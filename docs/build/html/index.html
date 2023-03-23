@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pyeo &mdash; Pyeo  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyeo.classification" href="classification.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home" alt="Documentation Home"> Pyeo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classification.html">pyeo.classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate_manipulation.html">pyeo.coordinate_manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queries_and_downloads.html">pyeo.queries_and_downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="raster_manipulation.html">pyeo.raster_manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem_utilities.html">pyeo.filesystem_utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">pyeo.validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Applications</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Pyeo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Pyeo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pyeo">
+<h1>Pyeo<a class="headerlink" href="#pyeo" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classification.html">pyeo.classification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate_manipulation.html">pyeo.coordinate_manipulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="coordinate_manipulation.html#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinate_manipulation.html#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="queries_and_downloads.html">pyeo.queries_and_downloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queries_and_downloads.html#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries_and_downloads.html#safe-files">SAFE files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries_and_downloads.html#query-data-structure">Query data structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries_and_downloads.html#data-download-sources">Data download sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queries_and_downloads.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="raster_manipulation.html">pyeo.raster_manipulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#rasters">Rasters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#timestamps">Timestamps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#supported-datatypes">Supported datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#geotransforms">Geotransforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#projections">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#masks">Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raster_manipulation.html#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem_utilities.html">pyeo.filesystem_utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem_utilities.html#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem_utilities.html#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">pyeo.validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="validation.html#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripts.html#image-comparison">image_comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.html#simple-s2-change-detection">simple_s2_change_detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.html#filter-by-class-map">filter_by_class_map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.html#sample-allocation">sample_allocation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Python For Earth Observation is a collection of functions for downloading, manipulating, combining and classifying
+geospatial raster and vector data.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>With Git and Miniconda or Anaconda installed, <code class="code docutils literal notranslate"><span class="pre">cd</span></code> to an install location then run the following lines</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/clcr/pyeo.git
+<span class="nb">cd</span> pyeo
+conda env create --file environment.yml --name pyeo_env
+conda activate pyeo_env
+python -m pip install . -vv
+</pre></div>
+</div>
+<p>In a Python prompt, try  <code class="code docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyeo</span></code> - you should see no errors.</p>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Before you start, you will need:</p>
+<ul class="simple">
+<li><p>Git</p></li>
+<li><p>Anaconda/Miniconda</p></li>
+<li><p>A raster of your window area</p></li>
+<li><p>A shapefile of polygons over your training areas with a field containing class labels</p></li>
+<li><p>A raster to classify. This can be the same as your original raster.</p>
+<ul>
+<li><p>All rasters and shapefiles should be in the same projection; ideally in the local projection of your satellite data.</p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="use">
+<h3>Use<a class="headerlink" href="#use" title="Permalink to this headline">¶</a></h3>
+<p>You can use Pyeo’s command-line functions to create and apply a pixel classification model from a set of polygons
+and a raster. The below example:</p>
+<ul class="simple">
+<li><p>saves the training data defined in <code class="code docutils literal notranslate"><span class="pre">your_raster.tif</span></code> and <code class="code docutils literal notranslate"><span class="pre">your_shapefile.tif</span></code> into <code class="code docutils literal notranslate"><span class="pre">signatures.csv</span></code></p></li>
+<li><p>creates a model from <code class="code docutils literal notranslate"><span class="pre">signatures.csv</span></code> named <code class="code docutils literal notranslate"><span class="pre">model.pkl</span></code></p></li>
+<li><p>Classifies the whole of <code class="code docutils literal notranslate"><span class="pre">your_raster.tif</span></code> using <code class="code docutils literal notranslate"><span class="pre">model.pkl</span></code>, and saves the result into <code class="code docutils literal notranslate"><span class="pre">output_image.tif</span></code></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate pyeo_env
+extract_signatures your_raster.tif your_shapefile.shp signatures.csv
+create_model_from_signatures signatures.csv model.pkl
+classify_image your_raster model.pkl output_image.tif
+</pre></div>
+</div>
+<p>A small test suite is located in pyeo/tests/pyeo_tests.py; this is designed for use with py.test.
+Some example applications and demos are in pyeo/apps; for an illustration of the use of the library,
+pyeo/apps/change_detection/simple_s2_change_detection.py is recommended.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="classification.html" class="btn btn-neutral float-right" title="pyeo.classification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, John Roberts
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

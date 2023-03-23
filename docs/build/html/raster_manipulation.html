@@ -1,0 +1,1330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyeo.raster_manipulation &mdash; Pyeo  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyeo.filesystem_utilities" href="filesystem_utilities.html" />
+    <link rel="prev" title="pyeo.queries_and_downloads" href="queries_and_downloads.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Pyeo
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="classification.html">pyeo.classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coordinate_manipulation.html">pyeo.coordinate_manipulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queries_and_downloads.html">pyeo.queries_and_downloads</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyeo.raster_manipulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#key-functions">Key functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rasters">Rasters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#timestamps">Timestamps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-datatypes">Supported datatypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geotransforms">Geotransforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#projections">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#masks">Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#function-reference">Function reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem_utilities.html">pyeo.filesystem_utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">pyeo.validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Applications</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Pyeo</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>pyeo.raster_manipulation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/raster_manipulation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-pyeo.raster_manipulation"></span><div class="section" id="pyeo-raster-manipulation">
+<h1>pyeo.raster_manipulation<a class="headerlink" href="#pyeo-raster-manipulation" title="Permalink to this headline">¶</a></h1>
+<p>Functions for working with raster data, including masks and platform-specific processing functions.</p>
+<div class="section" id="key-functions">
+<h2>Key functions<a class="headerlink" href="#key-functions" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p><a class="reference internal" href="#pyeo.raster_manipulation.create_matching_dataset" title="pyeo.raster_manipulation.create_matching_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_matching_dataset()</span></code></a> Creates an empty raster of the same shape as a source, ready for writing.</p>
+<p><a class="reference internal" href="#pyeo.raster_manipulation.stack_images" title="pyeo.raster_manipulation.stack_images"><code class="xref py py-func docutils literal notranslate"><span class="pre">stack_images()</span></code></a> Stacks a list of rasters into a single raster.</p>
+<p><a class="reference internal" href="#pyeo.raster_manipulation.preprocess_sen2_images" title="pyeo.raster_manipulation.preprocess_sen2_images"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess_sen2_images()</span></code></a> Preprocesses a set of of Sentinel-2 images into single raster files.</p>
+<p><a class="reference internal" href="#pyeo.raster_manipulation.clip_raster" title="pyeo.raster_manipulation.clip_raster"><code class="xref py py-func docutils literal notranslate"><span class="pre">clip_raster()</span></code></a> Clips a raster to a shapefile</p>
+</div></blockquote>
+</div>
+<div class="section" id="rasters">
+<h2>Rasters<a class="headerlink" href="#rasters" title="Permalink to this headline">¶</a></h2>
+<p>When working with raster data (geotiff, .jp2, ect) using this module, the following assumptions have been made:</p>
+<ul class="simple">
+<li><p>Any function that reads a raster can read from any gdal-readable format</p></li>
+<li><p>All interim rasters are stored internally as a geotiff</p></li>
+<li><p>All internal rasters have a .tif extension in the filename</p></li>
+<li><p>Unless otherwise stated, <strong>all rasters are assumed to be in a projected coordinate system</strong> - i.e. in meters.
+Functions may fail if passed a raster in lat-long projection</p></li>
+</ul>
+</div>
+<div class="section" id="timestamps">
+<h2>Timestamps<a class="headerlink" href="#timestamps" title="Permalink to this headline">¶</a></h2>
+<p>Pyeo uses the same timestamp convention as ESA: <cite>yyyymmddThhmmss</cite>; for example, 1PM on 27th December 2020 would be
+<cite>20201227T130000</cite>. All timestamps are in UTC</p>
+</div>
+<div class="section" id="supported-datatypes">
+<h2>Supported datatypes<a class="headerlink" href="#supported-datatypes" title="Permalink to this headline">¶</a></h2>
+<p>When a function in this library asks for a datatype, it can take one of the following</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Unknown</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt16</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Int16</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt32</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Int32</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float64</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CInt16</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CInt32</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat64</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="geotransforms">
+<h2>Geotransforms<a class="headerlink" href="#geotransforms" title="Permalink to this headline">¶</a></h2>
+<p>Every gdal raster has a geotransform associated with it; this defines it’s top-left hand corner in the projection
+and pixel size.
+In Pyeo, it takes the form of a 6-element tuple; for north-up images, these are the following.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">geotransform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_left_x</span>
+<span class="n">geotransfrom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel_width</span>
+<span class="n">geotransform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">geotransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_left_y</span>
+<span class="n">geotransform</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">geotransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel_height</span>
+</pre></div>
+</div>
+<p>A projection can be obtained from a raster with the following snippet:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;my_raster.tif&quot;</span><span class="p">)</span>
+<span class="n">gt</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For more information, see the following: See the following: <a class="reference external" href="https://gdal.org/user/raster_data_model.html#affine-geotransform">https://gdal.org/user/raster_data_model.html#affine-geotransform</a></p>
+</div>
+<div class="section" id="projections">
+<h2>Projections<a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h2>
+<p>Each Gdal raster also has a projection, defining (among other things) the unit of the geotransform.
+Projections in Pyeo are referred to either by EPSG number or passed around as a wkt( well-known text) string.
+You can look up EPSG values at <a class="reference external" href="https://epsg.io">https://epsg.io</a>
+You can use the following snippet to extract the well-known text of a raster</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">projection</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">GetProjection</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="masks">
+<h2>Masks<a class="headerlink" href="#masks" title="Permalink to this headline">¶</a></h2>
+<p>Some functions in this module include options for creating and applying masks.</p>
+<ul>
+<li><p>A raster may have an associated mask</p></li>
+<li><p>A mask is a geotif with an identical name as the raster it’s masking with a .msk extension</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>For example, the mask for my_sat_image.tif is my_sat_image.msk</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A mask is</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a single band raster</p></li>
+<li><p>of identical height, width and resolution of the related image</p></li>
+<li><p>contains values 0 or 1</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A mask is applied by multiplying it with each band of its raster</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>So any pixel with a 0 in its mask will be removed, and a 1 will be kept</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="function-reference">
+<h2>Function reference<a class="headerlink" href="#function-reference" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.align_image_in_place">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">align_image_in_place</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">target_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.align_image_in_place" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusts the geotransform of the image at image_path with that of the one at target_path, so they align neatly with
+the smallest magnitude of movement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – The path to the image to be adjusted.</p></li>
+<li><p><strong>target_path</strong> (<em>str</em>) – The image to align the image at image_path to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NonSquarePixelException</strong> – Raised if either image does not have square pixels</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.apply_array_image_mask">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">apply_array_image_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">mask</span></em>, <em class="sig-param"><span class="n">fill_value</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.apply_array_image_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a mask of (y,x) to an image array of (bands, y, x). Replaces any masked pixels with fill_value
+Mask is an a 2 dimensional array of 1 (unmasked) and 0 (masked)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>array_like</em>) – The array containing the raster data</p></li>
+<li><p><strong>mask</strong> (<em>array_like</em>) – The array containing the mask</p></li>
+<li><p><strong>fill_value</strong> (<em>number</em><em>, </em><em>optional</em>) – The value to replace any masked pixels with. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>masked_array</strong> – The array with masked pixels replaced with fill_value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array_like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.apply_band_function">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">apply_band_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_path</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">bands</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">out_datatype</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.apply_band_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applys an arbitrary band mathemtics function to an image at in_path and saves the result at out_map.
+Function should be a function object of the form f(band_input_A, band_input_B, …)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_path</strong> (<em>str</em>) – The image to process</p></li>
+<li><p><strong>function</strong> (<em>Func</em>) – </p></li>
+<li><p><strong>bands</strong> – </p></li>
+<li><p><strong>out_path</strong> – </p></li>
+<li><p><strong>out_datatype</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Calculating the NDVI of an image with red band at band 0 and IR band at 4
+First, define the function to be run across each pixel:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ndvi_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">r</span><span class="o">+</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">apply_band_function</span><span class="p">(</span><span class="s2">&quot;my_raster.tif&quot;</span><span class="p">,</span> <span class="n">ndvi_function</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;my_ndvi.tif&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.apply_image_function">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">apply_image_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_paths</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">out_datatype</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.apply_image_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a pixel-wise function across every image. Assumes each image is exactly contiguous and, for now,
+single-banded. function() should take a list of values and return a single value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_paths</strong> (<em>list of str</em>) – list of raster paths to process</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The path to the</p></li>
+<li><p><strong>function</strong> (<em>function</em>) – The function to apply to the list of images. Must take a list of numbers as an input and return a value.</p></li>
+<li><p><strong>out_datatype</strong> (<em>gdal datatype</em><em>, </em><em>optional</em>) – The datatype of the final raster. Defaults to gdal.gdt_Int32</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Producing a raster where each pixel contains the sum of the corresponding pixels in a list of other rasters</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sum_function</span><span class="p">(</span><span class="n">pixels_in</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pixels_in</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">in_paths</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;my_raster_dir&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_image_function</span><span class="p">(</span><span class="n">in_paths</span><span class="p">,</span> <span class="s2">&quot;sum_raster.tif&quot;</span><span class="p">,</span> <span class="n">sum_function</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.apply_sen2cor">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">apply_sen2cor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">sen2cor_path</span></em>, <em class="sig-param"><span class="n">delete_unprocessed_image</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.apply_sen2cor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies sen2cor to the SAFE file at image_path. Returns the path to the new product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the L1 Sentinel 2 .SAFE file</p></li>
+<li><p><strong>sen2cor_path</strong> (<em>str</em>) – Path to the l2a_process script (Linux) or l2a_process.exe (Windows)</p></li>
+<li><p><strong>delete_unprocessed_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, delete the unprocessed image after processing is done. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the new L2 .SAFE file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.atmospheric_correction">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">atmospheric_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_directory</span></em>, <em class="sig-param"><span class="n">out_directory</span></em>, <em class="sig-param"><span class="n">sen2cor_path</span></em>, <em class="sig-param"><span class="n">delete_unprocessed_image</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.atmospheric_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies Sen2cor atmospheric correction to each L1 image in in_directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_directory</strong> (<em>str</em>) – Path to the directory containing the L1 images</p></li>
+<li><p><strong>out_directory</strong> (<em>str</em>) – Path to the directory that will containg the new L2 images</p></li>
+<li><p><strong>sen2cor_path</strong> (<em>str</em>) – Path to the l2a_process script (Linux) or l2a_process.exe (Windows)</p></li>
+<li><p><strong>delete_unprocessed_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, delete the unprocessed image after processing is done. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.average_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">average_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_paths</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">geometry_mode</span><span class="o">=</span><span class="default_value">'intersect'</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">datatype</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.average_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>When provided with a list of rasters, will stack them into a single raster. The nunmber of
+bands in the output is equal to the total number of bands in the input. Geotransform and projection
+are taken from the first raster in the list; there may be unexpected behavior if multiple differing
+proejctions are provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_paths</strong> (<em>list of str</em>) – A list of paths to the rasters to be stacked, in order.</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – The path to the saved output raster.</p></li>
+<li><p><strong>geometry_mode</strong> (<em>{'intersect'</em><em> or </em><em>'union'}</em><em>, </em><em>optional</em>) – <p>Can be either ‘intersect’ or ‘union’. Defaults to ‘intersect’.
+- If ‘intersect’, then the output raster will only contain the pixels of the input rasters that overlap.
+- If ‘union’, then the output raster will contain every pixel in the outputs. Layers without data will</p>
+<blockquote>
+<div><p>have their pixel values set to 0.</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – The GDAL image format for the output. Defaults to ‘GTiff’</p></li>
+<li><p><strong>datatype</strong> (<em>gdal datatype</em>) – The datatype of the gdal array - see note. Defaults to gdal.GDT_Int32</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.buffer_mask_in_place">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">buffer_mask_in_place</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mask_path</span></em>, <em class="sig-param"><span class="n">buffer_size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.buffer_mask_in_place" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands a mask in-place, overwriting the previous mask</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask_path</strong> (<em>str</em>) – Path to a multiplicative mask (0; masked, 1; unmasked)</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em>) – The radius of the buffer, in pixel units of the mask</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.build_sen2cor_output_path">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">build_sen2cor_output_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.build_sen2cor_output_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a sen2cor output path dependent on the version ofr sen2cor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the image</p></li>
+<li><p><strong>timestamp</strong> (<em>str</em>) – Timestamp that processing was started (required for v &gt;= 2.8)</p></li>
+<li><p><strong>version</strong> (<em>str</em>) – String of the version of sen2cor (ex “2.05.05”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>new_path</strong> – The path of the finished sen2cor file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.calc_ndvi">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">calc_ndvi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_path</span></em>, <em class="sig-param"><span class="n">output_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.calc_ndvi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a raster of NDVI from the input raster at output_path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_path</strong> (<em>str</em>) – Path to a raster with blue, green, red and infrared bands (in that order)</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – Path to a location to save the output raster</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.clip_raster">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">clip_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_path</span></em>, <em class="sig-param"><span class="n">aoi_path</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">srs_id</span><span class="o">=</span><span class="default_value">4326</span></em>, <em class="sig-param"><span class="n">flip_x_y</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">dest_nodata</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.clip_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clips a raster at raster_path to a shapefile given by aoi_path. Assumes a shapefile only has one polygon.
+Will np.floor() when converting from geo to pixel units and np.absolute() y resolution form geotransform.
+Will also reproject the shapefile to the same projection as the raster if needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_path</strong> (<em>str</em>) – Path to the raster to be clipped.</p></li>
+<li><p><strong>aoi_path</strong> (<em>str</em>) – Path to a shapefile containing a single polygon</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – Path to a location to save the final output raster</p></li>
+<li><p><strong>flip_x_y</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, swaps the x and y axis of the raster image before clipping. For compatability with Landsat.
+Default is False.</p></li>
+<li><p><strong>dest_nodata</strong> (<em>number</em><em>, </em><em>optional</em>) – The fill value for outside of the clipped area. Deafults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.clip_raster_to_intersection">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">clip_raster_to_intersection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_to_clip_path</span></em>, <em class="sig-param"><span class="n">extent_raster_path</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">is_landsat</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.clip_raster_to_intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clips one raster to the extent proivded by the other raster, and saves the result at temp_file.
+Assumes both raster_to_clip and extent_raster are in the same projection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_to_clip_path</strong> (<em>str</em>) – The location of the raster to be clipped.</p></li>
+<li><p><strong>extent_raster_path</strong> (<em>str</em>) – The location of the raster that will provide the extent to clip to</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – A location for the finished raster</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.combine_masks">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">combine_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mask_paths</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">combination_func</span><span class="o">=</span><span class="default_value">'and'</span></em>, <em class="sig-param"><span class="n">geometry_func</span><span class="o">=</span><span class="default_value">'intersect'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.combine_masks" title="Permalink to this definition">¶</a></dt>
+<dd><p>ORs or ANDs several masks. Gets metadata from top mask. Assumes that masks are a
+Python true or false. Also assumes that all masks are the same projection for now.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask_paths</strong> (<em>list of str</em>) – A list of paths to the masks to combine</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The path to the new mask</p></li>
+<li><p><strong>combination_func</strong> (<em>{'and'</em><em> or </em><em>'or}</em><em>, </em><em>optional</em>) – Whether the a pixel in the final mask will be masked if
+- any pixel (‘or’) is masked
+- or all pixels (‘and’) are masked
+..in the corresponding pixels in the list of masks. Defaults to ‘and’</p></li>
+<li><p><strong>geometry_func</strong> (<em>{'intersect'</em><em> or </em><em>'union'}</em>) – How to handle non-overlapping masks. Defaults to ‘intersect’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the new mask</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.composite_directory">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">composite_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_dir</span></em>, <em class="sig-param"><span class="n">composite_out_dir</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">generate_date_images</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.composite_directory" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Using composite_images_with_mask, creates a composite containing every image in image_dir. This will</dt><dd><p>place a file named composite_[last image date].tif inside composite_out_dir</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_dir</strong> (<em>str</em>) – The directory containing the rasters and associated .msk files to be composited.</p></li>
+<li><p><strong>composite_out_dir</strong> (<em>str</em>) – The directory that will contain the final composite</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The raster format of the output image. Defaults to ‘GTiff’</p></li>
+<li><p><strong>generate_date_images</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, generates a corresponding date image for the composite. See docs for composite_images_with_mask.
+Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>composite_out_path</strong> – The path to the new composite</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.composite_images_with_mask">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">composite_images_with_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_raster_path_list</span></em>, <em class="sig-param"><span class="n">composite_out_path</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">generate_date_image</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.composite_images_with_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Works down in_raster_path_list, updating pixels in composite_out_path if not masked. Will also create a mask and
+(optionally) a date image in the same directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_raster_path_list</strong> (<em>list of str</em>) – A list of paths to rasters.</p></li>
+<li><p><strong>composite_out_path</strong> (<em>str</em>) – The path of the output image</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The gdal format of the image. Defaults to “GTiff”</p></li>
+<li><p><strong>generate_date_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, generates a single-layer raster containing the dates of each image detected - see below.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>composite_path</strong> – The path to the composite.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Masks are assumed to be a multiplicative .msk file with the same path as their corresponding image; see REFERENCE.
+All images must have the same number of layers and resolution, but do not have to be perfectly on top of each
+other. If it does not exist, composite_out_path will be created. Takes projection, resolution, ect from first band
+of first raster in list. Will reproject images and masks if they do not match initial raster.</p>
+<p>If generate_date_images is True, an raster ending with the suffix .date will be created; each pixel will contain the
+timestamp (yyyymmdd) of the date that pixel was last seen in the composite.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_mask_from_class_map">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_mask_from_class_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">class_map_path</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">classes_of_interest</span></em>, <em class="sig-param"><span class="n">buffer_size</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">out_resolution</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_mask_from_class_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a multiplicative mask from a classification mask: 1 for each pixel containing one of classes_of_interest,
+otherwise 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_map_path</strong> (<em>str</em>) – Path to the classification map to build the mask from</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – Path to the new mask</p></li>
+<li><p><strong>classes_of_interest</strong> (<em>list of int</em>) – The list of classes to count as clear pixels</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em>) – If greater than 0, applies a buffer to the masked pixels of this size. Defaults to 0.</p></li>
+<li><p><strong>out_resolution</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – If present, resamples the mask to this resoltion. Applied before buffering. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the new mask.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_mask_from_confidence_layer">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_mask_from_confidence_layer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l2_safe_path</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">cloud_conf_threshold</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">buffer_size</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_mask_from_confidence_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a multiplicative binary mask where cloudy pixels are 0 and non-cloudy pixels are 1. If
+cloud_conf_threshold = 0, use scl mask else use confidence image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l2_safe_path</strong> (<em>str</em>) – Path to the L1</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – Path to the new path</p></li>
+<li><p><strong>cloud_conf_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – If 0, uses the sen2cor classification raster as the base for the mask - else uses the cloud confidence image.
+Defaults to 0</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the buffer to apply to the cloudy pixel classes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the mask</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_mask_from_fmask">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_mask_from_fmask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_l1_dir</span></em>, <em class="sig-param"><span class="n">out_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_mask_from_fmask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cloud mask from a level 1 Sentinel-2 product using fmask</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_l1_dir</strong> (<em>str</em>) – The path to the l1 .SAFE folder</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The path to new mask</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_mask_from_model">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_mask_from_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">model_path</span></em>, <em class="sig-param"><span class="n">model_clear</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">num_chunks</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">buffer_size</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_mask_from_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a multiplicative mask (0 for cloud, shadow or haze, 1 for clear) built from the ML at model_path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the image</p></li>
+<li><p><strong>model_path</strong> (<em>str</em>) – Path to a pickled scikit-learn classification model</p></li>
+<li><p><strong>model_clear</strong> (<em>int</em><em>, </em><em>optional</em>) – The class from the model corresponding to non-cloudy pixels. Defaults to 0</p></li>
+<li><p><strong>num_chunks</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of chunks to break the processing into. See <code class="xref py py-func docutils literal notranslate"><span class="pre">classification.classify_image()</span></code></p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em><em>, </em><em>optional</em>) – If present, will apply a buffer of this many pixels to the mask, expanding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mask_path</strong> – The path to the new mask</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_mask_from_sen2cor_and_fmask">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_mask_from_sen2cor_and_fmask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l1_safe_file</span></em>, <em class="sig-param"><span class="n">l2_safe_file</span></em>, <em class="sig-param"><span class="n">out_mask_path</span></em>, <em class="sig-param"><span class="n">buffer_size</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_mask_from_sen2cor_and_fmask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cloud mask from a combination of the sen2cor thematic mask and the fmask method. Requires corresponding
+level 1 and level 2 .SAFE files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l1_safe_file</strong> (<em>str</em>) – Path to the level 1 .SAFE file</p></li>
+<li><p><strong>l2_safe_file</strong> (<em>str</em>) – Path to the level 2 .SAFE file</p></li>
+<li><p><strong>out_mask_path</strong> (<em>str</em>) – Path to the new mask</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em><em>, </em><em>optional</em>) – If greater than 0, the buffer to apply to the Sentinel 2 thematic map</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_matching_dataset">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_matching_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dataset</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">bands</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">datatype</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_matching_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an empty gdal dataset with the same dimensions, projection and geotransform as in_dataset.
+Defaults to 1 band.
+Datatype is set from the first layer of in_dataset if unspecified</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dataset</strong> (<em>gdal.Dataset</em>) – A gdal.Dataset object</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The path to save the copied dataset to</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The Ggal image format. Defaults to geotiff (“GTiff”); for a full list, see <a class="reference external" href="https://gdal.org/drivers/raster/index.html">https://gdal.org/drivers/raster/index.html</a></p></li>
+<li><p><strong>bands</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of bands in the dataset. Defaults to 1.</p></li>
+<li><p><strong>datatype</strong> (<em>gdal constant</em><em>, </em><em>optional</em>) – The datatype of the returned dataset. See the introduction for this module. Defaults to in_dataset’s datatype
+if not supplied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>new_dataset</strong> – An gdal.Dataset of the new, empty dataset that is ready for writing.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>gdal.Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_new_image_from_polygon">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_new_image_from_polygon</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon</span></em>, <em class="sig-param"><span class="n">out_path</span></em>, <em class="sig-param"><span class="n">x_res</span></em>, <em class="sig-param"><span class="n">y_res</span></em>, <em class="sig-param"><span class="n">bands</span></em>, <em class="sig-param"><span class="n">projection</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">datatype</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">nodata</span><span class="o">=</span><span class="default_value">- 9999</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_new_image_from_polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an empty image that covers the extent of the imput polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polygon</strong> (<em>ogr.Geometry</em>) – An OGR.Geometry object of a single polygon</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The path to save the new image to</p></li>
+<li><p><strong>x_res</strong> (<em>number</em>) – Pixel width in the new image</p></li>
+<li><p><strong>y_res</strong> (<em>number</em>) – Pixel height in the new image</p></li>
+<li><p><strong>bands</strong> (<em>int</em>) – Number of bands in the new image.</p></li>
+<li><p><strong>projection</strong> (<em>str</em>) – The projection, in wkt, of the output image.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The gdal raster format of the output image. Defaults to “Gtiff”</p></li>
+<li><p><strong>datatype</strong> (<em>gdal datatype</em><em>, </em><em>optional</em>) – The gdal datatype of the output image. Defaults to gdal.GDT_Int32</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A gdal.Image object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.create_new_stacks">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">create_new_stacks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_dir</span></em>, <em class="sig-param"><span class="n">stack_dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.create_new_stacks" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each granule present in image_dir Saves the result in stacked_dir.
+Assumes that each image in image_dir is saved with a Sentinel-2 identifiter name - see merge_raster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_dir</strong> (<em>str</em>) – A path to the directory containing the images to be stacked, all named as Sentinel 2 identifiers</p></li>
+<li><p><strong>stack_dir</strong> (<em>str</em>) – A path to a directory to save the stacked images to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>new_stacks</strong> – A list of paths to the new stacks</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The pairing algorithm is as follows:
+Step 1: Group directory by tile number
+Step 2: For each tile number, sort by time
+Step 3: For each image in the sorted list, stack each image with it’s next oldest image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>CreateNewStacksException</strong> – If the image directory is empty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.filter_by_class_map">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">filter_by_class_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">class_map_path</span></em>, <em class="sig-param"><span class="n">out_map_path</span></em>, <em class="sig-param"><span class="n">classes_of_interest</span></em>, <em class="sig-param"><span class="n">out_resolution</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.filter_by_class_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters a raster with a set of classes for corresponding for pixels in filter_map_path containing only
+classes_of_interest. Assumes that filter_map_path and class_map_path are same resolution and projection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the raster to be filtered.</p></li>
+<li><p><strong>class_map_path</strong> (<em>str</em>) – Path to the map to use as the filter. Assumes a raster of integer class labels.</p></li>
+<li><p><strong>out_map_path</strong> (<em>str</em>) – Path to the filtered map</p></li>
+<li><p><strong>classes_of_interest</strong> (<em>list of int</em>) – The classes in class_map_path to keep present in the raster to be filtered</p></li>
+<li><p><strong>out_resolution</strong> (<em>number</em><em>, </em><em>optional</em>) – The resolution of the output image</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_map_path</strong> – The path to the new map</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.flatten_probability_image">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">flatten_probability_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prob_image</span></em>, <em class="sig-param"><span class="n">out_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.flatten_probability_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a probability output from classify_image and flattens it into a single layer containing only the maximum
+value from each pixel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob_image</strong> (<em>str</em>) – The path to a probability image.</p></li>
+<li><p><strong>out_path</strong> (<em>str</em>) – The place to save the flattened image.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.get_extent_as_shp">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">get_extent_as_shp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_ras_path</span></em>, <em class="sig-param"><span class="n">out_shp_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.get_extent_as_shp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the extent of a raster as a shapefile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_ras_path</strong> (<em>str</em>) – The raster to get</p></li>
+<li><p><strong>out_shp_path</strong> (<em>str</em>) – The shape path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_shp_path</strong> – The path to the new shapefile</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.get_image_resolution">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">get_image_resolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.get_image_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resolution of the image in its native projection. Assumes square pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image_path</strong> (<em>str</em>) – Path to a raster</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>resolution</strong> – The size of each pixel in the image, in the units of its native projection.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.get_masked_array">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">get_masked_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster</span></em>, <em class="sig-param"><span class="n">mask_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.get_masked_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a numpy.mask masked array for the raster.
+Masked pixels are FALSE in the mask image (multiplicateive map),
+but TRUE in the masked_array (nodata pixels). If the raster is multi-band and
+the mask is single-band, the mask will be applied to every raster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster</strong> (<em>gdal.Dataset</em>) – A gdal.Dataset object</p></li>
+<li><p><strong>mask_path</strong> (<em>str</em>) – The path to the mask to use</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>masked_array</strong> – A numpy.masked array of the raster.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.masked</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.get_sen2cor_version">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">get_sen2cor_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sen2cor_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.get_sen2cor_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the version number of sen2cor from the help string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sen2cor_path</strong> (<em>str</em>) – Path the the sen2cor executable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>version</strong> – A string of the version of sen2cor at sen2cor_path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.get_sen_2_band_path">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">get_sen_2_band_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">safe_dir</span></em>, <em class="sig-param"><span class="n">band</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.get_sen_2_band_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the path to the raster of the specified band in the specified safe_dir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>safe_dir</strong> (<em>str</em>) – Path to the directory containing the raster</p></li>
+<li><p><strong>band</strong> (<em>str</em>) – The band identifier (‘B01’, ‘B02’, ect)</p></li>
+<li><p><strong>resolution</strong> (<em>int</em><em>, </em><em>optional</em>) – If given, tries to get that band in that image - if not, tries for the highest resolution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>band_path</strong> – The path to the raster containing the band.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.mosaic_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">mosaic_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_paths</span></em>, <em class="sig-param"><span class="n">out_raster_file</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">datatype</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">nodata</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.mosaic_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mosaics multiple images with the same number of layers into one single image. Overwrites
+overlapping pixels with the value furthest down raster_paths. Takes projection from the first
+raster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_paths</strong> (<em>str</em>) – A list of paths of raster to be mosaiced</p></li>
+<li><p><strong>out_raster_file</strong> (<em>str</em>) – The path to the output file</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – The image format of the output raster. Defaults to ‘GTiff’</p></li>
+<li><p><strong>datatype</strong> (<em>gdal datatype</em>) – The datatype of the output raster. Defaults to gdal.GDT_Int32</p></li>
+<li><p><strong>nodata</strong> (<em>number</em>) – The input nodata value; any pixels in raster_paths with this value will be ignored. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.open_dataset_from_safe">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">open_dataset_from_safe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">safe_file_path</span></em>, <em class="sig-param"><span class="n">band</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">'10m'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.open_dataset_from_safe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a dataset given a level 2 .SAFE file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>safe_file_path</strong> (<em>str</em>) – The path to the .SAFE file</p></li>
+<li><p><strong>band</strong> (<em>int</em>) – The band to open</p></li>
+<li><p><strong>resolution</strong> (<em>{'10m'</em><em>, </em><em>'20m'</em><em>, </em><em>'60m'}</em><em>, </em><em>optional</em>) – The resolution of imagery to open. Defaults to “10m”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>band_raster</strong> – A Gdal dataset contining the band</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>gdal.Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.preprocess_landsat_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">preprocess_landsat_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_dir</span></em>, <em class="sig-param"><span class="n">out_image_path</span></em>, <em class="sig-param"><span class="n">new_projection</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bands_to_stack</span><span class="o">=</span><span class="default_value">'B2', 'B3', 'B4'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.preprocess_landsat_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stacks a set of Landsat images into a single raster and reorders the bands into
+[bands, y, x] - by default, Landsat uses [x,y] and bands are in seperate rasters.
+If given, will also reproject to an EPSG or .wkt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_dir</strong> (<em>str</em>) – The directory containing the Landsat images</p></li>
+<li><p><strong>out_image_path</strong> (<em>str</em>) – The path to the stacked image</p></li>
+<li><p><strong>new_projection</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – An EPSG number or a .wkt containing a projection. Defaults to None</p></li>
+<li><p><strong>bands_to_stack</strong> (<em>list of str</em><em>, </em><em>optional</em>) – The Landsat bands to put into the stacked</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.preprocess_sen2_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">preprocess_sen2_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l2_dir</span></em>, <em class="sig-param"><span class="n">out_dir</span></em>, <em class="sig-param"><span class="n">l1_dir</span></em>, <em class="sig-param"><span class="n">cloud_threshold</span><span class="o">=</span><span class="default_value">60</span></em>, <em class="sig-param"><span class="n">buffer_size</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">epsg</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bands</span><span class="o">=</span><span class="default_value">'B02', 'B03', 'B04', 'B08'</span></em>, <em class="sig-param"><span class="n">out_resolution</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.preprocess_sen2_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>For every .SAFE folder in l2_dir and L1_dir, stacks band 2,3,4 and 8  bands into a single geotif, creates a cloudmask from
+the combined fmask and sen2cor cloudmasks and reprojects to a given EPSG if provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l2_dir</strong> (<em>str</em>) – The directory containing a set of L2 .SAFE folders to preprocess</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – The directory to store the preprocessed files</p></li>
+<li><p><strong>l1_dir</strong> (<em>str</em>) – The directory containing a set of L1 .SAFE files, corresponding to the L2 files in l2_dir</p></li>
+<li><p><strong>cloud_threshold</strong> (<em>number</em>) – DEPRECIATED; in for backwards compatibility.</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The buffer to apply to the sen2cor mask - defaults to 0</p></li>
+<li><p><strong>epsg</strong> (<em>int</em><em>, </em><em>optional</em>) – If present, the EPSG number to reproject the final images to.</p></li>
+<li><p><strong>bands</strong> (<em>list of str</em><em>, </em><em>optional</em>) – List of names of bands to include in the final rasters. Defaults to (“B02”, “B03”, “B04”, “B08”)</p></li>
+<li><p><strong>out_resolution</strong> (<em>number</em><em>, </em><em>optional</em>) – Resolution to resample every image to - units are defined by the image projection. Default is 10.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This functions’ augment list is likely to be changed in the near future to (l1_dir, l2_dir, out_dir) - please
+be aware - September 2020.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.raster_sum">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">raster_sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inRstList</span></em>, <em class="sig-param"><span class="n">outFn</span></em>, <em class="sig-param"><span class="n">outFmt</span><span class="o">=</span><span class="default_value">'GTiff'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.raster_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a raster stack from a list of rasters. Adapted from Chris Gerard’s
+book ‘Geoprocessing with Python’. The out put data type is the same as the input data type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inRstList</strong> (<em>list of str</em>) – List of rasters to stack.</p></li>
+<li><p><strong>outFn</strong> (<em>str</em>) – Filename output as str including directory else image will be
+written to current working directory.</p></li>
+<li><p><strong>outFmt</strong> (<em>str</em><em>, </em><em>optional.</em>) – String specifying the input data format e.g. ‘GTiff’ or ‘VRT’. Defaults to GTiff.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.raster_to_array">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">raster_to_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rst_pth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.raster_to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a raster file and returns a N-dimensional array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rst_pth</strong> (<em>str</em>) – Path to input raster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_array</strong> – An N-dimensional array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array_like</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.reproject_directory">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">reproject_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dir</span></em>, <em class="sig-param"><span class="n">out_dir</span></em>, <em class="sig-param"><span class="n">new_projection</span></em>, <em class="sig-param"><span class="n">extension</span><span class="o">=</span><span class="default_value">'.tif'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.reproject_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reprojects every file ending with extension to new_projection and saves in out_dir</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dir</strong> (<em>str</em>) – A directory containing the rasters to be reprojected/</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – The directory to save the output files to. Output files will be saved in out_dir, with the same
+filenames.</p></li>
+<li><p><strong>new_projection</strong> (<em>str</em>) – The new projection in wkt.</p></li>
+<li><p><strong>extension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension to reproject. Default is ‘.tif’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.reproject_image">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">reproject_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_raster</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">new_projection</span></em>, <em class="sig-param"><span class="n">driver</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">memory</span><span class="o">=</span><span class="default_value">2000.0</span></em>, <em class="sig-param"><span class="n">do_post_resample</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.reproject_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new, reprojected image from in_raster using the gdal.ReprojectImage function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_raster</strong> (<em>str</em><em> or </em><em>gdal.Dataset</em>) – Either a gdal.Dataset object or a path to a raster</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – The path to the new output raster.</p></li>
+<li><p><strong>new_projection</strong> (<em>str</em><em> or </em><em>int</em>) – The new projection in .wkt or as an EPSG number</p></li>
+<li><p><strong>driver</strong> (<em>str</em><em>, </em><em>optional</em>) – The format of the output raster.</p></li>
+<li><p><strong>memory</strong> (<em>float</em><em>, </em><em>optional</em>) – The amount of memory to give to the reprojection. Defaults to 2e3</p></li>
+<li><p><strong>do_post_resample</strong> (<em>bool</em><em>, </em><em>optional</em>) – If set to false, do not resample the image back to the original projection. Defaults to True</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The GDAL reprojection routine changes the size of the pixels by a very small amount; for example, a 10m pixel image
+can become a 10.002m pixel resolution image. To stop alignment issues, by default this function resamples the images
+back to their original resolution. If you are reprojecting from latlon to meters and get an outofmemory error from
+Gdal, set do_post_resample to False.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.resample_image_in_place">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">resample_image_in_place</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">new_res</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.resample_image_in_place" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resamples an image in-place using gdalwarp to new_res in metres.
+WARNING: This will make a permanent change to an image! Use with care.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the image to be resampled</p></li>
+<li><p><strong>new_res</strong> (<em>number</em>) – Pixel edge size in meters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.save_array_as_image">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">save_array_as_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">geotransform</span></em>, <em class="sig-param"><span class="n">projection</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.save_array_as_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a given array as a geospatial image to disk in the format ‘format’. The datatype will be of one corresponding
+to Array must be gdal format: [bands, y, x].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>array_like</em>) – A Numpy array containing the values to be saved to a raster</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The path to the location to save the output raster to</p></li>
+<li><p><strong>geotransform</strong> (<em>list</em>) – The geotransform of the image to be saved. See note.</p></li>
+<li><p><strong>projection</strong> (<em>str</em>) – The projection, as wkt, of the image to be saved. See note.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The image format. Defaults to ‘GTiff’; see note for other types.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>path_to_image</strong> – The path to the image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.stack_and_trim_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">stack_and_trim_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">old_image_path</span></em>, <em class="sig-param"><span class="n">new_image_path</span></em>, <em class="sig-param"><span class="n">aoi_path</span></em>, <em class="sig-param"><span class="n">out_image</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.stack_and_trim_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stacks an old and new S2 image and trims to within an aoi.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_image_path</strong> (<em>str</em>) – Path to the image that will be the first set of bands in the output image</p></li>
+<li><p><strong>new_image_path</strong> (<em>str</em>) – Path to the image that will be the second set of bands in the output image</p></li>
+<li><p><strong>aoi_path</strong> (<em>str</em>) – Path to a shapefile containing the AOI</p></li>
+<li><p><strong>out_image</strong> (<em>str</em>) – Path to the location of the clipped and stacked image.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.stack_image_with_composite">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">stack_image_with_composite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em>, <em class="sig-param"><span class="n">composite_path</span></em>, <em class="sig-param"><span class="n">out_dir</span></em>, <em class="sig-param"><span class="n">create_combined_mask</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">skip_if_exists</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">invert_stack</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.stack_image_with_composite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a single 8-band geotif image with a cloud-free composite, and saves the result in out_dir. Images are named
+“composite_tile_timestamp-of-composite_timestamp-of-image”. Bands 1,2,3 and 4 are the B,G,R and I bands of the
+composite, and bands 5,6,7 and 8 are the B,G,R and I bands of the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<em>str</em>) – Path to the image to be stacked</p></li>
+<li><p><strong>composite_path</strong> (<em>str</em>) – Path to the composite to stack the image with</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – The directory to save the resulting composite to</p></li>
+<li><p><strong>create_combined_mask</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, combines the cloud mask files associated with the images into a single mask. The mask will mask out
+clouds that exist in either image. Defaults to True.</p></li>
+<li><p><strong>skip_if_exists</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, skip stacking if a file with the same name is found. Defaults to True.</p></li>
+<li><p><strong>invert_stack</strong> (<em>bool</em><em>, </em><em>optional.</em>) – If true, changes the ordering of the bands to image BGRI - composite BGRI. Included to permit compatibility
+with older models - you can usually leave this alone.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the new composite.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.stack_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">stack_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raster_paths</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">geometry_mode</span><span class="o">=</span><span class="default_value">'intersect'</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em>, <em class="sig-param"><span class="n">datatype</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.stack_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>When provided with a list of rasters, will stack them into a single raster. The nunmber of
+bands in the output is equal to the total number of bands in the input. Geotransform and projection
+are taken from the first raster in the list; there may be unexpected behavior if multiple differing
+proejctions are provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_paths</strong> (<em>list of str</em>) – A list of paths to the rasters to be stacked, in order.</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – The path to the saved output raster.</p></li>
+<li><p><strong>geometry_mode</strong> (<em>{'intersect'</em><em> or </em><em>'union'}</em>) – <p>Can be either ‘instersect’ or ‘union’.
+- If ‘intersect’, then the output raster will only contain the pixels of the input rasters that overlap.
+- If ‘union’, then the output raster will contain every pixel in the outputs. Layers without data will</p>
+<blockquote>
+<div><p>have their pixel values set to 0.</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The GDAL image format for the output. Defaults to ‘GTiff’</p></li>
+<li><p><strong>datatype</strong> (<em>gdal datatype</em><em>, </em><em>optional</em>) – The datatype of the gdal array - see introduction. Defaults to gdal.GDT_Int32.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.stack_old_and_new_images">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">stack_old_and_new_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">old_image_path</span></em>, <em class="sig-param"><span class="n">new_image_path</span></em>, <em class="sig-param"><span class="n">out_dir</span></em>, <em class="sig-param"><span class="n">create_combined_mask</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.stack_old_and_new_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stacks two images that cover the same tile into a single multi-band raster, old_image_path being the first set of
+bands and new_image_path being the second. The produced image will have the name <cite>{tile}_{old_date}_{new_date}.tif</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_image_path</strong> (<em>str</em>) – Path to the older image</p></li>
+<li><p><strong>new_image_path</strong> (<em>str</em>) – Path to the newer image</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – Directory to place the new stacked raster into</p></li>
+<li><p><strong>create_combined_mask</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, finds and combines the associated mask files between</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_image_path</strong> – The path to the new image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.stack_sentinel_2_bands">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">stack_sentinel_2_bands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">safe_dir</span></em>, <em class="sig-param"><span class="n">out_image_path</span></em>, <em class="sig-param"><span class="n">bands</span><span class="o">=</span><span class="default_value">'B02', 'B03', 'B04', 'B08'</span></em>, <em class="sig-param"><span class="n">out_resolution</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.stack_sentinel_2_bands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stacks the specified bands of a .SAFE granule directory into a single geotiff</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>safe_dir</strong> (<em>str</em>) – Path to the .SAFE file to stack</p></li>
+<li><p><strong>out_image_path</strong> (<em>str</em>) – Location of the new image</p></li>
+<li><p><strong>bands</strong> (<em>list of str</em><em>, </em><em>optional</em>) – The band IDs to be stacked</p></li>
+<li><p><strong>out_resolution</strong> – The final resolution of the geotif- bands will be resampled if needed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_image_path</strong> – The path to the new image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.strip_bands">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">strip_bands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_raster_path</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">bands_to_strip</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.strip_bands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes bands from a raster and saves a copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_raster_path</strong> (<em>str</em>) – Path to the raster</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – Path to the output</p></li>
+<li><p><strong>bands_to_strip</strong> (<em>list of int</em>) – 0-indexed list of bands to remove</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out_path</strong> – The path to the output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyeo.raster_manipulation.trim_image">
+<code class="sig-prename descclassname">pyeo.raster_manipulation.</code><code class="sig-name descname">trim_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_raster_path</span></em>, <em class="sig-param"><span class="n">out_raster_path</span></em>, <em class="sig-param"><span class="n">polygon</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'GTiff'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyeo.raster_manipulation.trim_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trims a raster to a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_raster_path</strong> (<em>str</em>) – Path to the imput raster</p></li>
+<li><p><strong>out_raster_path</strong> (<em>str</em>) – Path of the output raster</p></li>
+<li><p><strong>polygon</strong> (<em>ogr.Geometry</em>) – A ogr.Geometry containing a single polygon</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – Image format of the output raster. Defaults to ‘GTiff’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="filesystem_utilities.html" class="btn btn-neutral float-right" title="pyeo.filesystem_utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="queries_and_downloads.html" class="btn btn-neutral float-left" title="pyeo.queries_and_downloads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2018, John Roberts
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
