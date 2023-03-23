@@ -344,7 +344,7 @@ def rolling_detection(config_path,
 
                     matching_l2a_products_df = pd.DataFrame.from_dict(matching_l2a_products, orient='index')
                     # 07/03/2023: Applied Ali's fix for converting product size to MB to compare against faulty_grandule_threshold
-i                   if len(matching_l2a_products_df) == 1 and [float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]] for x in [matching_l2a_products_df['size'][0].split(' ')]][0] > faulty_granule_threshold:
+                    if len(matching_l2a_products_df) == 1 and [float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]] for x in [matching_l2a_products_df['size'][0].split(' ')]][0] > faulty_granule_threshold:
                         log.info("Replacing L1C {} with L2A product:".format(id))
                         log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
                         drop.append(l1c_products.index[r])
@@ -352,11 +352,18 @@ i                   if len(matching_l2a_products_df) == 1 and [float(x[0]) * {'G
                     if len(matching_l2a_products_df) == 0:
                         #log.info("Found no match for L1C: {}.".format(id))
                         pass
+                    # I.R. Bug Fixed 20230311: Was not handling case where multiple L2A products were returned - now filters by 'size' and sorts df so that largest alternative is downloaded
                     if len(matching_l2a_products_df) > 1:
                         # check granule sizes on the server
+                        # print(f"1) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
                         matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                        # print(f"2) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
                         matching_l2a_products_df = matching_l2a_products_df.query('size >= '+str(faulty_granule_threshold))
-                        if matching_l2a_products_df.iloc[0,:]['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]]) > faulty_granule_threshold:
+                        # matching_l2a_products_df.sort_values(by='size', ascending=False)
+                        # print(f"3) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
+                        # if matching_l2a_products_df.iloc[0,:]['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]]) > faulty_granule_threshold:
+                        if len(matching_l2a_products_df) > 0:
+                            matching_l2a_products_df.sort_values(by='size', ascending=False)
                             log.info("Replacing L1C {} with L2A product:".format(id))
                             log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
                             drop.append(l1c_products.index[r])
