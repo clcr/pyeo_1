@@ -2497,6 +2497,124 @@ def apply_processing_baseline_0400_offset_correction_to_tiff_file_directory(in_t
 
 # Added I.R. 20220607 END
 
+# Added I.R. 20230312 START
+def apply_processing_baseline_offset_correction_to_tiff_file_directory(in_tif_directory,
+                                                                            out_tif_directory,
+                                                                            bands_to_offset_labels = ("B02", "B03", "B04", "B08"),
+                                                                            bands_to_offset_index = [0, 1, 2, 3],
+                                                                            BOA_ADD_OFFSET = -1000,
+                                                                            backup_flag = False):
+    """
+    Offsets data within selected bands from a directory of stacked raster files
+    Overwrites original file - option to save a backup copy.
+    Added I.R. 20220607
+
+    Parameters
+    ----------
+    in_tif_directory : str
+        Path to the input (and output) directory of tif raster files
+    out_tif_directory : str
+        Path to the output directory of tif raster files
+    bands_to_offset_labels : list of string
+        List of bands to offset
+    bands_to_offset_index : list of int
+        List of indices of bands to offset within the tif image
+    BOA_ADD_OFFSET : int
+        Required offset per band (from xml information within L2A SAFE file directory)
+    backup_flag : True/False
+        If True leaves unoffset images with .backup extension in tif_directory
+
+    Returns
+    -------
+    out_tif_directory : str
+        The path to the output directory
+
+    ToDo:
+    -------
+    # Check out_tif_directory directory exists and report an error or create it
+    # Force generated dtype to uint16 to save time and storage? Compatible with classifier?
+    # Generate bands_to_offset_index from comparison of bands_to_offset labels in band.description
+    # Read individual BOA_ADD_OFFSET value for each band from xml information in SAFE file root
+    # Use 'with TemporaryDirectory' pattern - Overwrite existing files with offset files by 'move'
+    # Work out why offset files are larger (2GB from ~1GB)
+
+    """
+    print(f'apply_processing_baseline_offset_correction_to_tiff_file_directory() running on: {in_tif_directory}')
+    log.info(f'apply_processing_baseline_offset_correction_to_tiff_file_directory() running on: {in_tif_directory}')
+
+    def get_processing_baseline(safe_path):
+        return safe_path[28:32]
+
+    def set_processing_baseline(safe_path, new_baseline):
+        new_safe_path = safe_path[:28] + new_baseline + safe_path[32:]
+        return new_safe_path
+
+    image_files = [f for f in os.listdir(in_tif_directory) if f.endswith('.tif') or f.endswith('.tiff')]
+    for f in image_files:
+        print(f'File: {f}, Baseline: {get_processing_baseline(f)}')
+        log.info(f'File: {f}, Baseline: {get_processing_baseline(f)}')
+        if get_processing_baseline(f)[0] == 'A':
+            print(f'Offset already applied - file marked as: {get_processing_baseline(f)}')
+            log.info(f'Offset already applied - file marked as: {get_processing_baseline(f)}')
+        if get_processing_baseline(f) in ['0400', '0509']:
+            in_raster_path = os.path.join(in_tif_directory, f)
+            print(f'Offsetting file: {f}')
+            log.info(f'Offsetting file: {f}')
+            print(f'in_raster_path: {in_raster_path}')
+            # log.info(f'in_raster_path: {in_raster_path}')
+            # Define temporary file destination for output
+            out_temporary_raster_path = os.path.join(out_tif_directory, os.path.basename(f).split(".")[0] + '_offset_temp.tif')
+            print(f'out_temporary_raster_path: {out_temporary_raster_path}')
+            log.info(f'out_temporary_raster_path: {out_temporary_raster_path}')
+            # Open data set
+            in_raster_ds = gdal.Open(in_raster_path, gdal.GA_Update)
+            raster_band_count = in_raster_ds.RasterCount
+            in_raster_array = in_raster_ds.GetVirtualMemArray()
+            out_temporary_raster_ds = pyeo.raster_manipulation.create_matching_dataset(in_raster_ds, out_temporary_raster_path, bands=raster_band_count)
+            out_temporary_raster_array = out_temporary_raster_ds.GetVirtualMemArray(eAccess=gdal.GA_Update)
+            # out_temporary_raster_array[...] = in_raster_array[bands_to_offset_index, :,:] + BOA_ADD_OFFSET
+
+            print(f'in_raster_array dtype: {in_raster_array.dtype}')
+            log.info(f'in_raster_array dtype: {in_raster_array.dtype}')
+            dtype_max = 10000  # np.iinfo(in_raster_array.dtype).max # upper bound for range clipping - should be > any likely pixel value
+            print(f'in_raster_array dtype_max used: {dtype_max}')
+            log.info(f'in_raster_array dtype_max used: {dtype_max}')
+
+            # Simple offset of all image bands
+            out_temporary_raster_array[...] = np.clip(in_raster_array[bands_to_offset_index, :,:] , (-1 * BOA_ADD_OFFSET), dtype_max) + BOA_ADD_OFFSET
+
+            # Untested: Improvement to offset just selected bands by label - for band specific offsetting if required
+            # out_raster_array[...] = in_raster_array[...]  # Copy over all data
+            # for band_index in raster_band_count:
+            #     band_in = in_raster_ds.GetRasterBand(band_index+1)
+            #     band_out = out_raster_ds.GetRasterBand(band_index+1)
+            #     band_out.SetDescription(band_in.GetDesciption())
+            #     if (band_in.GetDesciption() in bands_to_offset_labels):
+            #         out_raster_array[band_index, :, :] = np.clip(in_raster_array[band_index, :,:] , (-1 * BOA_ADD_OFFSET), dtype_max) + BOA_ADD_OFFSET
+
+            # Deallocate to force write of generated file to disk by OS
+            out_temporary_raster_array = None
+            in_raster_array = None
+            out_temporary_raster_ds = None
+            in_raster_ds = None
+
+            # Backup original .tif file to .backup file (subsequent algorithm stages should filter for only .tif or .tiff)
+            if (backup_flag == True):
+                shutil.move(in_raster_path, in_raster_path.split(".")[0] + '.backup')
+            out_raster_path = os.path.join(out_tif_directory, f)
+            # Intended to overwrite source file when in_tif_directory = out_tif_directory
+            # If in_tif_directory == out_tif_directory then overwrites original .tif file with offset file so that next stage of ForestMind algorithm can run
+            shutil.move(out_temporary_raster_path, out_raster_path)
+            # Rename file with processing baseline code modified from 0XXX to AXXX to avoid multiple runs of pipeline leading to multiple offsets being applied
+            out_raster_path_rename = os.path.join(out_tif_directory, set_processing_baseline(f, 'A' + get_processing_baseline(f)[1:]))
+            shutil.move(out_raster_path, out_raster_path_rename)
+
+    print('Offsetting Finished')
+    log.info('Offsetting Finished')
+    return out_tif_directory
+
+# Added I.R. 20230312 END
+
 
 def preprocess_landsat_images(image_dir, out_image_path, new_projection = None, bands_to_stack=("B2","B3","B4")):
     """

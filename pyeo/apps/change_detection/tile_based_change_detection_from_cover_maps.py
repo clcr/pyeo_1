@@ -493,7 +493,7 @@ def rolling_detection(config_path,
                 log.info("Offsetting cloud masked L2A images for composite.")
                 log.info("---------------------------------------------------------------")
 
-                pyeo.raster_manipulation.apply_processing_baseline_0400_offset_correction_to_tiff_file_directory(composite_l2_masked_image_dir, composite_l2_masked_image_dir)
+                pyeo.raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(composite_l2_masked_image_dir, composite_l2_masked_image_dir)
 
                 log.info("---------------------------------------------------------------")
                 log.info("Offsetting of cloud masked L2A images for composite complete.")
@@ -795,7 +795,7 @@ def rolling_detection(config_path,
             log.info("Offsetting cloud masked L2A images.")
             log.info("---------------------------------------------------------------")
 
-            pyeo.raster_manipulation.apply_processing_baseline_0400_offset_correction_to_tiff_file_directory(l2_masked_image_dir, l2_masked_image_dir)
+            pyeo.raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(l2_masked_image_dir, l2_masked_image_dir)
 
             log.info("---------------------------------------------------------------")
             log.info("Offsetting of cloud masked L2A images complete.")
