@@ -1,5 +1,0 @@
-#!/bin/bash
-set -o errexit
-set -o nounset
-
-python "$pyeo_1"/pyeo_1/apps/change_detection/simple_s2_change_detection.py "$@"

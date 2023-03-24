@@ -1,3 +1,3 @@
-.. title:: pyeo_1.terrain_correction
-.. automodule:: pyeo_1.terrain_correction
+.. title:: pyeo.terrain_correction
+.. automodule:: pyeo.terrain_correction
    :members:

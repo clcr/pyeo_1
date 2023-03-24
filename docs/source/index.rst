@@ -1,5 +1,5 @@
 ****
-pyeo_1
+Pyeo
 ****
 
 .. toctree::
@@ -27,13 +27,13 @@ With Git and Miniconda or Anaconda installed, :code:`cd` to an install location 
 
 .. code-block:: bash
 
-   git clone https://github.com/clcr/pyeo_1.git
-   cd pyeo_1
-   conda env create --file environment.yml --name pyeo_1_env
-   conda activate pyeo_1_env
+   git clone https://github.com/clcr/pyeo.git
+   cd pyeo
+   conda env create --file environment.yml --name pyeo_env
+   conda activate pyeo_env
    python -m pip install . -vv
 
-In a Python prompt, try  :code:`import pyeo_1` - you should see no errors.
+In a Python prompt, try  :code:`import pyeo` - you should see no errors.
 
 Quick start
 ###########
@@ -50,7 +50,7 @@ Before you start, you will need:
 
 Use
 ***
-You can use pyeo_1's command-line functions to create and apply a pixel classification model from a set of polygons
+You can use Pyeo's command-line functions to create and apply a pixel classification model from a set of polygons
 and a raster. The below example:
 
 * saves the training data defined in :code:`your_raster.tif` and :code:`your_shapefile.tif` into :code:`signatures.csv`
@@ -59,13 +59,13 @@ and a raster. The below example:
 
 .. code-block:: bash
 
-   conda activate pyeo_1_env
+   conda activate pyeo_env
    extract_signatures your_raster.tif your_shapefile.shp signatures.csv
    create_model_from_signatures signatures.csv model.pkl
    classify_image your_raster model.pkl output_image.tif
 
-A small test suite is located in pyeo_1/tests/pyeo_1_tests.py; this is designed for use with py.test.
-Some example applications and demos are in pyeo_1/apps; for an illustration of the use of the library,
-pyeo_1/apps/change_detection/simple_s2_change_detection.py is recommended.
+A small test suite is located in pyeo/tests/pyeo_tests.py; this is designed for use with py.test.
+Some example applications and demos are in pyeo/apps; for an illustration of the use of the library,
+pyeo/apps/change_detection/simple_s2_change_detection.py is recommended.
 
 

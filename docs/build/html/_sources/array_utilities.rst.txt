@@ -1,3 +1,3 @@
-.. title:: pyeo_1.array_utilities
-.. automodule:: pyeo_1.array_utilities
+.. title:: pyeo.array_utilities
+.. automodule:: pyeo.array_utilities
    :members:

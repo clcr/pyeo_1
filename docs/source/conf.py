@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(__file__, '..','..','..')))
 
 # -- Project information -----------------------------------------------------
 
-project = 'pyeo_1'
+project = 'Pyeo'
 copyright = '2018, John Roberts'
 author = 'John Roberts'
 
@@ -107,12 +107,12 @@ html_static_path = ['static']
 # html_sidebars = {}
 
 # The logo
-html_logo = r"../../pyeo_1/assets/pyeo_1logo_small.png"
+html_logo = r"../../pyeo/assets/pyeologo_small.png"
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pyeo_1doc'
+htmlhelp_basename = 'Pyeodoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -139,7 +139,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pyeo_1.tex', 'pyeo_1 Documentation',
+    (master_doc, 'Pyeo.tex', 'Pyeo Documentation',
      'John Roberts', 'manual'),
 ]
 
@@ -149,7 +149,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pyeo_1', 'pyeo_1 Documentation',
+    (master_doc, 'pyeo', 'Pyeo Documentation',
      [author], 1)
 ]
 
@@ -160,8 +160,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pyeo_1', 'pyeo_1 Documentation',
-     author, 'pyeo_1', 'One line description of project.',
+    (master_doc, 'Pyeo', 'Pyeo Documentation',
+     author, 'Pyeo', 'One line description of project.',
      'Miscellaneous'),
 ]
 

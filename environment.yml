@@ -1,4 +1,4 @@
-name: pyeo_1_env
+name: pyeo_env
 channels:
   - conda-forge
   - defaults

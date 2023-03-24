@@ -1,5 +1,0 @@
-#!/bin/bash
-set -o errexit
-set -o nounset
-
-python "$pyeo_1"/pyeo_1/apps/aws_processing/get_prereq_from_s3.py "$@"

@@ -1,4 +1,4 @@
-name: pyeo_1_clean_env
+name: pyeo_clean_env
 channels:
   - defaults
 dependencies:

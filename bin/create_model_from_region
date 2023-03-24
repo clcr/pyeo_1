@@ -2,4 +2,4 @@
 set -o errexit
 set -o nounset
 
-python "$pyeo_1"/pyeo_1/apps/model_creation/create_model_from_region.py "$@"
+python "$PYEO"/pyeo/apps/model_creation/create_model_from_region.py "$@"

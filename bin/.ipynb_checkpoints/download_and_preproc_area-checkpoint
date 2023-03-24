@@ -1,5 +1,0 @@
-#!/bin/bash
-set -o errexit
-set -o nounset
-
-python "$pyeo_1"/pyeo_1/apps/model_creation/download_and_preproc_area.py "$@"
