@@ -6,9 +6,9 @@ Python for Earth Observation
 This is designed to provide a set of portable, extensible and modular Python scripts for machine learning in earth observation and GIS,
 including downloading, preprocessing, creation of base layers, classification and validation.
 
-Full documentation at https://clcr.github.io/pyeo_1/build/html/index.html
+Full documentation at https://clcr.github.io/pyeo/build/html/index.html
 
-Example notebooks are at https://github.com/clcr/pyeo_1_training_materials
+Example notebooks are at https://github.com/clcr/pyeo_training_materials
 
 ## Requirements
 Package management is performed by Conda: https://docs.conda.io/en/latest/
