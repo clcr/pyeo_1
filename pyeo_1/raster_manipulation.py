@@ -3362,7 +3362,7 @@ def create_mask_from_band(in_raster_path, out_path, band, threshold, relation="s
     buffer_size : int
         If greater than 0, applies a buffer to the masked pixels of this size. Defaults to 0.
     out_resolution : int or None, optional
-        If present, resamples the mask to this resoltion. Applied before buffering. Defaults to 0.
+        If present, resamples the mask to this resolution. Applied before buffering. Defaults to 0.
 
     Returns
     -------
