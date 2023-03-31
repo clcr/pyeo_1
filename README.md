@@ -40,8 +40,11 @@ If you do not want to edit pyeo_1, replace the pip install line with
 python -m pip install . -vv
 ```
 
-You can test your installation with
-`import pyeo_1.classification`
+You can test your installation with by typing the following in Bash/Terminal/Anaconda Prompt:
+```
+python
+import pyeo_1.classification
+```
 
 ## Further Setup Information
 A slightly more verbose setup tutorial for `pyeo_1` can be found at: https://github.com/clcr/pyeo_1/blob/main/notebooks/PyEO_I_Setup.ipynb
