@@ -48,8 +48,10 @@ class InvalidGeometryFormatException(pyeo_1Exception):
 class NonSquarePixelException(pyeo_1Exception):
     pass
 
+
 class InvalidDateFormatException(pyeo_1Exception):
     pass
+
 
 class TooManyRequests(requests.RequestException):
     """Too many requests; do exponential backoff"""
