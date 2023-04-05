@@ -109,13 +109,14 @@ def create_file_structure(root):
         "output/report_image",
         "output/display_images",
         "output/quicklooks/",
-        "log/"
+        "log/",
     ]
     for dir in dirs:
         try:
             os.mkdir(dir)
         except FileExistsError:
             pass
+
 
 def create_folder_structure_for_tiles(root):
     """
@@ -155,7 +156,7 @@ def create_folder_structure_for_tiles(root):
         "output/classified/",
         "output/probabilities/",
         "output/quicklooks/",
-        "log/"
+        "log/",
     ]
     for dir in dirs:
         try:
@@ -165,14 +166,15 @@ def create_folder_structure_for_tiles(root):
 
 
 def validate_config_file(config_path):
-    #TODO: fill
+    # TODO: fill
     pass
 
+
 def get_filenames(path, filepattern, dirpattern):
-    '''
+    """
     Finds all file names in a directory for which the file name matches a certain string pattern,
     and the directory name matches a different string pattern.
-    
+
     Args:
       path = string indicating the path to a directory in which the search will be done
       filepattern = string of the file name pattern to search for
@@ -180,46 +182,46 @@ def get_filenames(path, filepattern, dirpattern):
 
     Returns:
       a list of all found files with the full path directory
-    '''
+    """
 
     log = logging.getLogger("pyeo_1")
 
     filelist = []
     for root, dirs, files in os.walk(path, topdown=True):
-        #log.info("root, dirs, files: {}".format(root,dirs,files))
-        dirs[:] = [d for d in dirs] 
+        # log.info("root, dirs, files: {}".format(root,dirs,files))
+        dirs[:] = [d for d in dirs]
         for f in files:
             if filepattern in f and dirpattern in root:
                 thisfile = os.path.join(root, f)
-                #log.info("Found file: {}".format(thisfile))
+                # log.info("Found file: {}".format(thisfile))
                 filelist.append(thisfile)
-    return(sorted(filelist))
+    return sorted(filelist)
 
 
 def get_raster_paths(paths, filepatterns, dirpattern):
-    '''
-    Iterates over get_filenames for different paths and different file patterns and 
+    """
+    Iterates over get_filenames for different paths and different file patterns and
     returns a dataframe of all directory paths that match the conditions together with
     the root path in which they were found.
-    
+
     Args:
       paths = list of strings indicating the path to a root directory in which the search will be done
       filepatterns = list of strings of the file name patterns to search for
       dirpattern = string of the directory name pattern to search for
     Returns:
       a dataframe of all found file paths, one line per path
-    '''
-    cols = ['safe_path']
+    """
+    cols = ["safe_path"]
     for filepattern in filepatterns:
         cols.append(filepattern)
     results = []
     # iterate over all SAFE directories
     for path in paths:
-        #log.info("  path = {}".format(path))
+        # log.info("  path = {}".format(path))
         row = [path]
         # iterate over all band file name patterns
         for filepattern in filepatterns:
-            #log.info("  filepattern = {}".format(filepattern))
+            # log.info("  filepattern = {}".format(filepattern))
             f = get_filenames(path, filepattern, dirpattern)
             if len(f) == 1:
                 row.append(f)
@@ -233,25 +235,30 @@ def get_raster_paths(paths, filepatterns, dirpattern):
                     log.info("  {}".format(i))
                 row.append("")
             if len(f) == 0:
-                log.info("File pattern {} and dir pattern {} not found in {}".format(filepattern, dirpattern, path))
+                log.info(
+                    "File pattern {} and dir pattern {} not found in {}".format(
+                        filepattern, dirpattern, path
+                    )
+                )
                 row.append("")
-        #log.info("  results = {}".format(results))
-        #log.info("  paths   = {}".format(paths))
-        #log.info("  row     = {}".format(row))
+        # log.info("  results = {}".format(results))
+        # log.info("  paths   = {}".format(paths))
+        # log.info("  row     = {}".format(row))
         results.extend(row)
-        #log.info("  results = {}".format(results))
-    #TODO: the following line expects exactly one search result per path. Challenge that assumption
+        # log.info("  results = {}".format(results))
+    # TODO: the following line expects exactly one search result per path. Challenge that assumption
     if len(results) == len(paths) * (len(filepatterns) + 1):
-        arr = np.array(results, dtype=object).reshape(len(paths), len(filepatterns)+1)
-        results=pd.DataFrame(arr, columns=cols)
+        arr = np.array(results, dtype=object).reshape(len(paths), len(filepatterns) + 1)
+        results = pd.DataFrame(arr, columns=cols)
     else:
         log.warning("  Unexpected shape of file name pattern search results:")
         log.warning("    Results      = {}".format(results))
         log.warning("    Column names = {}".format(cols))
         log.warning("    Returning an empty string.")
         results = ""
-    #log.info("  DF = {}".format(results))
-    return(results)
+    # log.info("  DF = {}".format(results))
+    return results
+
 
 def check_for_invalid_l2_data(l2_SAFE_file, resolution="10m"):
     """
@@ -282,15 +289,19 @@ def check_for_invalid_l2_data(l2_SAFE_file, resolution="10m"):
         return 2
     log.info("Checking {} for incomplete {} imagery".format(l2_SAFE_file, resolution))
 
-    bands=["B08","B04","B03","B02"]
-    nb=0
+    bands = ["B08", "B04", "B03", "B02"]
+    nb = 0
     for band in bands:
         f = get_filenames(l2_SAFE_file, band, "")
-        f = [filename for filename in f if ('.jp2' in filename) and (resolution in filename)]
+        f = [
+            filename
+            for filename in f
+            if (".jp2" in filename) and (resolution in filename)
+        ]
         if len(f) > 0:
             for i in range(len(f)):
                 log.info("   {}".format(f[i]))
-            nb=nb+1
+            nb = nb + 1
         else:
             log.warning("Band file not found for band: {}".format(band))
     if nb == len(bands):
@@ -315,7 +326,7 @@ def check_for_invalid_l2_data(l2_SAFE_file, resolution="10m"):
                 return os.path.join(root, name)
     """
 
-    '''
+    """
     # check whether the band rasters are in the IMG_DATA/R10 or similar subdirectory
     granule_path = r"GRANULE/*/IMG_DATA/R{}/*_B0[8,4,3,2]*.jp2".format(resolution)
     image_glob = os.path.join(l2_SAFE_file, granule_path)
@@ -340,7 +351,7 @@ def check_for_invalid_l2_data(l2_SAFE_file, resolution="10m"):
         else:
             log.warning("Not all necessary bands have been found in the SAFE directory")
             return 0
-    '''
+    """
 
 
 def check_for_invalid_l1_data(l1_SAFE_file):
@@ -389,7 +400,11 @@ def clean_l2_data(l2_SAFE_file, resolution="10m", warning=True):
     is_valid = check_for_invalid_l2_data(l2_SAFE_file, resolution)
     if not is_valid:
         if warning:
-            if not input("About to delete {}: Y/N?".format(l2_SAFE_file)).upper().startswith("Y"):
+            if (
+                not input("About to delete {}: Y/N?".format(l2_SAFE_file))
+                .upper()
+                .startswith("Y")
+            ):
                 return
         log.warning("Missing band data. Removing {}".format(l2_SAFE_file))
         shutil.rmtree(l2_SAFE_file)
@@ -414,7 +429,9 @@ def clean_l2_dir(l2_dir, resolution="10m", warning=True):
 
     """
     log.info("Scanning {} for missing band data in .SAFE files".format(l2_dir))
-    for safe_file_path in [os.path.join(l2_dir, safe_file_name) for safe_file_name in os.listdir(l2_dir)]:
+    for safe_file_path in [
+        os.path.join(l2_dir, safe_file_name) for safe_file_name in os.listdir(l2_dir)
+    ]:
         clean_l2_data(safe_file_path, resolution, warning)
 
 
@@ -431,26 +448,49 @@ def clean_aoi(aoi_dir, images_to_keep=4, warning=True):
         The number of images to keep
 
     """
-    l1_list = sort_by_timestamp(os.listdir(os.path.join(aoi_dir, "images/L1C")), recent_first=True)
-    l2_list = sort_by_timestamp(os.listdir(os.path.join(aoi_dir, "images/L2A")), recent_first=True)
-    comp_l1_list = sort_by_timestamp(os.listdir(os.path.join(aoi_dir, "composite/L2A")), recent_first=True)
-    comp_l2_list = sort_by_timestamp(os.listdir(os.path.join(aoi_dir, "composite/L2A")), recent_first=True)
+    l1_list = sort_by_timestamp(
+        os.listdir(os.path.join(aoi_dir, "images/L1C")), recent_first=True
+    )
+    l2_list = sort_by_timestamp(
+        os.listdir(os.path.join(aoi_dir, "images/L2A")), recent_first=True
+    )
+    comp_l1_list = sort_by_timestamp(
+        os.listdir(os.path.join(aoi_dir, "composite/L2A")), recent_first=True
+    )
+    comp_l2_list = sort_by_timestamp(
+        os.listdir(os.path.join(aoi_dir, "composite/L2A")), recent_first=True
+    )
     merged_list = sort_by_timestamp(
-        [image for image in os.listdir(os.path.join(aoi_dir, "images/bandmerged")) if image.endswith(".tif")],
-        recent_first=True)
+        [
+            image
+            for image in os.listdir(os.path.join(aoi_dir, "images/bandmerged"))
+            if image.endswith(".tif")
+        ],
+        recent_first=True,
+    )
     stacked_list = sort_by_timestamp(
-        [image for image in os.listdir(os.path.join(aoi_dir, "images/stacked")) if image.endswith(".tif")],
-        recent_first=True)
+        [
+            image
+            for image in os.listdir(os.path.join(aoi_dir, "images/stacked"))
+            if image.endswith(".tif")
+        ],
+        recent_first=True,
+    )
     comp_merged_list = sort_by_timestamp(
-        [image for image in os.listdir(os.path.join(aoi_dir, "composite/bandmerged")) if image.endswith(".tif")],
-        recent_first=True)
+        [
+            image
+            for image in os.listdir(os.path.join(aoi_dir, "composite/bandmerged"))
+            if image.endswith(".tif")
+        ],
+        recent_first=True,
+    )
     for image_list in (l1_list, l2_list, comp_l1_list, comp_l2_list):
         for safe_file in image_list[images_to_keep:]:
             os.rmdir(safe_file)
     for image_list in (merged_list, stacked_list, comp_merged_list):
         for image in image_list[images_to_keep:]:
             os.remove(image)
-            os.remove(image.rsplit('.')(0)+".msk")
+            os.remove(image.rsplit(".")(0) + ".msk")
 
 
 def sort_by_timestamp(strings, recent_first=True):
@@ -478,6 +518,7 @@ def sort_by_timestamp(strings, recent_first=True):
     strings = list(filter(get_image_acquisition_time, strings))
     strings.sort(key=lambda x: get_image_acquisition_time(x), reverse=recent_first)
     return strings
+
 
 def get_change_detection_date_strings(image_name):
     """
@@ -516,7 +557,10 @@ def get_change_detection_dates(image_name):
     """
     date_regex = r"\d\d\d\d\d\d\d\dT\d\d\d\d\d\d"
     timestamps = re.findall(date_regex, image_name)
-    date_times = [datetime.datetime.strptime(timestamp, r"%Y%m%dT%H%M%S") for timestamp in timestamps]
+    date_times = [
+        datetime.datetime.strptime(timestamp, r"%Y%m%dT%H%M%S")
+        for timestamp in timestamps
+    ]
     date_times.sort()
     return date_times
 
@@ -544,11 +588,15 @@ def get_preceding_image_path(target_image_name, search_dir):
 
     """
     target_time = get_image_acquisition_time(target_image_name)
-    image_paths = sort_by_timestamp(os.listdir(search_dir), recent_first=True)  # Sort image list newest first
+    image_paths = sort_by_timestamp(
+        os.listdir(search_dir), recent_first=True
+    )  # Sort image list newest first
     image_paths = filter(is_tif, image_paths)
-    for image_path in image_paths:   # Walk through newest to oldest
-        accq_time = get_image_acquisition_time(image_path)   # Get this image time
-        if accq_time < target_time:   # If this image is older than the target image, return it.
+    for image_path in image_paths:  # Walk through newest to oldest
+        accq_time = get_image_acquisition_time(image_path)  # Get this image time
+        if (
+            accq_time < target_time
+        ):  # If this image is older than the target image, return it.
             return os.path.join(search_dir, image_path)
     raise FileNotFoundError("No image older than {}".format(target_image_name))
 
@@ -624,7 +672,9 @@ def get_image_acquisition_time(image_name):
         A DateTime object providing the acquisition time
     """
     try:
-        return dt.datetime.strptime(get_sen_2_image_timestamp(image_name), '%Y%m%dT%H%M%S')
+        return dt.datetime.strptime(
+            get_sen_2_image_timestamp(image_name), "%Y%m%dT%H%M%S"
+        )
     except AttributeError:
         return None
 
@@ -666,8 +716,8 @@ def get_safe_product_type(image_name):
 
     """
     tmp1 = image_name.split("/")[-1]  # remove path
-    tmp2 = tmp1.split(".")[0] # remove file extension
-    comps = tmp2.split("_") # decompose
+    tmp2 = tmp1.split(".")[0]  # remove file extension
+    comps = tmp2.split("_")  # decompose
     return comps[1]
 
 
@@ -761,8 +811,8 @@ def get_sen_2_image_orbit(image_name):
 
     """
     tmp1 = image_name.split("/")[-1]  # remove path
-    tmp2 = tmp1.split(".")[0] # remove file extension
-    comps = tmp2.split("_") # decompose
+    tmp2 = tmp1.split(".")[0]  # remove file extension
+    comps = tmp2.split("_")  # decompose
     return comps[4]
 
 
@@ -781,8 +831,8 @@ def get_sen_2_baseline(image_name):
 
     """
     tmp1 = image_name.split("/")[-1]  # remove path
-    tmp2 = tmp1.split(".")[0] # remove file extension
-    comps = tmp2.split("_") # decompose
+    tmp2 = tmp1.split(".")[0]  # remove file extension
+    comps = tmp2.split("_")  # decompose
     return comps[3]
 
 
@@ -819,8 +869,8 @@ def get_sen_2_granule_id(safe_dir):
         The full ID of that S2 product (eg: 'S2B_MSIL2A_20180103T172709_N0206_R012_T13QFB_20180103T192359')
 
     """
-    tmp = os.path.basename(safe_dir) # removes path to SAFE directory
-    id = tmp.split(".")[0] # removes ".SAFE" from the ID name
+    tmp = os.path.basename(safe_dir)  # removes path to SAFE directory
+    id = tmp.split(".")[0]  # removes ".SAFE" from the ID name
     return id
 
 
@@ -840,18 +890,19 @@ def get_mask_path(image_path):
     """
     image_name = os.path.basename(image_path)
     image_dir = os.path.dirname(image_path)
-    mask_name = image_name.rsplit('.')[0] + ".msk"
+    mask_name = image_name.rsplit(".")[0] + ".msk"
     mask_path = os.path.join(image_dir, mask_name)
     return mask_path
 
+
 def serial_date_to_string(srl_no):
-    
+
     """
     Converts a serial date (days since X), to a date as a string.
     Author: AER
     Taken from: https://stackoverflow.com/a/39988256/6809533
     """
-    
+
     import datetime
 
     new_date = datetime.datetime(2000, 1, 1, 0, 0) + datetime.timedelta(
