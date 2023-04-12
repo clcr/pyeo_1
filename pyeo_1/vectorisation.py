@@ -200,7 +200,11 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
     return featstats
 
 
-def zonal_statistics(raster_path: str, shapefile_path: str, report_band: int, log):
+def zonal_statistics(raster_path: str,
+                     shapefile_path: str,
+                     report_band: int,
+                     log
+                     ):
 
     """
     This function, the contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
@@ -390,8 +394,8 @@ def merge_and_calculate_spatial(
     write_pkl: bool,
     change_report_path: str,
     log,
-    epsg,
-    level_1_boundaries_path
+    epsg: int,
+    level_1_boundaries_path: str
 ):
 
     """
@@ -496,8 +500,8 @@ def merge_and_calculate_spatial(
 
     # add user and decision columns, for verification
     merged["user"] = pd.Series(dtype="string")
-    merged["event_class"] = pd.Series(dtype="string")
-    merged["follow_up_yes_no"] = pd.Series(dtype="string")
+    merged["eventClass"] = pd.Series(dtype="string")
+    merged["follow_up"] = pd.Series(dtype="string")
     merged["comments"] = pd.Series(dtype="string")
 
     # reorder geometry to be the last column
@@ -540,8 +544,8 @@ def vector_report_generation(
     write_shapefile: bool,
     write_pkl: bool,
     log,
-    epsg,
-    level_1_boundaries_path
+    epsg: int,
+    level_1_boundaries_path: str
 ):
     """
     This function calls all the individual functions necessary to create a vectorised change report.
