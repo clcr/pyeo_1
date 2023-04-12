@@ -56,6 +56,14 @@ def acd_by_tile_vector():
 
     """
 
+def acd_national_vectorisation():
+
+    """
+    This function:
+        - Glob through the tile outputs, running acd_by_tile_vectorisation()
+
+    """
+
 def acd_national_integration():
     """
 
@@ -95,7 +103,20 @@ def acd_national_dataframe_to_shapefile():
     
     """
     
+   
+def acd_national_qgis_bookmark_generation():
+    """
     
+    This function:
+       - Generates a QGIS Project file using pyQGIS
+       - Generates QGIS Spatial Bookmarks (.xml) from a filtered dataframe for import into QGIS
+       - Import report.tif
+       - Import ROI
+    
+    """
+
+
+
 def acd_national_manual_validation():
     """
     
