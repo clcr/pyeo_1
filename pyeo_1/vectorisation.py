@@ -556,11 +556,13 @@ def vector_report_generation(
     Returns
     """
 
-    log.info("--" * 20)
-    log.info("Starting Vectorisation of the Change Report Raster")
-    log.info("--" * 20)
 
     change_report_path = raster_change_report_path
+    tileid = change_report_path.split("/")[-1].split("_")[2] # I should take tileid from .ini but this is quicker for now (12/04/2023)
+
+    log.info("--" * 20)
+    log.info(f"Starting Vectorisation of the Change Report Raster of Tile: {tileid}")
+    log.info("--" * 20)
 
     # 22 minutes
     path_vectorised_binary = vectorise_from_band(
