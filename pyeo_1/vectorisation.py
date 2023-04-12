@@ -395,7 +395,8 @@ def merge_and_calculate_spatial(
     change_report_path: str,
     log,
     epsg: int,
-    level_1_boundaries_path: str
+    level_1_boundaries_path: str,
+    tileid: str
 ):
 
     """
@@ -499,6 +500,7 @@ def merge_and_calculate_spatial(
     )
 
     # add user and decision columns, for verification
+    merged["tileid"] = tileid
     merged["user"] = pd.Series(dtype="string")
     merged["eventClass"] = pd.Series(dtype="string")
     merged["follow_up"] = pd.Series(dtype="string")
@@ -615,7 +617,8 @@ def vector_report_generation(
         change_report_path=change_report_path,
         log=log,
         epsg=epsg,
-        level_1_boundaries_path=level_1_boundaries_path
+        level_1_boundaries_path=level_1_boundaries_path,
+        tileid=tileid
     )
 
     log.info("--" * 20)
