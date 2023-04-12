@@ -1,2 +1,5 @@
 .ipynb_checkpoints/
+.pyeo_1.egg-info/
 *.pyc
+*.swp
+
