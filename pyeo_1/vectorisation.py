@@ -1,4 +1,5 @@
-def band_naming(band: int):
+def band_naming(band: int,
+                log):
     """
     This function provides a variable name (string) based on the input integer.
 
@@ -26,7 +27,9 @@ def band_naming(band: int):
     return band_name
 
 
-def vectorise_from_band(change_report_path: str, band: int):
+def vectorise_from_band(change_report_path: str,
+                        band: int,
+                        log):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -65,7 +68,7 @@ def vectorise_from_band(change_report_path: str, band: int):
             )
 
         # create output datasource
-        dst_layername = band_naming(band)
+        dst_layername = band_naming(band, log=log)
 
         drv = ogr.GetDriverByName("ESRI Shapefile")
         out_filename = f"{change_report_path[:-4]}_{dst_layername}.shp"
@@ -97,7 +100,8 @@ def vectorise_from_band(change_report_path: str, band: int):
     return out_filename
 
 
-def filter_vectorised_band(vectorised_band_path: str):
+def filter_vectorised_band(vectorised_band_path: str,
+                           log):
     """
     This function filters the vectorised bands.
 
@@ -196,7 +200,7 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
     return featstats
 
 
-def zonal_statistics(raster_path: str, shapefile_path: str, report_band: int):
+def zonal_statistics(raster_path: str, shapefile_path: str, report_band: int, log):
 
     """
     This function, the contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
@@ -362,7 +366,7 @@ def zonal_statistics(raster_path: str, shapefile_path: str, report_band: int):
             print(error)
 
     fn_csv = (
-        f"{os.path.splitext(raster_path)[0]}_zstats_over_{band_naming(report_band)}.csv"
+        f"{os.path.splitext(raster_path)[0]}_zstats_over_{band_naming(report_band, log=log)}.csv"
     )
     col_names = zstats[0].keys()
 
@@ -385,6 +389,9 @@ def merge_and_calculate_spatial(
     write_shapefile: bool,
     write_pkl: bool,
     change_report_path: str,
+    log,
+    epsg,
+    level_1_boundaries_path
 ):
 
     """
@@ -489,7 +496,9 @@ def merge_and_calculate_spatial(
 
     # add user and decision columns, for verification
     merged["user"] = pd.Series(dtype="string")
-    merged["decision"] = pd.Series(dtype="string")
+    merged["event_class"] = pd.Series(dtype="string")
+    merged["follow_up_yes_no"] = pd.Series(dtype="string")
+    merged["comments"] = pd.Series(dtype="string")
 
     # reorder geometry to be the last column
     columns = list(merged.columns)
@@ -530,6 +539,9 @@ def vector_report_generation(
     write_csv: bool,
     write_shapefile: bool,
     write_pkl: bool,
+    log,
+    epsg,
+    level_1_boundaries_path
 ):
     """
     This function calls all the individual functions necessary to create a vectorised change report.
@@ -548,14 +560,17 @@ def vector_report_generation(
     log.info("Starting Vectorisation of the Change Report Raster")
     log.info("--" * 20)
 
+    change_report_path = raster_change_report_path
+
     # 22 minutes
     path_vectorised_binary = vectorise_from_band(
-        change_report_path=change_report_path, band=6
+        change_report_path=change_report_path, band=6, log=log
     )
 
     # 1.5 minutes
     path_vectorised_binary_filtered = filter_vectorised_band(
-        vectorised_band_path=path_vectorised_binary
+        vectorised_band_path=path_vectorised_binary,
+        log=log
     )
 
     # 6 minutes
@@ -563,6 +578,7 @@ def vector_report_generation(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=2,
+        log=log,
     )
 
     # 6 minutes
@@ -570,6 +586,7 @@ def vector_report_generation(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=5,
+        log=log
     )
 
     # 6 minutes
@@ -577,6 +594,7 @@ def vector_report_generation(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=7,
+        log=log
     )
 
     # table joins, area, lat lon, county
@@ -589,6 +607,9 @@ def vector_report_generation(
         write_shapefile=write_shapefile,
         write_pkl=write_pkl,
         change_report_path=change_report_path,
+        log=log,
+        epsg=epsg,
+        level_1_boundaries_path=level_1_boundaries_path
     )
 
     log.info("--" * 20)
