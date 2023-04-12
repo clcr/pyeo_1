@@ -376,13 +376,14 @@ def zonal_statistics(raster_path: str, shapefile_path: str, report_band: int):
     return zstats_df
 
 
-def geopandas_function(
+def merge_and_calculate_spatial(
     rb2_zstats_df,
     rb5_zstats_df,
     rb7_zstats_df,
     path_to_vectorised_binary_filtered: str,
     write_csv: bool,
     write_shapefile: bool,
+    write_pkl: bool,
     change_report_path: str,
 ):
 
@@ -405,11 +406,14 @@ def geopandas_function(
     path_to_vectorised_binary (str)
         Path to the vectorised binary shapefile
 
-    write_csv (bool)
-        whether to write to csv, defaults to True
+    write_pkl (bool, optional)
+        whether to write to pkl, defaults to False
 
-    write_shapefile (bool)
-        whether to write to shapefile, defaults to True
+    write_csv (bool, optional)
+        whether to write to csv, defaults to False
+
+    write_shapefile (bool, optional)
+        whether to write to shapefile, defaults to False
 
     change_report_path (str)
         the path of the original change_report tiff, used for filenaming if saving outputs
@@ -447,6 +451,7 @@ def geopandas_function(
     merged3 = merged2.merge(rb7_zstats_df, on="id", how="inner")
     merged = merged3
 
+    log.info("Merging Complete")
     # housekeeping, remove unused variables
     del (merged3, merged2, binary_dec)
 
@@ -482,6 +487,10 @@ def geopandas_function(
         ["index_right"], axis=1
     )
 
+    # add user and decision columns, for verification
+    merged["user"] = pd.Series(dtype="string")
+    merged["decision"] = pd.Series(dtype="string")
+
     # reorder geometry to be the last column
     columns = list(merged.columns)
     columns.remove("geometry")
@@ -490,16 +499,26 @@ def geopandas_function(
 
     shp_fname = f"{os.path.splitext(change_report_path)[0]}.shp"
     csv_fname = f"{os.path.splitext(change_report_path)[0]}.csv"
+    pkl_fname = f"{os.path.splitext(change_report_path)[0]}.pkl"
 
     if write_shapefile:
         merged.to_file(shp_fname)
-        log.info(f"Shapefile written to:  {shp_fname}")
+        log.info(f"Shapefile written as ESRI Shapefile, to:  {shp_fname}")
+
+    else:
+        None
+
+    if write_pkl:
+        merged.to_pickle(pkl_fname)
+        log.info(f"GeoDataFrame written as pickle, to:  {pkl_fname}")
+
     else:
         None
 
     if write_csv:
         merged.to_csv(csv_fname)
-        log.info(f"DataFrame written to   : {csv_fname}")
+        log.info(f"DataFrame written as csv, to:   {csv_fname}")
+
     else:
         None
 
@@ -507,7 +526,10 @@ def geopandas_function(
 
 
 def vector_report_generation(
-    raster_change_report_path: str, write_csv: bool, write_shapefile: bool
+    raster_change_report_path: str,
+    write_csv: bool,
+    write_shapefile: bool,
+    write_pkl: bool,
 ):
     """
     This function calls all the individual functions necessary to create a vectorised change report.
@@ -521,6 +543,7 @@ def vector_report_generation(
     ----------------
     Returns
     """
+
     log.info("--" * 20)
     log.info("Starting Vectorisation of the Change Report Raster")
     log.info("--" * 20)
@@ -557,13 +580,14 @@ def vector_report_generation(
     )
 
     # table joins, area, lat lon, county
-    geopandas_function(
+    merge_and_calculate_spatial(
         rb2_zstats_df=rb2_zstats_df,
         rb5_zstats_df=rb5_zstats_df,
         rb7_zstats_df=rb7_zstats_df,
         path_to_vectorised_binary_filtered=path_vectorised_binary_filtered,
-        write_csv=True,
-        write_shapefile=True,
+        write_csv=write_csv,
+        write_shapefile=write_shapefile,
+        write_pkl=write_pkl,
         change_report_path=change_report_path,
     )
 
