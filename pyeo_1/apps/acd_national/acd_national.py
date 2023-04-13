@@ -56,13 +56,65 @@ def acd_by_tile_vector():
 
     """
 
-def acd_national_vectorisation():
-
+def acd_national_vectorisation(root_dir: str,
+                               log,
+                               epsg: int,
+                               level_1_boundaries_path: str,
+                               conda_env_name: str,
+                               delete_existing: bool):
     """
     This function:
-        - Glob through the tile outputs, running acd_by_tile_vectorisation()
-
+        - Globs through the tile outputs, running acd_by_tile_vectorisation()
+  
+    
     """
+
+    import glob
+    import os
+
+    tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
+    report_tif_pattern = "/output/probabilities/report*.tif"
+    search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
+
+    tiles_paths = glob.glob(os.path.join(root_dir, search_pattern))
+    
+    log.info("Tiles to vectorise the change report rasters of:  ")
+    log.info(tiles_paths)
+    log.info("--"*20)
+    
+    if delete_existing:
+        log.info("delete_existing flag is set to True, therefore deleting existing vectorised change report shapefiles, pkls and csvs")
+        report_shp_pattern = "/output/probabilities/report*"
+        search_shp_pattern = f"{tiles_name_pattern}{report_shp_pattern}"
+        existing_files = glob.glob(os.path.join(root_dir, search_shp_pattern))
+
+        # remove .tif files from the delete list
+        files_to_remove = [file for file in existing_files if not file.endswith(".tif")]
+
+        for file in files_to_remove:
+            os.remove(file)
+
+    for report in tiles_paths:
+        try:
+            vectorisation.vector_report_generation(raster_change_report_path=report,
+                                                write_csv=False,
+                                                write_pkl=True,
+                                                write_shapefile=True,
+                                                log=log,
+                                                epsg=epsg,
+                                                level_1_boundaries_path=level_1_boundaries_path,
+                                                conda_env_name=conda_env_name,
+                                                delete_intermediates=True) 
+        except:
+            log.info(f"Failed to vectorise {report}, moving on to the next")
+
+    log.info("--"*20)
+    log.info("--"*20)
+    log.info("National Vectorisation of the Change Reports Complete")
+    log.info("--"*20)
+    log.info("--"*20)
+
+    return
 
 def acd_national_integration():
     """
