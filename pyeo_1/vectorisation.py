@@ -1,5 +1,4 @@
-def band_naming(band: int,
-                log):
+def band_naming(band: int, log):
     """
     This function provides a variable name (string) based on the input integer.
 
@@ -27,9 +26,7 @@ def band_naming(band: int,
     return band_name
 
 
-def vectorise_from_band(change_report_path: str,
-                        band: int,
-                        log):
+def vectorise_from_band(change_report_path: str, band: int, log):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -100,8 +97,7 @@ def vectorise_from_band(change_report_path: str,
     return out_filename
 
 
-def filter_vectorised_band(vectorised_band_path: str,
-                           log):
+def filter_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
     """
     This function filters the vectorised bands.
 
@@ -113,10 +109,9 @@ def filter_vectorised_band(vectorised_band_path: str,
 
     # specify gdal and proj installation, here it is geopandas'
     home = str(Path.home())
-    # os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/pyeo_1_env/share/gdal"
     os.environ[
         "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/pyeo_prod_0_8_0_env/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
@@ -200,11 +195,9 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
     return featstats
 
 
-def zonal_statistics(raster_path: str,
-                     shapefile_path: str,
-                     report_band: int,
-                     log
-                     ):
+def zonal_statistics(
+    raster_path: str, shapefile_path: str, report_band: int, log, conda_env_name: str
+):
 
     """
     This function, the contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
@@ -232,103 +225,121 @@ def zonal_statistics(raster_path: str,
     import os
     import csv
     from pathlib import Path
+    from tempfile import TemporaryDirectory
 
     # enable gdal to raise exceptions
     gdal.UseExceptions()
 
     # specify gdal and proj installation, this is GDAL's
     home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/pyeo_prod_0_8_0_env/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/pyeo_prod_0_8_0_env/share/proj"
+    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
+    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
-    mem_driver = ogr.GetDriverByName("Memory")
-    mem_driver_gdal = gdal.GetDriverByName("MEM")
-    shp_name = "temp"
+    with TemporaryDirectory(dir=os.getcwd()) as td:
+        mem_driver = ogr.GetDriverByName("Memory")
+        mem_driver_gdal = gdal.GetDriverByName("MEM")
+        shp_name = "temp"
 
-    fn_raster = raster_path
-    fn_zones = shapefile_path
+        fn_raster = raster_path
+        fn_zones = shapefile_path
 
-    r_ds = gdal.Open(fn_raster)
-    p_ds = ogr.Open(fn_zones)
+        r_ds = gdal.Open(fn_raster)
+        p_ds = ogr.Open(fn_zones)
 
-    # lyr = shapefile layer
-    lyr = p_ds.GetLayer()
-    # get projection to apply to temporary files
-    proj = lyr.GetSpatialRef()
-    geot = r_ds.GetGeoTransform()
-    nodata = r_ds.GetRasterBand(1).GetNoDataValue()
+        # lyr = shapefile layer
+        lyr = p_ds.GetLayer()
+        # get projection to apply to temporary files
+        proj = lyr.GetSpatialRef()
+        geot = r_ds.GetGeoTransform()
+        nodata = r_ds.GetRasterBand(1).GetNoDataValue()
 
-    zstats = []
+        zstats = []
 
-    # p_feat = polygon feature
-    p_feat = lyr.GetNextFeature()
-    niter = 0
+        # p_feat = polygon feature
+        p_feat = lyr.GetNextFeature()
+        niter = 0
 
-    # while lyr.GetNextFeature() returns a polygon feature, do the following:
-    while p_feat:
+        # while lyr.GetNextFeature() returns a polygon feature, do the following:
+        while p_feat:
 
-        try:
-            # if a geometry is returned from p_feat, do the following:
-            if p_feat.GetGeometryRef() is not None:
-                if os.path.exists(shp_name):
+            try:
+                # if a geometry is returned from p_feat, do the following:
+                if p_feat.GetGeometryRef() is not None:
+                    if os.path.exists(shp_name):
 
-                    mem_driver.DeleteDataSource(shp_name)
+                        mem_driver.DeleteDataSource(shp_name)
 
-                # tp_ds = temporary datasource
-                tp_ds = mem_driver.CreateDataSource(shp_name)
-                tp_lyr = tp_ds.CreateLayer(
-                    "polygons", srs=proj, geom_type=ogr.wkbPolygon
-                )
-                tp_lyr.CreateFeature(p_feat.Clone())
-                offsets = boundingBoxToOffsets(
-                    p_feat.GetGeometryRef().GetEnvelope(), geot
-                )
-                new_geot = geotFromOffsets(offsets[0], offsets[2], geot)
+                    # tp_ds = temporary datasource
+                    tp_ds = mem_driver.CreateDataSource(shp_name)
+                    tp_lyr = tp_ds.CreateLayer(
+                        "polygons", srs=proj, geom_type=ogr.wkbPolygon
+                    )
+                    tp_lyr.CreateFeature(p_feat.Clone())
+                    offsets = boundingBoxToOffsets(
+                        p_feat.GetGeometryRef().GetEnvelope(), geot
+                    )
+                    new_geot = geotFromOffsets(offsets[0], offsets[2], geot)
 
-                # tr_ds = target datasource
-                tr_ds = mem_driver_gdal.Create(
-                    "",
-                    offsets[3] - offsets[2],
-                    offsets[1] - offsets[0],
-                    1,
-                    gdal.GDT_Byte,
-                )
-
-                tr_ds.SetGeoTransform(new_geot)
-                gdal.RasterizeLayer(tr_ds, [1], tp_lyr, burn_values=[1])
-                tr_array = tr_ds.ReadAsArray()
-
-                r_array = r_ds.GetRasterBand(report_band).ReadAsArray(
-                    offsets[2],
-                    offsets[0],
-                    offsets[3] - offsets[2],
-                    offsets[1] - offsets[0],
-                )
-
-                # get identifier for
-                id = p_feat.GetFID()
-
-                # if raster array was successfully read, do the following:
-                if r_array is not None:
-                    maskarray = np.ma.MaskedArray(
-                        r_array,
-                        mask=np.logical_or(r_array == nodata, np.logical_not(tr_array)),
+                    # tr_ds = target datasource
+                    tr_ds = mem_driver_gdal.Create(
+                        "",
+                        offsets[3] - offsets[2],
+                        offsets[1] - offsets[0],
+                        1,
+                        gdal.GDT_Byte,
                     )
 
-                    if maskarray is not None:
-                        zstats.append(
-                            setFeatureStats(
-                                id,
-                                maskarray.min(),
-                                maskarray.max(),
-                                maskarray.mean(),
-                                np.ma.median(maskarray),
-                                maskarray.std(),
-                                maskarray.sum(),
-                                maskarray.count(),
-                                report_band=report_band,
-                            )
+                    tr_ds.SetGeoTransform(new_geot)
+                    gdal.RasterizeLayer(tr_ds, [1], tp_lyr, burn_values=[1])
+                    tr_array = tr_ds.ReadAsArray()
+
+                    r_array = r_ds.GetRasterBand(report_band).ReadAsArray(
+                        offsets[2],
+                        offsets[0],
+                        offsets[3] - offsets[2],
+                        offsets[1] - offsets[0],
+                    )
+
+                    # get identifier for
+                    id = p_feat.GetFID()
+
+                    # if raster array was successfully read, do the following:
+                    if r_array is not None:
+                        maskarray = np.ma.MaskedArray(
+                            r_array,
+                            mask=np.logical_or(
+                                r_array == nodata, np.logical_not(tr_array)
+                            ),
                         )
+
+                        if maskarray is not None:
+                            zstats.append(
+                                setFeatureStats(
+                                    id,
+                                    maskarray.min(),
+                                    maskarray.max(),
+                                    maskarray.mean(),
+                                    np.ma.median(maskarray),
+                                    maskarray.std(),
+                                    maskarray.sum(),
+                                    maskarray.count(),
+                                    report_band=report_band,
+                                )
+                            )
+                        else:
+                            zstats.append(
+                                setFeatureStats(
+                                    id,
+                                    nodata,
+                                    nodata,
+                                    nodata,
+                                    nodata,
+                                    nodata,
+                                    nodata,
+                                    nodata,
+                                    report_band=report_band,
+                                )
+                            )
                     else:
                         zstats.append(
                             setFeatureStats(
@@ -343,43 +354,27 @@ def zonal_statistics(raster_path: str,
                                 report_band=report_band,
                             )
                         )
-                else:
-                    zstats.append(
-                        setFeatureStats(
-                            id,
-                            nodata,
-                            nodata,
-                            nodata,
-                            nodata,
-                            nodata,
-                            nodata,
-                            nodata,
-                            report_band=report_band,
-                        )
-                    )
 
-                # close temporary variables, resetting them for the next iteration
-                tp_ds = None
-                tp_lyr = None
-                tr_ds = None
+                    # close temporary variables, resetting them for the next iteration
+                    tp_ds = None
+                    tp_lyr = None
+                    tr_ds = None
 
-                # once there are no more features to retrieve, p_feat will return as None, exiting the loop
-                p_feat = lyr.GetNextFeature()
+                    # once there are no more features to retrieve, p_feat will return as None, exiting the loop
+                    p_feat = lyr.GetNextFeature()
 
-        except RuntimeError as error:
-            print(error)
+            except RuntimeError as error:
+                print(error)
 
-    fn_csv = (
-        f"{os.path.splitext(raster_path)[0]}_zstats_over_{band_naming(report_band, log=log)}.csv"
-    )
-    col_names = zstats[0].keys()
+        fn_csv = f"{os.path.splitext(raster_path)[0]}_zstats_over_{band_naming(report_band, log=log)}.csv"
+        col_names = zstats[0].keys()
 
-    zstats_df = pd.DataFrame(data=zstats, columns=col_names)
+        zstats_df = pd.DataFrame(data=zstats, columns=col_names)
 
-    with open(fn_csv, "w", newline="") as csvfile:
-        writer = csv.DictWriter(csvfile, col_names)
-        writer.writeheader()
-        writer.writerows(zstats)
+        with open(fn_csv, "w", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, col_names)
+            writer.writeheader()
+            writer.writerows(zstats)
 
     return zstats_df
 
@@ -393,10 +388,12 @@ def merge_and_calculate_spatial(
     write_shapefile: bool,
     write_pkl: bool,
     change_report_path: str,
+    delete_intermediates: bool,
     log,
     epsg: int,
     level_1_boundaries_path: str,
-    tileid: str
+    tileid: str,
+    conda_env_name: str,
 ):
 
     """
@@ -435,6 +432,7 @@ def merge_and_calculate_spatial(
     """
 
     import os
+    import glob
     import pandas as pd
     import geopandas as gpd
     from pathlib import Path
@@ -444,10 +442,10 @@ def merge_and_calculate_spatial(
     home = str(Path.home())
     os.environ[
         "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/pyeo_prod_0_8_0_env/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
+    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
     os.environ[
         "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/pyeo_prod_0_8_0_env/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
 
     binary_dec = gpd.read_file(path_to_vectorised_binary_filtered)
 
@@ -520,22 +518,30 @@ def merge_and_calculate_spatial(
         merged.to_file(shp_fname)
         log.info(f"Shapefile written as ESRI Shapefile, to:  {shp_fname}")
 
-    else:
-        None
-
     if write_pkl:
         merged.to_pickle(pkl_fname)
         log.info(f"GeoDataFrame written as pickle, to:  {pkl_fname}")
-
-    else:
-        None
 
     if write_csv:
         merged.to_csv(csv_fname)
         log.info(f"DataFrame written as csv, to:   {csv_fname}")
 
-    else:
-        None
+    if delete_intermediates:
+        try:
+            log.info("Deleting intermediate change report vectorisation files")
+            directory = os.path.dirname(change_report_path)
+            binary_dec_pattern = f"{directory}/*BinaryDec*"
+            zstats_pattern = f"{directory}/*zstats*"
+
+            intermediate_files = glob.glob(binary_dec_pattern)
+            zstat_files = glob.glob(zstats_pattern)
+
+            intermediate_files.extend(zstat_files)
+
+            for file in intermediate_files:
+                os.remove(file)
+        except:
+            log.info("Could not delete intermediate files")
 
     return
 
@@ -547,7 +553,9 @@ def vector_report_generation(
     write_pkl: bool,
     log,
     epsg: int,
-    level_1_boundaries_path: str
+    level_1_boundaries_path: str,
+    conda_env_name: str,
+    delete_intermediates: bool
 ):
     """
     This function calls all the individual functions necessary to create a vectorised change report.
@@ -558,13 +566,17 @@ def vector_report_generation(
     raster_change_report (str):
         path to the report raster
 
+    conda_env_name (str):
+        string of the name of the conda environment, used to permit interchangeable use of GDAL and geopandas' installations.
+
     ----------------
     Returns
     """
 
-
     change_report_path = raster_change_report_path
-    tileid = change_report_path.split("/")[-1].split("_")[2] # I should take tileid from .ini but this is quicker for now (12/04/2023)
+    tileid = change_report_path.split("/")[-1].split("_")[
+        2
+    ]  # I should take tileid from .ini but this is quicker for now (12/04/2023)
 
     log.info("--" * 20)
     log.info(f"Starting Vectorisation of the Change Report Raster of Tile: {tileid}")
@@ -578,7 +590,8 @@ def vector_report_generation(
     # 1.5 minutes
     path_vectorised_binary_filtered = filter_vectorised_band(
         vectorised_band_path=path_vectorised_binary,
-        log=log
+        log=log,
+        conda_env_name=conda_env_name,
     )
 
     # 6 minutes
@@ -587,6 +600,7 @@ def vector_report_generation(
         shapefile_path=path_vectorised_binary_filtered,
         report_band=2,
         log=log,
+        conda_env_name=conda_env_name,
     )
 
     # 6 minutes
@@ -594,7 +608,8 @@ def vector_report_generation(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=5,
-        log=log
+        log=log,
+        conda_env_name=conda_env_name,
     )
 
     # 6 minutes
@@ -602,7 +617,8 @@ def vector_report_generation(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=7,
-        log=log
+        log=log,
+        conda_env_name=conda_env_name,
     )
 
     # table joins, area, lat lon, county
@@ -614,11 +630,13 @@ def vector_report_generation(
         write_csv=write_csv,
         write_shapefile=write_shapefile,
         write_pkl=write_pkl,
+        delete_intermediates=delete_intermediates,
         change_report_path=change_report_path,
         log=log,
         epsg=epsg,
         level_1_boundaries_path=level_1_boundaries_path,
-        tileid=tileid
+        tileid=tileid,
+        conda_env_name=conda_env_name,
     )
 
     log.info("--" * 20)
