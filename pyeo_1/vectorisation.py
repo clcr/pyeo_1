@@ -50,7 +50,7 @@ def vectorise_from_band(change_report_path: str, band: int, log):
         log.info(f"Opening {change_report_path}")
 
         if src_ds is None:
-            log.info(f"Unable to open {change_report_path}")
+            log.error(f"Unable to open {change_report_path}")
 
         log.info(f"Successfully opened {change_report_path}")
 
@@ -78,15 +78,19 @@ def vectorise_from_band(change_report_path: str, band: int, log):
         dst_field = dst_layer.GetLayerDefn().GetFieldIndex(dst_layername)
 
         # polygonise the raster band
-        gdal.Polygonize(
-            src_band,
-            # src_band.GetMaskBand(),  # use .msk to only polygonise values > 0 # can't get gdal.Polygonize to respect .msk
-            None,  # no mask
-            dst_layer,
-            dst_field,  # -1 for no field column
-            [],
-        )
-
+        try:
+            gdal.Polygonize(
+                src_band,
+                # src_band.GetMaskBand(),  # use .msk to only polygonise values > 0 # can't get gdal.Polygonize to respect .msk
+                None,  # no mask
+                dst_layer,
+                dst_field,  # -1 for no field column
+                [],
+            )
+        except RuntimeError as error:
+            log.error(f"GDAL Polygonize failed: \n {error}")
+        except:
+            log.error(f"GDAL Polygonize failed, not a Runtime Error.")
         # close dst_ds and src_band
         dst_ds = None
         src_band = None
@@ -555,7 +559,7 @@ def vector_report_generation(
     epsg: int,
     level_1_boundaries_path: str,
     conda_env_name: str,
-    delete_intermediates: bool
+    delete_intermediates: bool,
 ):
     """
     This function calls all the individual functions necessary to create a vectorised change report.
