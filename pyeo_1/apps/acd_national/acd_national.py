@@ -82,19 +82,23 @@ def acd_national_vectorisation(root_dir: str,
     log.info(tiles_paths)
     log.info("--"*20)
     
-    if delete_existing:
-        log.info("delete_existing flag is set to True, therefore deleting existing vectorised change report shapefiles, pkls and csvs")
-        report_shp_pattern = "/output/probabilities/report*"
-        search_shp_pattern = f"{tiles_name_pattern}{report_shp_pattern}"
-        existing_files = glob.glob(os.path.join(root_dir, search_shp_pattern))
-
-        # remove .tif files from the delete list
-        files_to_remove = [file for file in existing_files if not file.endswith(".tif")]
-
-        for file in files_to_remove:
-            os.remove(file)
-
     for report in tiles_paths:
+        if delete_existing:
+            # get list of existing report files in report path
+            log.info("delete_existing flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs")
+            directory = os.path.dirname(report)
+            report_shp_pattern = "/report*"
+            search_shp_pattern = f"{directory}{report_shp_pattern}"
+            existing_files = glob.glob(search_shp_pattern)
+
+            # exclude .tif files from the delete list
+            files_to_remove = [file for file in existing_files if not file.endswith(".tif")]
+
+            for file in files_to_remove:
+                try:
+                    os.remove(file)
+                except:
+                    log.error(f"Could not delete {file}, skipping")
         try:
             vectorisation.vector_report_generation(raster_change_report_path=report,
                                                 write_csv=False,
@@ -114,7 +118,7 @@ def acd_national_vectorisation(root_dir: str,
     log.info("--"*20)
     log.info("--"*20)
 
-    return
+    return tiles_paths
 
 def acd_national_integration():
     """
