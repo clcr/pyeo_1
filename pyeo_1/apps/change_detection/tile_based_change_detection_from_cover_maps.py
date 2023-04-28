@@ -1048,6 +1048,15 @@ def rolling_detection(config_path,
                                              after_timestamp.strftime("%Y%m%dT%H%M%S"))
                                              )
                 log.info("  Change raster file to be created: {}".format(change_raster))
+
+                dNDVI_raster = os.path.join(probability_image_dir,
+                                             "dNDVI_{}_{}_{}.tif".format(
+                                             before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                                             tile_id,
+                                             after_timestamp.strftime("%Y%m%dT%H%M%S"))
+                                             )
+                log.info("  dNDVI raster file to be created: {}".format(dNDVI_raster))
+
                 if do_dev:
                     # This function looks for changes from class 'change_from' in the composite to any of the 'change_to_classes'
                     # in the change images. Pixel values are the acquisition date of the detected change of interest or zero.
@@ -1058,6 +1067,7 @@ def rolling_detection(config_path,
                     pyeo_1.raster_manipulation.__change_from_class_maps(latest_class_composite_path,
                                                                 image,
                                                                 change_raster,
+                                                                dNDVI_raster,
                                                                 change_from = from_classes,
                                                                 change_to = to_classes,
                                                                 report_path = output_product,
@@ -1066,7 +1076,7 @@ def rolling_detection(config_path,
                                                                 new_image_dir = l2_masked_image_dir,
                                                                 viband1 = 4,
                                                                 viband2 = 3,
-                                                                threshold = -0.2
+                                                                dNDVI_threshold = -0.2
                                                                 )
                 else:
                     pyeo_1.raster_manipulation.change_from_class_maps(latest_class_composite_path,
