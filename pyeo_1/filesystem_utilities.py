@@ -63,6 +63,40 @@ def init_log(log_path):
     log.info("****PROCESSING START****")
     return log
 
+def init_log_acd(log_path, logger_name):
+    """
+    This function differs slightly to `init_log` in that it accomodates a logger_name. This enables \n
+    unique logger objects to be created so multiple loggers can be run at a time.
+
+    Sets up the log format and log handlers; one for stdout and to write to a file, 'log_path'.
+    Returns the log for the calling script.
+
+    Parameters
+    ----------
+    log_path : str
+        The path to the file output of this log.
+
+    logger_name : str
+        A unique logger name.
+
+    Returns
+    -------
+    log : logging.Logger
+        The logging object.
+
+    """
+
+    logging.basicConfig(format="%(asctime)s: %(levelname)s: %(message)s")
+    formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.INFO)
+    file_handler = logging.FileHandler(log_path)
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    logger.info("****PROCESSING START****")
+
+    return logger
 
 def create_file_structure(root):
     """
@@ -895,12 +929,22 @@ def get_mask_path(image_path):
     return mask_path
 
 
-def serial_date_to_string(srl_no):
+def serial_date_to_string(srl_no: int):
 
     """
     Converts a serial date (days since X), to a date as a string.
     Author: AER
     Taken from: https://stackoverflow.com/a/39988256/6809533
+
+    ------------
+    Parameters
+    srl_no (int)
+        serial number representing days since X
+
+    -----------
+    Returns
+
+    Date object
     """
 
     import datetime
@@ -909,3 +953,74 @@ def serial_date_to_string(srl_no):
         srl_no
     )  # could require srl_no - 1, if day 1 is 2000-01-01
     return new_date.strftime("%Y-%m-%d")
+
+def zip_contents(directory: str, notstartswith=None):
+        
+    """
+    This function zips the contents of the directory passed
+
+    ---------
+    Parameters
+
+    Directory (str)
+        Path to the directory whose contents to zip.
+
+    --------
+    Returns
+    None
+
+    """
+    paths = [f for f in os.listdir(directory) if not f.endswith(".zip")]
+    for f in paths:
+        do_it = True
+        if notstartswith is not None:
+            for i in notstartswith:
+                if f.startswith(i):
+                    do_it = False
+                    log.info('Skipping file that starts with \'{}\':   {}'.format(i,f))
+        if do_it:
+            file_to_zip = os.path.join(directory, f)
+            zipped_file = file_to_zip.split(".")[0]
+            log.info('Zipping   {}'.format(file_to_zip))
+            if os.path.isdir(file_to_zip):
+                shutil.make_archive(zipped_file, 'zip', file_to_zip)
+            else:
+                with zipfile.ZipFile(zipped_file+".zip", "w", compression=zipfile.ZIP_DEFLATED) as zf:
+                    zf.write(file_to_zip, os.path.basename(file_to_zip))
+            if (os.path.exists(zipped_file+".zip")):
+                if os.path.isdir(file_to_zip):
+                    shutil.rmtree(file_to_zip)
+                else:
+                    os.remove(file_to_zip)
+            else:
+                log.error("Zipping failed: {}".format(zipped_file+".zip"))
+    return
+
+def unzip_contents(zippath: str, ifstartswith=None, ending=None):
+
+    """
+    This function unzips the zipped path provided
+
+    ---------
+    Parameters
+    Zippath (str)
+        Path to the zipped folder, to unzip.
+    """
+    dirpath = zippath[:-4] # cut away the  .zip ending
+    if ifstartswith is not None and ending is not None:
+        if dirpath.startswith(ifstartswith):
+            dirpath = dirpath + ending
+    log.info("Unzipping {}".format(zippath))
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
+    if os.path.exists(dirpath):
+        if os.path.exists(zippath):
+            shutil.unpack_archive(
+                filename=zippath,
+                extract_dir=dirpath,
+                format='zip'
+                )
+            os.remove(zippath)
+    else:
+        log.error("Unzipping failed")
+    return

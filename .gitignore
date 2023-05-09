@@ -3,5 +3,5 @@
 ./pyeo_1/__pycache__/
 *.pyc
 *.swp
-
 log/national_vector_test.txt
+credentials/credentials.ini

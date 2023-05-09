@@ -26,7 +26,7 @@ def band_naming(band: int, log):
     return band_name
 
 
-def vectorise_from_band(change_report_path: str, band: int, log):
+def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -36,10 +36,38 @@ def vectorise_from_band(change_report_path: str, band: int, log):
         path to a change report raster
     band (int):
         an integer from 1 - 7, indicating the desired band to vectorise.
+    log:
+        log variable
+    conda_env_name (str):
+        String of the conda_env_name for specifying which GDAL and PROJ_LIB installation to use
     """
     import os
     from tempfile import TemporaryDirectory
     from osgeo import gdal, ogr, osr
+    from pathlib import Path
+    import signal
+
+    #### set up timeout
+    class TimeoutException(Exception):
+        pass
+
+    def timeout_handler(signum, frame):
+        raise TimeoutException("Computation timed out.")
+
+    # Set the timeout to 2 hours (in seconds)
+    timeout_seconds = 2 * 60 * 60
+
+    # Set the signal handler
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(timeout_seconds)
+    ####
+
+    # specify gdal and proj installation, this is GDAL's
+    home = str(Path.home())
+    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
+    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+
+    #log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
     # let GDAL use Python to raise Exceptions, instead of printing to sys.stdout
     gdal.UseExceptions()
@@ -78,6 +106,7 @@ def vectorise_from_band(change_report_path: str, band: int, log):
         dst_field = dst_layer.GetLayerDefn().GetFieldIndex(dst_layername)
 
         # polygonise the raster band
+        log.info("Now vectorising the raster band")
         try:
             gdal.Polygonize(
                 src_band,
@@ -87,10 +116,15 @@ def vectorise_from_band(change_report_path: str, band: int, log):
                 dst_field,  # -1 for no field column
                 [],
             )
+            # cancel the alarm if Polygonize finishes before the timeout
+            signal.alarm(0)
+        except TimeoutException:
+            log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
         except RuntimeError as error:
             log.error(f"GDAL Polygonize failed: \n {error}")
-        except:
-            log.error(f"GDAL Polygonize failed, not a Runtime Error.")
+        except Exception as error:
+            log.error(f"GDAL Polygonize failed, error received : \n {error}")
+
         # close dst_ds and src_band
         dst_ds = None
         src_band = None
@@ -238,6 +272,8 @@ def zonal_statistics(
     home = str(Path.home())
     os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
     os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+
+    log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
     with TemporaryDirectory(dir=os.getcwd()) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -588,7 +624,7 @@ def vector_report_generation(
 
     # 22 minutes
     path_vectorised_binary = vectorise_from_band(
-        change_report_path=change_report_path, band=6, log=log
+        change_report_path=change_report_path, band=6, log=log, conda_env_name=conda_env_name
     )
 
     # 1.5 minutes
