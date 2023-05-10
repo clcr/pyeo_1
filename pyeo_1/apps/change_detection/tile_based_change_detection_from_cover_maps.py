@@ -1037,7 +1037,7 @@ def rolling_detection(config_path,
                 before_timestamp = pyeo_1.filesystem_utilities.get_change_detection_dates(os.path.basename(latest_class_composite_path))[0]
                 after_timestamp  = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(image))
                 #I.R. 20220612 START
-                log.info("  class image index: {} of {}".format(index, len(class_image_paths)))
+                log.info("*** PROCESSING CLASSIFIED IMAGE: {} of {} filename: {} ***".format(index, len(class_image_paths), image))
                 #I.R. 20220612 END
                 log.info("  early time stamp: {}".format(before_timestamp))
                 log.info("  late  time stamp: {}".format(after_timestamp))
@@ -1055,7 +1055,15 @@ def rolling_detection(config_path,
                                              tile_id,
                                              after_timestamp.strftime("%Y%m%dT%H%M%S"))
                                              )
-                log.info("  dNDVI raster file to be created: {}".format(dNDVI_raster))
+                log.info("  I.R. dNDVI raster file to be created: {}".format(dNDVI_raster))
+
+                NDVI_raster = os.path.join(probability_image_dir,
+                                             "NDVI_{}_{}_{}.tif".format(
+                                             before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                                             tile_id,
+                                             after_timestamp.strftime("%Y%m%dT%H%M%S"))
+                                             )
+                log.info("  I.R. NDVI raster file of change image to be created: {}".format(NDVI_raster))
 
                 if do_dev:
                     # This function looks for changes from class 'change_from' in the composite to any of the 'change_to_classes'
@@ -1068,6 +1076,7 @@ def rolling_detection(config_path,
                                                                 image,
                                                                 change_raster,
                                                                 dNDVI_raster,
+                                                                NDVI_raster,
                                                                 change_from = from_classes,
                                                                 change_to = to_classes,
                                                                 report_path = output_product,
@@ -1087,13 +1096,29 @@ def rolling_detection(config_path,
                                                                 skip_existing = skip_existing
                                                                 )
 
-            # I.R. ToDo: Insert new report_analysis function to generate additional computed layers derived
-            # from the outputs of iteration through change image set above
-            # E.g. :
-                # binarisation
-                # area analysis and filtering
-                # region labelling and highlightinh
+            # I.R. ToDo: Function compute additional layers derived from set of layers in report file generated in __change_from_class_maps()
+            # pyeo_1.raster_manipulation.computed_report_layer_generation(report_path = output_product)
 
+            # I.R. ToDo: Function to generate 3D time series array of classified (+NDVI?) images over full date range 
+            ## and save it to disk as a layered GeoTIFF (or numpy array)
+            ## (Build into above loop that generates report...?)
+            # pyeo_1.raster_manipulation.time_series_construction(classified_image_dir = classified_image_dir, change_from = from_classes,change_to = to_classes)
+
+            # I.R. ToDo: Insert function to perform time series analysis on 3D classified (+NDVI?) time series array and generate forest alert outputs
+            ## in a GeoTIFF file
+            # pyeo_1.raster_manipulation.time_series_analysis(report_path = output_product)
+            # 
+            # I.R. ToDo: Alternatively.. implement sliding buffer to scan through classified (and/or NDVI) image set so that FIR, IIR and State-Machine
+            ## filters can be implemented to generate forest alerts  
+            ## e.g. 5 layers to hold rotating buffer of classification and/or NDVI state plus additional layers to hold state variables
+            ## Use state to record a run of n consecutive change_from classes, 
+            ## detect transition to bare earth class with a simultaneous NDVI drop of > threshold
+            ## record time point as first change date
+            ## detect subsequent change to grassland class as bare earth re-greens with new growth
+            ## count detection of multiple such cycles if they occur
+            ## Use the above as input for temporal classification of pixel by land use e.g. multiple season correlated cycles as a signature of cropland
+            ### and thus establish an expectation of variation for that pixel in the future
+            ## Extend use of above to incorporate spatial analysis over multiple pixel neighbourhoods
 
 
             log.info("---------------------------------------------------------------")
