@@ -1,0 +1,17 @@
+title = "PyEO Image Acquisition Configuration File"
+
+[authentication] # Copernicus DataSpace service authentication
+username = ""
+password = ""
+
+[sentinel2_properties]
+start_date = ""
+end_date = ""
+max_cloud_cover = 25
+tiles_to_process = ""
+max_image_number = 600
+min_image_size = 500
+max_records = 100
+
+[directories]
+l2a_safes = ""
