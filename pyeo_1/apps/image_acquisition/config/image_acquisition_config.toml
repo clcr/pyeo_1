@@ -1,4 +1,4 @@
-title = "PyEO Image Acquisition Configuration File"
+title = "SEPAL PyEO Image Acquisition Configuration File"
 
 [authentication] # Copernicus DataSpace service authentication
 username = ""
@@ -7,7 +7,7 @@ password = ""
 [sentinel2_properties]
 start_date = ""
 end_date = ""
-max_cloud_cover = 25
+max_cloud_cover = 100
 tiles_to_process = ""
 max_image_number = 600
 min_image_size = 500
