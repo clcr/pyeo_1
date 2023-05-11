@@ -444,7 +444,7 @@ def stack_images(
     out_raster_path : str
         The path to the saved output raster.
     geometry_mode : {'intersect' or 'union'}
-        Can be either 'instersect' or 'union'.
+        Can be either 'intersect' or 'union'.
         - If 'intersect', then the output raster will only contain the pixels of the input rasters that overlap.
         - If 'union', then the output raster will contain every pixel in the outputs. Layers without data will
           have their pixel values set to 0.
@@ -1290,6 +1290,7 @@ def clever_composite_images(
         driver = gdal.GetDriverByName(str(format))
         projection = in_raster.GetProjection()
         in_gt = in_raster.GetGeoTransform()
+        log.info(f'I.R. 20230430 clever_composite_images() in_raster_path_list[0].geotransform = {in_raster.GetGeoTransform()}')
         n_bands = in_raster.RasterCount
         temp_band = in_raster.GetRasterBand(1)
         datatype = temp_band.DataType
@@ -1301,6 +1302,7 @@ def clever_composite_images(
         good_rasters = []
         for f in in_raster_path_list:
             in_raster = gdal.Open(f)
+            log.info(f'I.R. 20230430 clever_composite_images() in_raster_path_list.geotransform = {in_raster.GetGeoTransform()}')
             f_n_bands = in_raster.RasterCount
             f_xsize = in_raster.RasterXSize
             f_ysize = in_raster.RasterYSize
@@ -1424,10 +1426,19 @@ def clever_composite_images(
             # log some image stats
             get_stats_from_raster_file(tmpfile)
         log.info("Finished median calculations.")
-        # Aggretating band composites into a single tiff file
+        # Aggregating band composites into a single tiff file
         log.info("Aggretating band composites into a single raster file.")
         stack_images(tmpfiles, composite_out_path, geometry_mode="intersect")
         get_stats_from_raster_file(composite_out_path)
+    
+    log.info(f'I.R. 20230430 clever_composite_images() Fixing composite geotransform to ensure it matches first of contributing images')    
+    in_raster = gdal.Open(in_raster_path_list[0])
+    in_gt = in_raster.GetGeoTransform()
+    composite_raster = gdal.Open(composite_out_path)
+    composite_raster.SetGeoTransform(in_gt)
+    in_raster = None
+    composite_raster = None
+
     log.info("-------------------------------------------------")
     log.info("Median composite done")
     log.info("-------------------------------------------------")
@@ -4167,6 +4178,8 @@ def __change_from_class_maps(
     old_class_path,
     new_class_path,
     change_raster,
+    dNDVI_raster,
+    NDVI_raster,
     change_from,
     change_to,
     report_path,
@@ -4175,7 +4188,7 @@ def __change_from_class_maps(
     new_image_dir=None,
     viband1=None,
     viband2=None,
-    threshold=None,
+    dNDVI_threshold=None,
 ):
     """
     UNTESTED DEVELOPMENT VERSION:
@@ -4205,6 +4218,12 @@ def __change_from_class_maps(
     change_raster : str
         Path to the output raster file that will be created. Will be updated with the latest time stamp.
 
+    dNDVI_raster : str
+        Path to the output dNDVI raster file that will be created. Will be updated with the latest time stamp.
+
+    NDVI_raster : str
+        Path to the output NDVI raster file for the change image that will be created. Will be updated with the latest time stamp.
+
     change_from : list of int
         List of integers with the class codes to be used as 'from' in the change detection.
 
@@ -4232,7 +4251,7 @@ def __change_from_class_maps(
         If given, this is the second band number (start from band 1) for calculating the vegetation index from a raster file with matching timestamp
         vi = (viband1 - viband2) / (viband1 + viband2)
 
-    threshold : float
+    dNDVI_threshold : float
         If given, this is the threhold for checking change detections based on the vegetation index:
         A change pixel is confirmed if vi < threshold and discarded otherwise.
 
@@ -4248,7 +4267,7 @@ def __change_from_class_maps(
         log.info("Report file being created: {}".format(report_path))
         new_class_image = gdal.Open(new_class_path, gdal.GA_ReadOnly)
 
-        # I.R. 20220603 START
+        # I.R. 20220603/20230421 START
         ## Changed to always generate report from scratch - incremental update is unstable and inflexible
         ## Any previous reports automatically copied to prefix 'archived_' in tile_based_change_detection_from_cover_maps.py
         ## Report layer depth extended to 7 bands
@@ -4258,13 +4277,13 @@ def __change_from_class_maps(
             new_class_image,
             report_path,
             format="GTiff",
-            bands=7,
+            bands=18,
             datatype=gdal.GDT_Int16,
         )
 
         # ORIGINAL
         # report_image = create_matching_dataset(new_class_image, report_path, format='GTiff', bands=3, datatype=gdal.GDT_Int32)
-        # I.R. 20220603 END
+        # I.R. 20220603/20230421 END
 
         new_class_image = None
         report_image = None
@@ -4302,9 +4321,8 @@ def __change_from_class_maps(
             )
             log.info("added mask path {}".format(added_mask_path))
             new_class_image = gdal.Open(new_class_path, gdal.GA_ReadOnly)
-            new_class_array = new_class_image.GetVirtualMemArray(
-                eAccess=gdal.gdalconst.GF_Read
-            ).squeeze()
+            new_class_array = new_class_image.GetVirtualMemArray(eAccess=gdal.gdalconst.GF_Read).squeeze()
+
             change_image = create_matching_dataset(
                 new_class_image,
                 change_raster,
@@ -4312,13 +4330,28 @@ def __change_from_class_maps(
                 bands=1,
                 datatype=gdal.GDT_Int32,
             )
-            change_array = change_image.GetVirtualMemArray(
-                eAccess=gdal.gdalconst.GF_Write
-            ).squeeze()
+            change_array = change_image.GetVirtualMemArray(eAccess=gdal.gdalconst.GF_Write).squeeze()
+
+            dNDVI_image = create_matching_dataset(
+                new_class_image,
+                dNDVI_raster,
+                format="GTiff",
+                bands=1,
+                datatype=gdal.GDT_Int32,
+            )
+            dNDVI_array = dNDVI_image.GetVirtualMemArray(eAccess=gdal.gdalconst.GF_Write).squeeze()
+
+            NDVI_image = create_matching_dataset(
+                new_class_image,
+                NDVI_raster,
+                format="GTiff",
+                bands=1,
+                datatype=gdal.GDT_Int32,
+            )
+            NDVI_array = NDVI_image.GetVirtualMemArray(eAccess=gdal.gdalconst.GF_Write).squeeze()
+
             added_mask = gdal.Open(added_mask_path, gdal.GA_ReadOnly)
-            added_mask_array = added_mask.GetVirtualMemArray(
-                eAccess=gdal.gdalconst.GF_Read
-            ).squeeze()
+            added_mask_array = added_mask.GetVirtualMemArray(eAccess=gdal.gdalconst.GF_Read).squeeze()
             # Gets timestamp as integer in form yyyymmdd
             new_date = get_image_acquisition_time(new_class_path)
             reference_date = datetime.datetime(2000, 1, 1, 0, 0, 0, 0)
@@ -4334,18 +4367,10 @@ def __change_from_class_maps(
             change_array[np.where(added_mask_array != 2)] = 0
             # set clouds and missing values in latest class image to -1 in the change layer
             change_array[np.where(new_class_array == 0)] = -1
-            if viband1 is not None and viband2 is not None and threshold is not None:
-                log.info(
-                    "Confirming detected class transitions based on vegetation index differencing."
-                )
-                log.info(
-                    "  VI = (band{} - band{}) / (band{} - band{})".format(
-                        viband1, viband2, viband1, viband2
-                    )
-                )
-                log.info(
-                    "  confirming changes if VI_new - VI_old < {}".format(threshold)
-                )
+            if viband1 is not None and viband2 is not None and dNDVI_threshold is not None:
+                log.info("Confirming detected class transitions based on vegetation index differencing.")
+                log.info("  VI = (band{} - band{}) / (band{} + band{})".format(viband1, viband2, viband1, viband2))
+                log.info("  confirming changes if VI_new - VI_old < {}".format(dNDVI_threshold))
                 # get composite file name and find bands in composite
                 old_timestamp = pyeo_1.filesystem_utilities.get_image_acquisition_time(
                     os.path.basename(old_class_path)
@@ -4370,14 +4395,8 @@ def __change_from_class_maps(
                     # calculate composite VI (N.B. -1 because array starts numbering with 0 and GDAL numbers bands from 1
                     with np.errstate(divide="ignore", invalid="ignore"):
                         vi_old = np.true_divide(
-                            (
-                                1.0 * old_image_array[viband1 - 1, :, :]
-                                - 1.0 * old_image_array[viband2 - 1, :, :]
-                            ),
-                            (
-                                1.0 * old_image_array[viband1 - 1, :, :]
-                                + 1.0 * old_image_array[viband2 - 1, :, :]
-                            ),
+                            (1.0 * old_image_array[viband1 - 1, :, :] - 1.0 * old_image_array[viband2 - 1, :, :]),
+                            (1.0 * old_image_array[viband1 - 1, :, :] + 1.0 * old_image_array[viband2 - 1, :, :]),
                         )
                         vi_old[vi_old == np.inf] = 0
                         vi_old = np.nan_to_num(vi_old)
@@ -4410,26 +4429,38 @@ def __change_from_class_maps(
                         # calculate change image VI
                         with np.errstate(divide="ignore", invalid="ignore"):
                             vi_new = np.true_divide(
-                                (
-                                    1.0 * new_image_array[viband1 - 1, :, :]
-                                    - 1.0 * new_image_array[viband2 - 1, :, :]
-                                ),
-                                (
-                                    1.0 * new_image_array[viband1 - 1, :, :]
-                                    + 1.0 * new_image_array[viband2 - 1, :, :]
-                                ),
+                                (1.0 * new_image_array[viband1 - 1, :, :] - 1.0 * new_image_array[viband2 - 1, :, :]),
+                                (1.0 * new_image_array[viband1 - 1, :, :] + 1.0 * new_image_array[viband2 - 1, :, :]),
                             )
                             vi_new[vi_new == np.inf] = 0
-                            vi_new = np.nan_to_num(vi_new)
-                        new_image_array = None
-                        new_image = None
+                            vi_new = np.nan_to_num(vi_new)  # I.R. Replaces NaN with zero and infinity with large finite numbers
+
                         # calculate dVI = new minus old VI
                         dvi = vi_new - vi_old
+
+                        # I.R. 20230501 Force cloud masked or out-of-orbit (no data) regions of ndvi to -1
+                        vi_new[new_image_array[viband1 - 1, :, :] == 0] = -1 
+
+                        # I.R. 20230501 Force cloud masked or out-of-orbit (no data) regions of dNDVI to 1
+                        dvi[new_image_array[viband1 - 1, :, :] == 0] = 1 
+
+                        # I.R. Sets all values where the VI difference exceeds the threshold to a distictive negative value
+                        # to indicate a decision of 'no change' and as a record that this was due to the dNDVI test failing
+                        # change_array[np.where(dvi >= dNDVI_threshold)] = -2
+
+                        # I.R. 20230421+ START: Save NDVI and dNDVI of change image to disk for analysis
+                        dNDVI_scale_factor = 100  # Multiplier used to scale dNDVI to integer range
+                        np.copyto(dNDVI_array, (dvi * dNDVI_scale_factor).astype(int))
+                        NDVI_scale_factor = 100  # Multiplier used to scale NDVI to integer range
+                        np.copyto(NDVI_array,  (vi_new * NDVI_scale_factor).astype(int))
+                        # I.R. 20230421 END
+
+                        new_image_array = None
+                        new_image = None
+                        dvi = None
                         vi_new = None
                         vi_old = None
-                        # set all values where the VI difference exceeds the threshold to zero (no change)
-                        change_array[np.where(dvi >= threshold)] = 0
-                        dvi = None
+
                     else:
                         log.error(
                             "Did not find a new satellite image with name pattern: {}".format(
@@ -4455,6 +4486,10 @@ def __change_from_class_maps(
             added_mask = None
             change_array = None
             change_image = None
+            dNDVI_array = None
+            dNDVI_image = None
+            NDVI_array = None
+            NDVI_image = None
         else:
             log.info(
                 "Change raster file already exists: {}. Skipping change raster creation.".format(
@@ -4507,11 +4542,29 @@ def __change_from_class_maps(
         # =============================================================================
         # I.R. 20220611 END
 
-        # now update the report file layers
+        # I.R. 20230421+ START  
+        log.info(f"***   Loading data arrays required to build report layers   ***")
+
+        new_class_image = gdal.Open(new_class_path, gdal.GA_ReadOnly)
+        new_class_array = new_class_image.GetVirtualMemArray(
+            eAccess=gdal.gdalconst.GF_Read
+        ).squeeze()
+
         change_image = gdal.Open(change_raster, gdal.GA_ReadOnly)
         change_array = change_image.GetVirtualMemArray(
             eAccess=gdal.gdalconst.GF_Read
         ).squeeze()
+
+        dNDVI_image = gdal.Open(dNDVI_raster, gdal.GA_ReadOnly)
+        dNDVI_array = dNDVI_image.GetVirtualMemArray(
+            eAccess=gdal.gdalconst.GF_Read
+        ).squeeze()
+
+        NDVI_image = gdal.Open(NDVI_raster, gdal.GA_ReadOnly)
+        NDVI_array = NDVI_image.GetVirtualMemArray(
+            eAccess=gdal.gdalconst.GF_Read
+        ).squeeze()
+
         report_image = gdal.Open(report_path, gdal.GA_Update)
         out_report_array = report_image.GetVirtualMemArray(
             eAccess=gdal.GA_Update
@@ -4527,71 +4580,133 @@ def __change_from_class_maps(
             change_image = None
             report_image = None
             return -1
-        # layer 0 contains the earlier date of a change detection where values are greater than zero (not missing data and not cloud)
-        log.info(
-            "layer 0 contains the earlier date of a change detection where values are greater than zero (not missing data and not cloud)"
-        )
-        # where layer 0 > 0 and the change array contains a value > 0, the smaller value of the two will be burned into the report layer 0
-        locs = (out_report_array[0, :, :] > 0) & (change_array > 0)
-        out_report_array[0, locs] = np.minimum(
-            out_report_array[0, locs], change_array[locs]
-        )
-        # where layer 0 is zero and the change array contains a value > 0, it will be burned into the report layer 0
-        locs = (out_report_array[0, :, :] == 0) & (change_array > 0)
-        out_report_array[0, locs] = change_array[locs]
-        # layer 1 contains an additive map of the number of positive change detections
-        log.info(
-            "layer 1 contains an additive map of the number of positive change detections"
-        )
-        locs = change_array > 0
-        out_report_array[1, locs] = out_report_array[1, locs] + 1
-        # layer 2 counts the number of consecutive change detections, ignoring cloudy observations (change array == -1) and
-        #   decreasing the counter whenever no change is detected, i.e. change array == 0
-        # log.info("layer 2 counts the number of consecutive change detections, ignoring cloudy observations (change array == -1) and")
-        # log.info("   decreasing the counter whenever no change is detected, i.e. change array == 0")
 
-        # I.R. 20220603 START
-        # Layer 2: Count if no change was detected and first change has already been detected
-        locs = (change_array == 0) & (out_report_array[0, :, :] > 0)
+        log.info(f"***   Starting build of report layers:   ***")
+
+        # If kept as a feature move these parameters into .ini file
+        minimum_required_validated_detections_threshold = 5  #  Absolute number of valid detections for classifier opinion to be accepted.
+        minimum_required_dNDVI_detections_threshold = 5      #  Absolute number of dNDVI change detections for classifier opinion to be accepted.
+        minimum_required_classifier_detections_threshold = 5 # Absolute number of classifier-only detections for opinion to be accepted
+        percentage_probability_threshold = 50
+        minimum_required_FROM_detections_threshold = 2
+        minimum_required_TO_detections_threshold = 2
+
+        log.info(f"percentage_probability_threshold:   {percentage_probability_threshold}")
+        log.info(f"minimum_required_validated_detections_threshold: {minimum_required_validated_detections_threshold}")
+        log.info(f"minimum_required_dNDVI_detections_threshold: {minimum_required_dNDVI_detections_threshold}")
+        log.info(f"minimum_required_classifier_detections_threshold: {minimum_required_classifier_detections_threshold}")
+        log.info(f"minimum_required_FROM_detections_threshold: {minimum_required_FROM_detections_threshold}")
+        log.info(f"minimum_required_TO_detections_threshold: {minimum_required_TO_detections_threshold}")
+
+        log.info('Build Report Layers') 
+
+        # Layer 0
+        log.info("Layer 0: Total Image Count: Counts the number of images processed per pixel - number of available images within overall cloud percentage cover limit set in kenya.ini file")
+        locs = (out_report_array[0, :, :] >= 0)  # i.e. locs covers all locations - an inefficient global counter but useful for computed fields and when viewing in QGIS
+        out_report_array[0, locs] = out_report_array[0, locs] + 1
+
+        # Layer 1
+        log.info("Layer 1: Occluded Image Count: Counts number of cloud occluded (or out-of-orbit) images that are thus unavailable for classification and analysis")
+        locs = (change_array == -1)
+        out_report_array[1, locs] = out_report_array[1, locs] + 1
+
+        # Layer 2
+        log.info("Layer 2: Classifier Change Detection Count: Count if a from/to change of classification was detected")
+        locs = (change_array > 0)
         out_report_array[2, locs] = out_report_array[2, locs] + 1
-        # Compute report measures only for pixels where first change has been detected ( to avoid divide by zero)
-        locs = out_report_array[0, :, :] > 0
-        # Layer 3: Total number of valid (no cloud) images for this pixel since first change was detected
-        # = total change + nochange
-        out_report_array[3, locs] = (
-            out_report_array[1, locs] + out_report_array[2, locs]
-        )
-        # Layer 4: Probability (percentage) that a change detection is correct
-        # = ratio change/(change +_nochange) for pixels where first change has been detected
-        out_report_array[4, locs] = (
-            100 * out_report_array[1, locs]
-        ) / out_report_array[3, locs]
-        # Layer 5: Percentage Probability (Layer 4) binarised by a threshold
-        percentage_probability_threshold = (
-            50  # IF kept as a feature move parameter into .ini file
-        )
-        minimum_required_samples_threshold = 5  #  Number of valid images for classifier opinion to be accepted. IF kept as a feature move parameter into .ini file
-        log.info(
-            f"percentage_probability_threshold:   {percentage_probability_threshold}"
-        )
-        log.info(
-            f"minimum_required_samples_threshold: {minimum_required_samples_threshold}"
-        )
-        out_report_array[
-            5, :, :
-        ] = 0  ## Reset from previous calls (INEFFICIENT! Layers 5 and 6 should be generated in a separate stage after iteration through the change layers has been completed)
-        # locs_binarise = (out_report_array[4, :, :] >= percentage_probability_threshold)
-        locs_binarise = (
-            out_report_array[4, :, :] >= percentage_probability_threshold
-        ) & (out_report_array[3, :, :] >= minimum_required_samples_threshold)
-        log.info(f"out_report_array.shape: {out_report_array.shape}")
-        out_report_array[
-            5, locs_binarise
-        ] = 1  # Assumes empty array layer initialised to zero
-        # Layer 6: Layer 0 (first change date) masked by Binarised Percentage Probability (Layer 5)
-        out_report_array[6, :, :] = (
-            out_report_array[0, :, :] * out_report_array[5, :, :]
-        )
+
+        # Layer 3
+        log.info("Layer 3: First-Change Trigger for Combined Classifier+dNDVI Validated Change Detection: Records earliest date of a classification change detection where values are greater than zero (not missing data and not cloud)")
+        # where layer 2 is zero and the change array contains a value > 0, this date will be burned into the report layer 2
+        locs = (out_report_array[3, :, :] == 0) & (change_array > 0) & (dNDVI_array < int(dNDVI_threshold * dNDVI_scale_factor))  # Base on dNDVI validated change detections
+        out_report_array[3, locs] = change_array[locs]
+        # where layer 3 is non-zero it is set to the earlier date
+        locs = (out_report_array[3, :, :] > 0) & (change_array > 0) & (dNDVI_array < int(dNDVI_threshold * dNDVI_scale_factor))  # Base on dNDVI validated change detections
+        out_report_array[3, locs] = np.minimum(out_report_array[3, locs], change_array[locs])
+
+        # Layer 4: 
+        log.info("Layer 4: Combined Classifier+dNDVI Validated Change Detection Count: Count if a change was detected after a first change has already been detected")
+        locs = (change_array > 0) & (dNDVI_array < int(dNDVI_threshold * dNDVI_scale_factor)) & (out_report_array[3, :, :] > 0)
+        out_report_array[4, locs] = out_report_array[4, locs] + 1
+
+        # Layer 5: 
+        log.info("Layer 5: Combined Classifier+dNDVI Validated No Change Detection Count: Count if a no change was detected after a first change has already been detected")
+        locs = (change_array == 0) & (out_report_array[3, :, :] > 0)
+        out_report_array[5, locs] = out_report_array[5, locs] + 1
+
+        # Layer 6: 
+        log.info("Layer 6: Cloud Occlusion Count: Count if a cloud occlusion (or out-of-orbit) occured after a first change has already been detected")
+        locs = (change_array == -1) & (out_report_array[3, :, :] > 0)
+        out_report_array[6, locs] = out_report_array[6, locs] + 1
+
+        # Compute following report measures only for pixels where first change has been detected (to avoid division by zero)
+        # NOTE: (INEFFICIENT! All computed layers should be generated in a separate stage after iteration through the change layers has been completed)
+        locs = out_report_array[3, :, :] > 0
+
+        # Layer 7: 
+        log.info("Layer 7: Valid Image Count: Total number of valid (no cloud) images for this pixel since first change was detected")
+        # = total change + change_filtered + nochange
+        out_report_array[7, locs] = (out_report_array[4, locs] + out_report_array[5, locs])
+
+        # Layer 8: 
+        log.info("Layer 8: Change Detection Repeatability: Repeatability of change detection after first change is detected - as a percentage of available valid images")
+        # = ratio change/(change + nochange) for pixels where first change has been detected
+        out_report_array[8, locs] = (100 * out_report_array[4, locs]) / out_report_array[7, locs]  # Base on dNDVI validated change detections
+
+        # Layer 9:
+        log.info("Layer 9: Binary time-series decision: Based on percentage_probability_threshold and minimum_required_validated_detections_threshold")
+        out_report_array[9, :, :] = 0  ## Reset from previous calls 
+        locs_binarise = (out_report_array[8, :, :] >= percentage_probability_threshold) & (out_report_array[4, :, :] >= minimum_required_validated_detections_threshold)  # Base on dNDVI validated change detections
+        out_report_array[9, locs_binarise] = 1  # Assumes empty array layer initialised to zero
+
+        # Layer 10
+        log.info("Layer 10: Binary time-series decision by first-change date: First change date masked by Binary Decision - Layer 9")
+        out_report_array[10, :, :] = (out_report_array[3, :, :] * out_report_array[9, :, :])
+
+        # Layer 11: 
+        log.info("Layer 11: dNDVI Only Change Detection Count: Count if a change was detected by the dNDVI test and that not cloud occluded (or out-of-orbit)")
+        locs = (change_array >= 0) & (dNDVI_array < int(dNDVI_threshold * dNDVI_scale_factor))
+        out_report_array[11, locs] = out_report_array[11, locs] + 1
+
+        # Layer 12:
+        log.info("Layer 12: Binary time-series decision: Based on dNDVI Only and minimum_required_dNDVI_detections_threshold")
+        out_report_array[12, :, :] = 0  ## Reset from previous calls 
+        # locs_binarise = (out_report_array[8, :, :] >= percentage_probability_threshold) & (out_report_array[6, :, :] >= minimum_required_validated_detections_threshold)
+        locs_binarise = (out_report_array[11, :, :] >= minimum_required_dNDVI_detections_threshold)
+        out_report_array[12, locs_binarise] = 1  # Assumes empty array layer initialised to zero
+
+        # Layer 13:
+        log.info("Layer 13: Binary time-series decision: Based on Classifier Only")
+        out_report_array[13, :, :] = 0  ## Reset from previous calls 
+        locs_binarise = (out_report_array[2, :, :] >= minimum_required_classifier_detections_threshold)
+        out_report_array[13, locs_binarise] = 1  # Assumes empty array layer initialised to zero
+
+        # Layer 14:
+        log.info("Layer 14: Combined Classifier+dNDVI Binary time-series decision: Based on Classifier AND dNDVI opinion")
+        out_report_array[14, :, :] = 0  ## Reset from previous calls 
+        locs_binarise = (out_report_array[12, :, :] > 0) & (out_report_array[13, :, :] > 0)
+        out_report_array[14, locs_binarise] = 1  # Assumes empty array layer initialised to zero
+
+        # Layer 15:
+        log.info("Layer 15: FROM Classification Count")
+        # Assumes layer was initialised to zero when report file was created above e.g. with out_report_array[15, :, :] = 0
+        locs_from = np.isin(new_class_array, change_from)  # change_from parameter holds a list of classes
+        # locs_from = np.nonzero(np.isin(new_class_array, change_from))  # change_from parameter holds a list of classes
+        out_report_array[15, locs_from] = out_report_array[15, locs_from] + 1  # Assumes empty array layer initialised to zero
+
+        # Layer 16:
+        log.info("Layer 16: TO Classification Count")
+        # Assumes layer was initialised to zero when report file was created above e.g. with out_report_array[16, :, :] = 0  
+        locs_to = np.isin(new_class_array, change_to)  # change_from parameter holds a list of classes
+        # locs_to = np.nonzero(np.isin(new_class_array, change_to))  # change_to parameter holds a list of classes
+        out_report_array[16, locs_to] = out_report_array[16, locs_to] + 1  # Assumes empty array layer initialised to zero
+
+        # Layer 17:
+        log.info("Layer 17: Binary Decision Thresholds on FROM and TO Classification Counts")
+        out_report_array[17, :, :] = 0  ## Reset from previous calls 
+        locs_tofrom = (out_report_array[15, :, :] >= minimum_required_FROM_detections_threshold) & (out_report_array[16, :, :] >= minimum_required_TO_detections_threshold)
+        out_report_array[17, locs_tofrom] = 1  # Assumes empty array layer initialised to zero
+
 
         # ORIGINAL CODE
         # increase counter if a change was detected
@@ -4601,9 +4716,12 @@ def __change_from_class_maps(
         # locs = ( change_array == 0 )
         # out_report_array[2, locs] = out_report_array[2, locs] - 1
 
-        # I.R. 20220603 END
+        # I.R. 20220603/20230421 END
+
         change_array = None
         change_image = None
+        dNDVI_array = None
+        dNDVI_image = None
         out_report_array = None
         report_image = None
     return change_raster
