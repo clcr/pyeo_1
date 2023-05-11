@@ -39,7 +39,6 @@ REFRESH_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/p
 
 USERNAME = CONFIG["authentication"]["username"]
 PASSWORD = CONFIG["authentication"]["password"]
-REFRESH_TOKEN = CONFIG["tokens"]["refresh"]
 
 SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
 
