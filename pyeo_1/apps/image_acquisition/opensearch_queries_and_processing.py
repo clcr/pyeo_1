@@ -137,7 +137,7 @@ def filter_valid_size_s2_products(response_dataframe: pd.DataFrame) -> pd.DataFr
     response_dataframe["size"] = response_dataframe["size"].apply(
         lambda x: float(x) * 1e-6
     )
-    response_dataframe = response_dataframe.query("size >= " + MIN_IMAGE_SIZE)
+    response_dataframe = response_dataframe.query("size >= " + str(MIN_IMAGE_SIZE))
 
     response_dataframe = response_dataframe.reset_index(drop=True)
     return response_dataframe
