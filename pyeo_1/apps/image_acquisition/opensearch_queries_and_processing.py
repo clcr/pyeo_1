@@ -32,6 +32,7 @@ REFRESH_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/p
 
 USERNAME = CONFIG["authentication"]["username"]
 PASSWORD = CONFIG["authentication"]["password"]
+REFRESH_TOKEN = CONFIG["authentication"]["refresh_token"]
 
 SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
 MIN_IMAGE_SIZE = CONFIG["sentinel2_properties"]["min_image_size"]
@@ -274,7 +275,9 @@ def unzip_downloaded_product(write_directory: str, product_name: str) -> None:
     -------
 
     """
-
+    
+    LOGGER.info(f"Attempting to unzip image: {product_name}")
+    
     try:
         zip_path = os.path.join(write_directory, product_name + ".zip")
         zip_ref = zipfile.ZipFile(zip_path, "r")

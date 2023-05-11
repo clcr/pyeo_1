@@ -80,25 +80,47 @@ async def main() -> None:
                 continue  # Product already downloaded, skipping to next product
             else:
                 if product_status == "ONLINE":
-                    download_product(
-                        product_uuid=product_uuid,
-                        auth_token=auth_token,
-                        product_name=product_name,
-                    )
-                    LOGGER.info(
-                        f"Downloaded product: {product_name} of UUID: {product_uuid}."
-                    )
-                    unzip_downloaded_product(
-                        write_directory=SAFE_DOWNLOAD_PATH, product_name=product_name
-                    )
+                    try:
+                        LOGGER.info(
+                            f"Starting download of file: {product_name} with UUID {product_uuid}."
+                        )
+                        download_product(
+                            product_uuid=product_uuid,
+                            auth_token=auth_token,
+                            product_name=product_name,
+                        )
+                        LOGGER.info(
+                            f"Finished downloading product: {product_name} with UUID: {product_uuid}."
+                        )
+                        unzip_downloaded_product(
+                            write_directory=SAFE_DOWNLOAD_PATH,
+                            product_name=product_name,
+                        )
+                    except:
+                        LOGGER.info(
+                            f"Download for product: {product_name} with UUID: {product_uuid} failed!"
+                        )
+                        try:
+                            os.remove(f"{SAFE_DOWNLOAD_PATH}/{product_name}")
+                            LOGGER.info(
+                                f"Incomplete or otherwise faulty product: {product_name} removed. This product will have to be redownloaded."
+                            )
+                        except:
+                            LOGGER.info(
+                                f"Problem removing product: {product_name}. Does the product exist on disk?"
+                            )
+                            continue
+                        finally:
+                            LOGGER.info("Continuing the download.")
+                            continue
 
                 else:
                     """
                     The new API seems to have retired the Offline data activation mechanism.
                     Currently, we are not expecting any offline data, but this may change in the future,
-                    so the offline data retrieval flow may still need to be implemented. Check legacy_api_main.py for
-                    reference on how to activate offline data (though this mechanism may change in the future). For now,
-                    we are logging the names of offline products should we come across one (unlikely).
+                    so the offline data retrieval flow may still need to be implemented. Check legacy_main.py for
+                    reference on how to activate offline data (though this mechanism may also change in the future).
+                    For now, we are logging the names of offline products should we come across one (unlikely).
                     """
                     LOGGER.info(
                         f"Product: {product_name} is not online. Adding to activation queue."
