@@ -45,22 +45,22 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     from tempfile import TemporaryDirectory
     from osgeo import gdal, ogr, osr
     from pathlib import Path
-    import signal
+    #import signal
 
     #### set up timeout
-    class TimeoutException(Exception):
-        pass
+    #class TimeoutException(Exception):
+      #  pass
 
-    def timeout_handler(signum, frame):
-        raise TimeoutException("Computation timed out.")
+    #def timeout_handler(signum, frame):
+    #    raise TimeoutException("Computation timed out.")
 
-    # Set the timeout to 2 hours (in seconds)
-    timeout_seconds = 2 * 60 * 60
+    # # Set the timeout to 2 hours (in seconds)
+    # timeout_seconds = 2 * 60 * 60
 
-    # Set the signal handler
-    signal.signal(signal.SIGALRM, timeout_handler)
-    signal.alarm(timeout_seconds)
-    ####
+    # # Set the signal handler
+    # signal.signal(signal.SIGALRM, timeout_handler)
+    # signal.alarm(timeout_seconds)
+    # ####
 
     # specify gdal and proj installation, this is GDAL's
     home = str(Path.home())
@@ -117,9 +117,9 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
                 [],
             )
             # cancel the alarm if Polygonize finishes before the timeout
-            signal.alarm(0)
-        except TimeoutException:
-            log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
+            #signal.alarm(0)
+        #except TimeoutException:
+          #  log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
         except RuntimeError as error:
             log.error(f"GDAL Polygonize failed: \n {error}")
         except Exception as error:
