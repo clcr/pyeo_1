@@ -1084,7 +1084,29 @@ def rolling_detection(config_path,
                 # area analysis and filtering
                 # Region labelling and highlighting
 
+            # I.R. ToDo: Function compute additional layers derived from set of layers in report file generated in __change_from_class_maps()
+            # pyeo_1.raster_manipulation.computed_report_layer_generation(report_path = output_product)
 
+            # I.R. ToDo: Function to generate 3D time series array of classified (+NDVI?) images over full date range 
+            ## and save it to disk as a layered GeoTIFF (or numpy array)
+            ## (Build into above loop that generates report...?)
+            # pyeo_1.raster_manipulation.time_series_construction(classified_image_dir = classified_image_dir, change_from = from_classes,change_to = to_classes)
+
+            # I.R. ToDo: Insert function to perform time series analysis on 3D classified (+NDVI?) time series array and generate forest alert outputs
+            ## in a GeoTIFF file
+            # pyeo_1.raster_manipulation.time_series_analysis(report_path = output_product)
+            # 
+            # I.R. ToDo: Alternatively.. implement sliding buffer to scan through classified (and/or NDVI) image set so that FIR, IIR and State-Machine
+            ## filters can be implemented to generate forest alerts  
+            ## e.g. 5 layers to hold rotating buffer of classification and/or NDVI state plus additional layers to hold state variables
+            ## Use state to record a run of n consecutive change_from classes, 
+            ## detect transition to bare earth class with a simultaneous NDVI drop of > threshold
+            ## record time point as first change date
+            ## detect subsequent change to grassland class as bare earth re-greens with new growth
+            ## count detection of multiple such cycles if they occur
+            ## Use the above as input for temporal classification of pixel by land use e.g. multiple season correlated cycles as a signature of cropland
+            ### and thus establish an expectation of variation for that pixel in the future
+            ## Extend use of above to incorporate spatial analysis over multiple pixel neighbourhoods
 
             log.info("---------------------------------------------------------------")
             log.info("Post-classification change detection complete.")
