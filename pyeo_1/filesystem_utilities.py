@@ -280,7 +280,7 @@ def get_raster_paths(paths, filepatterns, dirpattern):
         # log.info("  row     = {}".format(row))
         results.extend(row)
         # log.info("  results = {}".format(results))
-    # TODO: the following line expects exactly one search result per path. Challenge that assumption
+    # todo: the following line expects exactly one search result per path. Challenge that assumption
     if len(results) == len(paths) * (len(filepatterns) + 1):
         arr = np.array(results, dtype=object).reshape(len(paths), len(filepatterns) + 1)
         results = pd.DataFrame(arr, columns=cols)

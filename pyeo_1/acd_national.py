@@ -60,13 +60,13 @@ def automatic_change_detection_national(path_to_config):
     # potential todo: integrated_vectorisation to accomodate the tilelist_df
     # and skip already existing vectors
 
-    # acd_integrated_vectorisation(root_dir=config_dict["tile_dir"],
-    #                           log=acd_log,
-    #                           epsg=config_dict["epsg"],
-    #                           level_1_boundaries_path=config_dict["level_1_boundaries_path"],
-    #                           conda_env_name=config_dict["conda_env_name"],
-    #                           delete_existing=config_dict["do_delete_existing_vector"],
-    #                           tilelist_filepath=tilelist_filepath)
+    acd_integrated_vectorisation(root_dir=config_dict["tile_dir"],
+                              log=acd_log,
+                              epsg=config_dict["epsg"],
+                              level_1_boundaries_path=config_dict["level_1_boundaries_path"],
+                              conda_env_name=config_dict["conda_env_name"],
+                              delete_existing=config_dict["do_delete_existing_vector"],
+                              tilelist_filepath=tilelist_filepath)
     
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_national_integration")
@@ -1200,8 +1200,8 @@ def acd_by_tile_raster(config_dict: dict, log, tile_directory_path: str, tile_to
             tile_log.info("Creating change layers from stacked class images.")
             tile_log.info("---------------------------------------------------------------")
             tile_log.info("Changes of interest:")
-            tile_log.info("  from any of the classes {}".format(from_classes))
-            tile_log.info("  to   any of the classes {}".format(to_classes))
+            tile_log.info("  from any of the classes {}".format(config_dict["from_classes"]))
+            tile_log.info("  to   any of the classes {}".format(config_dict["to_classes"]))
 
             # optionally sieve the class images
             if sieve > 0:
@@ -1337,8 +1337,8 @@ def acd_by_tile_raster(config_dict: dict, log, tile_directory_path: str, tile_to
                     raster_manipulation.__change_from_class_maps(latest_class_composite_path,
                                                                 image,
                                                                 change_raster,
-                                                                change_from = from_classes,
-                                                                change_to = to_classes,
+                                                                change_from = config_dict["from_classes"],
+                                                                change_to = config_dict["to_classes"],
                                                                 report_path = output_product,
                                                                 skip_existing = skip_existing,
                                                                 old_image_dir = composite_dir,
@@ -1351,8 +1351,8 @@ def acd_by_tile_raster(config_dict: dict, log, tile_directory_path: str, tile_to
                     raster_manipulation.change_from_class_maps(latest_class_composite_path,
                                                                 image,
                                                                 change_raster,
-                                                                change_from = from_classes,
-                                                                change_to = to_classes,
+                                                                change_from = config_dict["from_classes"],
+                                                                change_to = config_dict["to_classes"],
                                                                 skip_existing = skip_existing
                                                                 )
 
@@ -1399,7 +1399,8 @@ def acd_by_tile_raster(config_dict: dict, log, tile_directory_path: str, tile_to
                 output_product = os.path.join(probability_image_dir,
                                               "report_{}_{}_{}.tif".format(
                                               before_timestamp.strftime("%Y%m%dT%H%M%S"),
-                                              tile_id,
+                                              tile_to_process,
+                                              # tile_id,
                                               after_timestamp.strftime("%Y%m%dT%H%M%S"))
                                               )
                 tile_log.info("Combining date maps: {}".format(date_image_paths))
@@ -1652,7 +1653,7 @@ def acd_integrated_vectorisation(root_dir,
             # log the order of filepaths to vectorise
             for n, tile_path in enumerate(sorted_filepaths):
                 log.info(f"{n+1}  :  {tile_path}")
-            log.info("--"*30)
+            log.info("---------------------------------------------------------------")
 
             # vectorise per path logic
             for report in sorted_filepaths:                
@@ -1693,18 +1694,17 @@ def acd_integrated_vectorisation(root_dir,
     else:
         log.error(f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand")
 
-    log.info("--"*30)
-    log.info("--"*30)
+    log.info("---------------------------------------------------------------")
+    log.info("---------------------------------------------------------------")
     log.info("National Vectorisation of the Change Reports Complete")
-    log.info("--"*30)
-    log.info("--"*30)
+    log.info("---------------------------------------------------------------")
+    log.info("---------------------------------------------------------------")
 
     return
 
 def acd_national_integration(root_dir: str,
                              log,
                              epsg: int,
-                             level_1_boundaries_path: str,
                              conda_env_name: str,
                              config_dict : dict):
     
@@ -1721,7 +1721,6 @@ def acd_national_integration(root_dir: str,
     root_dir : str
     log :
     epsg : int
-    level_1_boundaries_path : str
     conda_env_name : str
     config_dict : dict
 
@@ -1751,32 +1750,40 @@ def acd_national_integration(root_dir: str,
     # initialise empty geodataframe
     merged_gdf = gpd.GeoDataFrame()
 
-    # read in ROI
-    roi_filepath = os.path.join(config_dict["roi_dir"], config_dict["roi_filename"])
-    roi = gpd.read_file(roi_filepath)
-    # for each shapefile in the list of shapefile paths, read, filter and merge
-    for vector in vectorised_paths[:-1]:
-        try:
-            shape = gpd.read_file(vector)
+    try:
+        # read in ROI
+        roi_filepath = os.path.join(config_dict["roi_dir"], config_dict["roi_filename"])
+        roi = gpd.read_file(roi_filepath)
+        log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
+        roi = roi.to_crs(epsg)
+        # for each shapefile in the list of shapefile paths, read, filter and merge
+        for vector in vectorised_paths[:-1]:
+            try:
+                log.info(f"Reading in change report shapefile   :  {vector}")
+                shape = gpd.read_file(vector)
+                log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
+                shape = shape.to_crs(epsg)
+                # spatial filter intersection
+                log.info(f"Intersecting {vector} with {roi_filepath}")
+                intersected = shape.overlay(roi, how="intersection")
 
-            # spatial filter intersection
-            intersected = shape.overlay(roi, how="intersection")
+                # join the two gdfs
+                merged_gdf = pd.concat([merged_gdf, intersected], ignore_index=True)
+                log.info(f"Intersection: Success")
+            except:
+                log.error(f"failed to merge geodataframe: {vector}")
+    except:
+        log.error(f"Could not open ROI, is the filepath correct?  :  {roi_filepath}")
 
-            # join the two gdfs
-            merged_gdf = pd.concat([merged_gdf, intersected], ignore_index=True)
-            log.info(f"{vector} merged")
-        except:
-            log.error(f"failed to merge geodataframe: {vector}")
-            
     out_path = f"{os.path.join(root_dir, 'national_geodataframe.shp')}"
     merged_gdf.to_file(filename=out_path)
     log.info(f"National GeoDataFrame written to {out_path}")
 
-    log.info("--"*20)
-    log.info("--"*20)
+    log.info("---------------------------------------------------------------")
+    log.info("---------------------------------------------------------------")
     log.info("National Integration of the Vectorised Change Reports Complete")
-    log.info("--"*20)
-    log.info("--"*20)
+    log.info("---------------------------------------------------------------")
+    log.info("---------------------------------------------------------------")
 
     return
 

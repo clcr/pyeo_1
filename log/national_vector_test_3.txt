@@ -8026,3 +8026,78 @@
 2023-05-11 12:11:47,604: INFO: Finished ACD Raster Processes for Tile :  36NXG
 2023-05-11 12:11:47,631: INFO: Starting ACD Raster Processes for Tile :  36NYG
 2023-05-11 12:11:47,631: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-11 13:06:48,814: INFO: ****PROCESSING START****
+2023-05-11 13:06:48,843: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,843: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-11 13:06:48,843: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,843: INFO: Reading in parameters defined in the Config
+2023-05-11 13:06:48,844: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,844: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,844: INFO: Starting acd_to_config_to_log()
+2023-05-11 13:06:48,844: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,844: INFO: Options:
+2023-05-11 13:06:48,844: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-11 13:06:48,844: INFO:   --build_composite for baseline composite
+2023-05-11 13:06:48,844: INFO:   --download_source = "scihub"
+2023-05-11 13:06:48,844: INFO:          composite start date  : 20230315
+2023-05-11 13:06:48,844: INFO:          composite end date  : 20231231
+2023-05-11 13:06:48,845: INFO:   --download for change detection images
+2023-05-11 13:06:48,845: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-11 13:06:48,845: INFO:   --change to produce change detection layers and report images
+2023-05-11 13:06:48,845: INFO:          change start date  : 20230101
+2023-05-11 13:06:48,845: INFO:          change end date  : 20230314
+2023-05-11 13:06:48,845: INFO:   --quicklooks to create image quicklooks
+2023-05-11 13:06:48,845: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-11 13:06:48,845: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-11 13:06:48,845: INFO: EPSG used is: 21097
+2023-05-11 13:06:48,845: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-11 13:06:48,845: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-11 13:06:48,845: INFO: List of class labels:
+2023-05-11 13:06:48,845: INFO:   1 : primary forest
+2023-05-11 13:06:48,846: INFO:   2 : plantation forest
+2023-05-11 13:06:48,846: INFO:   3 : bare soil
+2023-05-11 13:06:48,846: INFO:   4 : crops
+2023-05-11 13:06:48,846: INFO:   5 : grassland
+2023-05-11 13:06:48,846: INFO:   6 : open water
+2023-05-11 13:06:48,846: INFO:   7 : burn scar
+2023-05-11 13:06:48,846: INFO:   8 : cloud
+2023-05-11 13:06:48,846: INFO:   9 : cloud shadow
+2023-05-11 13:06:48,846: INFO:   10 : haze
+2023-05-11 13:06:48,846: INFO:   11 : sparse woodland
+2023-05-11 13:06:48,846: INFO:   12 : dense woodland
+2023-05-11 13:06:48,846: INFO:   13 : artificial
+2023-05-11 13:06:48,846: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-11 13:06:48,846: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-11 13:06:48,846: INFO: ------------------------------------------------------------
+2023-05-11 13:06:48,846: INFO: Reporting Directories and Filepaths
+2023-05-11 13:06:48,846: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-11 13:06:48,847: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-11 13:06:48,847: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-11 13:06:48,847: INFO: Integrated Directory is   : ./integrated
+2023-05-11 13:06:48,847: INFO: ROI Directory is   : ./roi
+2023-05-11 13:06:48,847: INFO: Geometry Directory is   : ./geometry
+2023-05-11 13:06:48,847: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-11 13:06:48,847: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-11 13:06:48,847: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-11 13:06:48,847: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:48,847: INFO: Starting acd_roi_tile_intersection()
+2023-05-11 13:06:48,847: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:49,083: INFO: The provided ROI intersects with 1 Sentinel-2 tiles
+2023-05-11 13:06:49,083: INFO: These tiles are  :
+2023-05-11 13:06:49,084: INFO:   1 : 36NXG
+2023-05-11 13:06:49,084: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-11 13:06:49,090: INFO: Finished ROI tile intersection
+2023-05-11 13:06:49,090: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:49,090: INFO: Starting acd_integrated_raster():
+2023-05-11 13:06:49,090: INFO: ---------------------------------------------------------------
+2023-05-11 13:06:49,154: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-11 13:06:49,154: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-11 16:00:35,138: ERROR: Could not complete ACD Raster Process for Tile  36NXG
+2023-05-11 16:00:35,290: ERROR: error received   :  name 'from_classes' is not defined
+2023-05-11 16:00:35,291: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-11 16:00:35,291: INFO: ---------------------------------------------------------------
+2023-05-11 16:00:35,291: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-11 16:00:35,291: INFO: ---------------------------------------------------------------
+2023-05-11 16:00:35,292: INFO: ---------------------------------------------------------------
+2023-05-11 16:00:35,292: INFO: Starting acd_national_integration
+2023-05-11 16:00:35,292: INFO: ---------------------------------------------------------------
