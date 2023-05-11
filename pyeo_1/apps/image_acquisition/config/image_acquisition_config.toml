@@ -1,0 +1,16 @@
+title = "SEPAL PyEO Image Acquisition Configuration File"
+
+[authentication] # Copernicus DataSpace service authentication
+username = ""
+password = ""
+
+[sentinel2_properties]
+start_date = "" # YYYY-MM-DD
+end_date = "" # YYYY-MM-DD
+max_cloud_cover = 100 # 0-100
+tiles_to_process = "" # Path to tile centroid .geojson
+min_image_size = 500
+max_records = 100 # Maximum amount of records to return from a single query
+
+[directories]
+l2a_safes = "" # Root path to download the imagery to
