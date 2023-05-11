@@ -1077,13 +1077,6 @@ def rolling_detection(config_path,
                                                                 skip_existing = skip_existing
                                                                 )
 
-            # I.R. ToDo: Insert new report_analysis function to generate additional computed layers derived
-            # from the outputs of iteration through change image set above
-            # E.g. :
-                # binarisation
-                # area analysis and filtering
-                # Region labelling and highlighting
-
             # I.R. ToDo: Function compute additional layers derived from set of layers in report file generated in __change_from_class_maps()
             # pyeo_1.raster_manipulation.computed_report_layer_generation(report_path = output_product)
 
