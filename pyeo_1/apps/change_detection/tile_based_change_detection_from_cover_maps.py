@@ -500,10 +500,10 @@ def rolling_detection(config_path,
                 log.info("---------------------------------------------------------------")
                 # I.R. 20220607 END
 
-            if do_quicklooks or do_all:
-                log.info("---------------------------------------------------------------")
-                log.info("Producing quicklooks.")
-                log.info("---------------------------------------------------------------")
+                if do_quicklooks or do_all:
+                    log.info("---------------------------------------------------------------")
+                    log.info("Producing quicklooks.")
+                    log.info("---------------------------------------------------------------")
                 dirs_for_quicklooks = [composite_l2_masked_image_dir]
                 for main_dir in dirs_for_quicklooks:
                     files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") ]
@@ -518,7 +518,7 @@ def rolling_detection(config_path,
                                                                       quicklook_path,
                                                                       width=512,
                                                                       height=512,
-                                                                      format="PNG",
+                                                                  format="PNG",
                                                                       bands=[3,2,1],
                                                                       scale_factors=[[0,2000,0,255]]
                                                                       )
@@ -1082,7 +1082,7 @@ def rolling_detection(config_path,
             # E.g. :
                 # binarisation
                 # area analysis and filtering
-                # region labelling and highlightinh
+                # Region labelling and highlighting
 
 
 
