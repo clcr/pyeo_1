@@ -3572,7 +3572,7 @@ def stack_old_and_new_images(
         log.error("Tiles  of the two images do not match. Aborted.")
 
 
-def apply_sen2cor(image_path, sen2cor_path, delete_unprocessed_image=False):
+def apply_sen2cor(image_path, sen2cor_path, delete_unprocessed_image=False, log=logging.getLogger(__name__)):
     """
     Applies sen2cor to the SAFE file at image_path. Returns the path to the new product.
 
@@ -3718,8 +3718,7 @@ def get_sen2cor_version(sen2cor_path):
 
 
 def atmospheric_correction(
-    in_directory, out_directory, sen2cor_path, delete_unprocessed_image=False
-):
+    in_directory, out_directory, sen2cor_path, delete_unprocessed_image=False, log=logging.getLogger(__name__)):
     """
     Applies Sen2cor atmospheric correction to each L1C image in in_directory
 
@@ -3733,9 +3732,11 @@ def atmospheric_correction(
         Path to the l2a_process script (Linux) or l2a_process.exe (Windows)
     delete_unprocessed_image : bool, optional
         If True, delete the unprocessed image after processing is done. Defaults to False.
-
+    log : optional
+        if a logger object is provided, `atmospheric_correction` will pass statements to that logger, otherwise the default namespace logger is used.
     """
-    log = logging.getLogger(__name__)
+    
+    # log = logging.getLogger(__name__)
     images = [
         image for image in os.listdir(in_directory) if image.startswith("MSIL1C", 4)
     ]
@@ -3769,6 +3770,7 @@ def atmospheric_correction(
                     image_path,
                     sen2cor_path,
                     delete_unprocessed_image=delete_unprocessed_image,
+                    log=log
                 )
                 l2_name = os.path.basename(l2_path)
                 log.info("Changing L2A path: {}".format(l2_path))

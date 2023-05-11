@@ -14,7 +14,8 @@ Example notebooks are at https://github.com/clcr/pyeo_training_materials
 Package management is performed by Conda, for instructions on how to install, refer to: https://docs.conda.io/en/latest/.  
 *Note: Conda can be installed as part of Anaconda https://www.anaconda.com/*
 
-For downloading, you will need a Scihub account: https://scihub.copernicus.eu/
+From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space Ecosystem (COP DSE). In the meantime, if you wish to download from Scihub, you will need a Scihub account: https://scihub.copernicus.eu/
+To use COP DSE, you will need an account: https://dataspace.copernicus.eu
 
 For processing of Sentinel-2 L1Cs, you will need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/, but this is installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.
 

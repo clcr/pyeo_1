@@ -6291,3 +6291,1738 @@
 2023-05-05 16:25:04,983: INFO: ---------------------------------------------------------------
 2023-05-05 16:25:04,983: INFO: ---                  INTEGRATED PROCESSING END              ---
 2023-05-05 16:25:04,983: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,723: INFO: ****PROCESSING START****
+2023-05-09 17:28:36,753: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,753: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-09 17:28:36,753: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,753: INFO: Reading in parameters defined in the Config
+2023-05-09 17:28:36,753: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,754: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,754: INFO: Starting acd_to_config_to_log()
+2023-05-09 17:28:36,754: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,754: INFO: Options:
+2023-05-09 17:28:36,754: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-09 17:28:36,754: INFO:   --do_all
+2023-05-09 17:28:36,754: INFO:   --build_composite for baseline composite
+2023-05-09 17:28:36,754: INFO:   --download_source = "scihub"
+2023-05-09 17:28:36,754: INFO:   composite start date  : 20230315
+2023-05-09 17:28:36,755: INFO:   composite end date  : 20231231
+2023-05-09 17:28:36,755: INFO:   --download for change detection images
+2023-05-09 17:28:36,755: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-09 17:28:36,755: INFO:   --build_prob_image to save classification probability layers
+2023-05-09 17:28:36,755: INFO:   --change to produce change detection layers and report images
+2023-05-09 17:28:36,755: INFO:   change start date  : 20230101
+2023-05-09 17:28:36,755: INFO:   change end date  : 20230314
+2023-05-09 17:28:36,755: INFO:   --update to update the baseline composite with new observations
+2023-05-09 17:28:36,755: INFO:   --quicklooks to create image quicklooks
+2023-05-09 17:28:36,755: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-09 17:28:36,755: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-09 17:28:36,755: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-09 17:28:36,755: INFO:            Keeps only L2A images, composites and report files.
+2023-05-09 17:28:36,755: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-09 17:28:36,755: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-09 17:28:36,755: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-09 17:28:36,755: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-09 17:28:36,755: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-09 17:28:36,756: INFO: EPSG used is: 21097
+2023-05-09 17:28:36,756: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-09 17:28:36,756: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-09 17:28:36,756: INFO: List of class labels:
+2023-05-09 17:28:36,756: INFO:   1 : primary forest
+2023-05-09 17:28:36,756: INFO:   2 : plantation forest
+2023-05-09 17:28:36,756: INFO:   3 : bare soil
+2023-05-09 17:28:36,756: INFO:   4 : crops
+2023-05-09 17:28:36,756: INFO:   5 : grassland
+2023-05-09 17:28:36,756: INFO:   6 : open water
+2023-05-09 17:28:36,756: INFO:   7 : burn scar
+2023-05-09 17:28:36,756: INFO:   8 : cloud
+2023-05-09 17:28:36,756: INFO:   9 : cloud shadow
+2023-05-09 17:28:36,756: INFO:   10 : haze
+2023-05-09 17:28:36,756: INFO:   11 : sparse woodland
+2023-05-09 17:28:36,756: INFO:   12 : dense woodland
+2023-05-09 17:28:36,756: INFO:   13 : artificial
+2023-05-09 17:28:36,757: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-09 17:28:36,757: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-09 17:28:36,757: INFO: ------------------------------------------------------------
+2023-05-09 17:28:36,757: INFO: Reporting Directories and Filepaths
+2023-05-09 17:28:36,757: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-09 17:28:36,757: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-09 17:28:36,757: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-09 17:28:36,757: INFO: Integrated Directory is   : ./integrated
+2023-05-09 17:28:36,757: INFO: ROI Directory is   : ./roi
+2023-05-09 17:28:36,757: INFO: Geometry Directory is   : ./geometry
+2023-05-09 17:28:36,757: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-09 17:28:36,757: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-09 17:28:36,757: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-09 17:28:36,757: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:36,757: INFO: Starting acd_roi_tile_intersection()
+2023-05-09 17:28:36,757: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,172: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-09 17:28:37,172: INFO: These tiles are  :
+2023-05-09 17:28:37,172: INFO:   1 : 36NXG
+2023-05-09 17:28:37,172: INFO:   2 : 36NYG
+2023-05-09 17:28:37,172: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-09 17:28:37,179: INFO: Finished ROI tile intersection
+2023-05-09 17:28:37,179: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,180: INFO: Starting acd_integrated_raster():
+2023-05-09 17:28:37,180: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,214: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:28:37,214: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-09 17:28:37,265: INFO: Creating the directory paths
+2023-05-09 17:28:37,265: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,265: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:28:37,266: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,266: INFO: Searching for images for initial composite.
+2023-05-09 17:28:37,843: INFO: --> Found 23 L1C and L2A products for the composite:
+2023-05-09 17:28:37,859: INFO: Removed 1 faulty scenes <200MB in size from the list:
+2023-05-09 17:28:37,863: INFO:    198.2 MB: S2B_MSIL1C_20230218T075959_N0509_R035_T36NXG_20230220T131038
+2023-05-09 17:28:37,864: INFO:     22 L1C products
+2023-05-09 17:28:37,864: INFO:     0 L2A products
+2023-05-09 17:28:37,864: INFO: Capping the number of L1C products to 4
+2023-05-09 17:28:37,865: INFO: Relative orbits found covering tile: [ 35 135]
+2023-05-09 17:28:37,867: INFO:     4 L1C products remain:
+2023-05-09 17:28:37,867: INFO:        S2A_MSIL1C_20230305T075811_N0509_R035_T36NXG_20230305T094419
+2023-05-09 17:28:37,867: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NXG_20230220T093430
+2023-05-09 17:28:37,867: INFO:        S2A_MSIL1C_20230213T080031_N0509_R035_T36NXG_20230213T094415
+2023-05-09 17:28:37,867: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NXG_20230121T093443
+2023-05-09 17:28:37,868: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:28:37,868: INFO:   availability of matching L2A products for download.
+2023-05-09 17:28:37,868: INFO: Searching locally for file names containing: 20230305T075811_N0509_R035_T36NXG.
+2023-05-09 17:28:37,869: ERROR: Could not complete ACD Raster Process for Tile  36NXG
+2023-05-09 17:28:37,869: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L1C'
+2023-05-09 17:28:37,869: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:28:37,869: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-09 17:28:37,869: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-09 17:28:37,897: INFO: Creating the directory paths
+2023-05-09 17:28:37,897: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,897: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:28:37,897: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:37,897: INFO: Searching for images for initial composite.
+2023-05-09 17:28:38,234: INFO: --> Found 14 L1C and L2A products for the composite:
+2023-05-09 17:28:38,243: INFO: Removed 0 faulty scenes <200MB in size from the list:
+2023-05-09 17:28:38,246: INFO:     14 L1C products
+2023-05-09 17:28:38,246: INFO:     0 L2A products
+2023-05-09 17:28:38,247: INFO: Capping the number of L1C products to 4
+2023-05-09 17:28:38,247: INFO: Relative orbits found covering tile: [135]
+2023-05-09 17:28:38,248: INFO:     4 L1C products remain:
+2023-05-09 17:28:38,249: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NYG_20230220T093430
+2023-05-09 17:28:38,249: INFO:        S2A_MSIL1C_20230210T075051_N0509_R135_T36NYG_20230210T093437
+2023-05-09 17:28:38,249: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NYG_20230121T093443
+2023-05-09 17:28:38,249: INFO:        S2B_MSIL1C_20230106T075219_N0509_R135_T36NYG_20230106T093416
+2023-05-09 17:28:38,249: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:28:38,249: INFO:   availability of matching L2A products for download.
+2023-05-09 17:28:38,250: INFO: Searching locally for file names containing: 20230220T074941_N0509_R135_T36NYG.
+2023-05-09 17:28:38,250: ERROR: Could not complete ACD Raster Process for Tile  36NYG
+2023-05-09 17:28:38,250: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L1C'
+2023-05-09 17:28:38,251: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: Starting acd_national_integration
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: Starting acd_national_filtering
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,251: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,252: INFO: Starting acd_national_manual_validation()
+2023-05-09 17:28:38,252: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,252: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,252: INFO: Starting acd_national_distribution()
+2023-05-09 17:28:38,252: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,252: INFO: ---------------------------------------------------------------
+2023-05-09 17:28:38,252: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-09 17:28:38,252: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,878: INFO: ****PROCESSING START****
+2023-05-09 17:30:29,880: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,880: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-09 17:30:29,880: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,880: INFO: Reading in parameters defined in the Config
+2023-05-09 17:30:29,880: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,880: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,880: INFO: Starting acd_to_config_to_log()
+2023-05-09 17:30:29,880: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,880: INFO: Options:
+2023-05-09 17:30:29,881: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-09 17:30:29,881: INFO:   --do_all
+2023-05-09 17:30:29,881: INFO:   --build_composite for baseline composite
+2023-05-09 17:30:29,881: INFO:   --download_source = "scihub"
+2023-05-09 17:30:29,881: INFO:   composite start date  : 20230315
+2023-05-09 17:30:29,881: INFO:   composite end date  : 20231231
+2023-05-09 17:30:29,881: INFO:   --download for change detection images
+2023-05-09 17:30:29,881: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-09 17:30:29,881: INFO:   --build_prob_image to save classification probability layers
+2023-05-09 17:30:29,881: INFO:   --change to produce change detection layers and report images
+2023-05-09 17:30:29,881: INFO:   change start date  : 20230101
+2023-05-09 17:30:29,881: INFO:   change end date  : 20230314
+2023-05-09 17:30:29,881: INFO:   --update to update the baseline composite with new observations
+2023-05-09 17:30:29,881: INFO:   --quicklooks to create image quicklooks
+2023-05-09 17:30:29,881: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-09 17:30:29,881: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-09 17:30:29,881: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-09 17:30:29,882: INFO:            Keeps only L2A images, composites and report files.
+2023-05-09 17:30:29,882: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-09 17:30:29,882: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-09 17:30:29,882: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-09 17:30:29,882: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-09 17:30:29,882: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-09 17:30:29,882: INFO: EPSG used is: 21097
+2023-05-09 17:30:29,882: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-09 17:30:29,882: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-09 17:30:29,882: INFO: List of class labels:
+2023-05-09 17:30:29,882: INFO:   1 : primary forest
+2023-05-09 17:30:29,882: INFO:   2 : plantation forest
+2023-05-09 17:30:29,882: INFO:   3 : bare soil
+2023-05-09 17:30:29,882: INFO:   4 : crops
+2023-05-09 17:30:29,882: INFO:   5 : grassland
+2023-05-09 17:30:29,882: INFO:   6 : open water
+2023-05-09 17:30:29,883: INFO:   7 : burn scar
+2023-05-09 17:30:29,883: INFO:   8 : cloud
+2023-05-09 17:30:29,883: INFO:   9 : cloud shadow
+2023-05-09 17:30:29,883: INFO:   10 : haze
+2023-05-09 17:30:29,883: INFO:   11 : sparse woodland
+2023-05-09 17:30:29,883: INFO:   12 : dense woodland
+2023-05-09 17:30:29,883: INFO:   13 : artificial
+2023-05-09 17:30:29,883: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-09 17:30:29,883: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-09 17:30:29,883: INFO: ------------------------------------------------------------
+2023-05-09 17:30:29,883: INFO: Reporting Directories and Filepaths
+2023-05-09 17:30:29,883: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-09 17:30:29,883: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-09 17:30:29,883: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-09 17:30:29,883: INFO: Integrated Directory is   : ./integrated
+2023-05-09 17:30:29,883: INFO: ROI Directory is   : ./roi
+2023-05-09 17:30:29,884: INFO: Geometry Directory is   : ./geometry
+2023-05-09 17:30:29,884: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-09 17:30:29,884: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-09 17:30:29,884: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-09 17:30:29,884: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:29,884: INFO: Starting acd_roi_tile_intersection()
+2023-05-09 17:30:29,884: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,119: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-09 17:30:30,120: INFO: These tiles are  :
+2023-05-09 17:30:30,120: INFO:   1 : 36NXG
+2023-05-09 17:30:30,120: INFO:   2 : 36NYG
+2023-05-09 17:30:30,120: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-09 17:30:30,138: INFO: Finished ROI tile intersection
+2023-05-09 17:30:30,139: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,139: INFO: Starting acd_integrated_raster():
+2023-05-09 17:30:30,139: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,142: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:30:30,142: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-09 17:30:30,151: INFO: Creating the directory paths
+2023-05-09 17:30:30,152: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,152: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:30:30,152: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,152: INFO: Searching for images for initial composite.
+2023-05-09 17:30:30,802: INFO: --> Found 23 L1C and L2A products for the composite:
+2023-05-09 17:30:30,817: INFO: Removed 1 faulty scenes <200MB in size from the list:
+2023-05-09 17:30:30,822: INFO:    198.2 MB: S2B_MSIL1C_20230218T075959_N0509_R035_T36NXG_20230220T131038
+2023-05-09 17:30:30,823: INFO:     22 L1C products
+2023-05-09 17:30:30,823: INFO:     0 L2A products
+2023-05-09 17:30:30,823: INFO: Capping the number of L1C products to 4
+2023-05-09 17:30:30,823: INFO: Relative orbits found covering tile: [ 35 135]
+2023-05-09 17:30:30,826: INFO:     4 L1C products remain:
+2023-05-09 17:30:30,826: INFO:        S2A_MSIL1C_20230305T075811_N0509_R035_T36NXG_20230305T094419
+2023-05-09 17:30:30,826: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NXG_20230220T093430
+2023-05-09 17:30:30,826: INFO:        S2A_MSIL1C_20230213T080031_N0509_R035_T36NXG_20230213T094415
+2023-05-09 17:30:30,826: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NXG_20230121T093443
+2023-05-09 17:30:30,826: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:30:30,826: INFO:   availability of matching L2A products for download.
+2023-05-09 17:30:30,827: INFO: Searching locally for file names containing: 20230305T075811_N0509_R035_T36NXG.
+2023-05-09 17:30:30,827: ERROR: Could not complete ACD Raster Process for Tile  36NXG
+2023-05-09 17:30:30,827: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L1C'
+2023-05-09 17:30:30,827: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:30:30,827: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-09 17:30:30,828: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-09 17:30:30,833: INFO: Creating the directory paths
+2023-05-09 17:30:30,833: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,833: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:30:30,833: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:30,833: INFO: Searching for images for initial composite.
+2023-05-09 17:30:31,198: INFO: --> Found 14 L1C and L2A products for the composite:
+2023-05-09 17:30:31,206: INFO: Removed 0 faulty scenes <200MB in size from the list:
+2023-05-09 17:30:31,211: INFO:     14 L1C products
+2023-05-09 17:30:31,211: INFO:     0 L2A products
+2023-05-09 17:30:31,211: INFO: Capping the number of L1C products to 4
+2023-05-09 17:30:31,211: INFO: Relative orbits found covering tile: [135]
+2023-05-09 17:30:31,213: INFO:     4 L1C products remain:
+2023-05-09 17:30:31,213: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NYG_20230220T093430
+2023-05-09 17:30:31,213: INFO:        S2A_MSIL1C_20230210T075051_N0509_R135_T36NYG_20230210T093437
+2023-05-09 17:30:31,213: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NYG_20230121T093443
+2023-05-09 17:30:31,213: INFO:        S2B_MSIL1C_20230106T075219_N0509_R135_T36NYG_20230106T093416
+2023-05-09 17:30:31,213: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:30:31,213: INFO:   availability of matching L2A products for download.
+2023-05-09 17:30:31,214: INFO: Searching locally for file names containing: 20230220T074941_N0509_R135_T36NYG.
+2023-05-09 17:30:31,214: ERROR: Could not complete ACD Raster Process for Tile  36NYG
+2023-05-09 17:30:31,214: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L1C'
+2023-05-09 17:30:31,214: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-09 17:30:31,214: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,214: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: Starting acd_national_integration
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: Starting acd_national_filtering
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: Starting acd_national_manual_validation()
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,215: INFO: Starting acd_national_distribution()
+2023-05-09 17:30:31,216: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,216: INFO: ---------------------------------------------------------------
+2023-05-09 17:30:31,216: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-09 17:30:31,216: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,886: INFO: ****PROCESSING START****
+2023-05-09 17:31:27,886: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,886: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-09 17:31:27,887: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,887: INFO: Reading in parameters defined in the Config
+2023-05-09 17:31:27,887: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,887: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,887: INFO: Starting acd_to_config_to_log()
+2023-05-09 17:31:27,887: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,887: INFO: Options:
+2023-05-09 17:31:27,887: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-09 17:31:27,887: INFO:   --do_all
+2023-05-09 17:31:27,887: INFO:   --build_composite for baseline composite
+2023-05-09 17:31:27,888: INFO:   --download_source = "scihub"
+2023-05-09 17:31:27,888: INFO:   composite start date  : 20230315
+2023-05-09 17:31:27,888: INFO:   composite end date  : 20231231
+2023-05-09 17:31:27,888: INFO:   --download for change detection images
+2023-05-09 17:31:27,888: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-09 17:31:27,888: INFO:   --build_prob_image to save classification probability layers
+2023-05-09 17:31:27,888: INFO:   --change to produce change detection layers and report images
+2023-05-09 17:31:27,888: INFO:   change start date  : 20230101
+2023-05-09 17:31:27,888: INFO:   change end date  : 20230314
+2023-05-09 17:31:27,888: INFO:   --update to update the baseline composite with new observations
+2023-05-09 17:31:27,888: INFO:   --quicklooks to create image quicklooks
+2023-05-09 17:31:27,888: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-09 17:31:27,888: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-09 17:31:27,888: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-09 17:31:27,888: INFO:            Keeps only L2A images, composites and report files.
+2023-05-09 17:31:27,889: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-09 17:31:27,889: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-09 17:31:27,889: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-09 17:31:27,889: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-09 17:31:27,889: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-09 17:31:27,889: INFO: EPSG used is: 21097
+2023-05-09 17:31:27,889: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-09 17:31:27,889: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-09 17:31:27,889: INFO: List of class labels:
+2023-05-09 17:31:27,889: INFO:   1 : primary forest
+2023-05-09 17:31:27,889: INFO:   2 : plantation forest
+2023-05-09 17:31:27,889: INFO:   3 : bare soil
+2023-05-09 17:31:27,889: INFO:   4 : crops
+2023-05-09 17:31:27,889: INFO:   5 : grassland
+2023-05-09 17:31:27,889: INFO:   6 : open water
+2023-05-09 17:31:27,889: INFO:   7 : burn scar
+2023-05-09 17:31:27,889: INFO:   8 : cloud
+2023-05-09 17:31:27,890: INFO:   9 : cloud shadow
+2023-05-09 17:31:27,890: INFO:   10 : haze
+2023-05-09 17:31:27,890: INFO:   11 : sparse woodland
+2023-05-09 17:31:27,890: INFO:   12 : dense woodland
+2023-05-09 17:31:27,890: INFO:   13 : artificial
+2023-05-09 17:31:27,890: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-09 17:31:27,890: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-09 17:31:27,890: INFO: ------------------------------------------------------------
+2023-05-09 17:31:27,890: INFO: Reporting Directories and Filepaths
+2023-05-09 17:31:27,890: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-09 17:31:27,890: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-09 17:31:27,890: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-09 17:31:27,890: INFO: Integrated Directory is   : ./integrated
+2023-05-09 17:31:27,890: INFO: ROI Directory is   : ./roi
+2023-05-09 17:31:27,890: INFO: Geometry Directory is   : ./geometry
+2023-05-09 17:31:27,890: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-09 17:31:27,890: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-09 17:31:27,891: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-09 17:31:27,891: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:27,891: INFO: Starting acd_roi_tile_intersection()
+2023-05-09 17:31:27,891: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:28,107: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-09 17:31:28,107: INFO: These tiles are  :
+2023-05-09 17:31:28,107: INFO:   1 : 36NXG
+2023-05-09 17:31:28,107: INFO:   2 : 36NYG
+2023-05-09 17:31:28,107: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-09 17:31:28,126: INFO: Finished ROI tile intersection
+2023-05-09 17:31:28,127: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:28,127: INFO: Starting acd_integrated_raster():
+2023-05-09 17:31:28,127: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:28,130: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:31:28,130: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-09 17:31:28,134: INFO: Creating the directory paths
+2023-05-09 17:31:28,134: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:28,134: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:31:28,135: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:28,135: INFO: Searching for images for initial composite.
+2023-05-09 17:31:28,511: INFO: --> Found 23 L1C and L2A products for the composite:
+2023-05-09 17:31:28,524: INFO: Removed 1 faulty scenes <200MB in size from the list:
+2023-05-09 17:31:28,528: INFO:    198.2 MB: S2B_MSIL1C_20230218T075959_N0509_R035_T36NXG_20230220T131038
+2023-05-09 17:31:28,529: INFO:     22 L1C products
+2023-05-09 17:31:28,530: INFO:     0 L2A products
+2023-05-09 17:31:28,530: INFO: Capping the number of L1C products to 4
+2023-05-09 17:31:28,530: INFO: Relative orbits found covering tile: [ 35 135]
+2023-05-09 17:31:28,532: INFO:     4 L1C products remain:
+2023-05-09 17:31:28,532: INFO:        S2A_MSIL1C_20230305T075811_N0509_R035_T36NXG_20230305T094419
+2023-05-09 17:31:28,532: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NXG_20230220T093430
+2023-05-09 17:31:28,532: INFO:        S2A_MSIL1C_20230213T080031_N0509_R035_T36NXG_20230213T094415
+2023-05-09 17:31:28,533: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NXG_20230121T093443
+2023-05-09 17:31:28,533: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:31:28,533: INFO:   availability of matching L2A products for download.
+2023-05-09 17:31:28,533: INFO: Searching locally for file names containing: 20230305T075811_N0509_R035_T36NXG.
+2023-05-09 17:31:28,534: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L2A/S2A_MSIL2A_20230305T075811_N0509_R035_T36NXG_20230305T114158.SAFE
+2023-05-09 17:31:28,535: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked/S2A_MSIL2A_20230305T075811_N0509_R035_T36NXG_20230305T114158.tif
+2023-05-09 17:31:28,535: INFO: Searching on the data hub for files containing: *20230305T075811_N0509_R035_T36NXG*.
+2023-05-09 17:31:29,394: INFO: Replacing L1C S2A_MSIL1C_20230305T075811_N0509_R035_T36NXG_20230305T094419 with L2A product:
+2023-05-09 17:31:29,395: INFO:               S2A_MSIL2A_20230305T075811_N0509_R035_T36NXG_20230305T114158
+2023-05-09 17:31:29,396: INFO: Searching locally for file names containing: 20230220T074941_N0509_R135_T36NXG.
+2023-05-09 17:31:29,397: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L2A/S2A_MSIL2A_20230220T074941_N0509_R135_T36NXG_20230220T111156.SAFE
+2023-05-09 17:31:29,397: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked/S2A_MSIL2A_20230220T074941_N0509_R135_T36NXG_20230220T111156.tif
+2023-05-09 17:31:29,397: INFO: Searching on the data hub for files containing: *20230220T074941_N0509_R135_T36NXG*.
+2023-05-09 17:31:30,240: INFO: Replacing L1C S2A_MSIL1C_20230220T074941_N0509_R135_T36NXG_20230220T093430 with L2A product:
+2023-05-09 17:31:30,241: INFO:               S2A_MSIL2A_20230220T074941_N0509_R135_T36NXG_20230220T111156
+2023-05-09 17:31:30,242: INFO: Searching locally for file names containing: 20230213T080031_N0509_R035_T36NXG.
+2023-05-09 17:31:30,243: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L2A/S2A_MSIL2A_20230213T080031_N0509_R035_T36NXG_20230213T112005.SAFE
+2023-05-09 17:31:30,243: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked/S2A_MSIL2A_20230213T080031_N0509_R035_T36NXG_20230213T112005.tif
+2023-05-09 17:31:30,243: INFO: Searching on the data hub for files containing: *20230213T080031_N0509_R035_T36NXG*.
+2023-05-09 17:31:31,134: INFO: Replacing L1C S2A_MSIL1C_20230213T080031_N0509_R035_T36NXG_20230213T094415 with L2A product:
+2023-05-09 17:31:31,134: INFO:               S2A_MSIL2A_20230213T080031_N0509_R035_T36NXG_20230213T112005
+2023-05-09 17:31:31,135: INFO: Searching locally for file names containing: 20230121T075231_N0509_R135_T36NXG.
+2023-05-09 17:31:31,136: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L2A/S2A_MSIL2A_20230121T075231_N0509_R135_T36NXG_20230121T110651.SAFE
+2023-05-09 17:31:31,136: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked/S2A_MSIL2A_20230121T075231_N0509_R135_T36NXG_20230121T110651.tif
+2023-05-09 17:31:31,136: INFO: Searching on the data hub for files containing: *20230121T075231_N0509_R135_T36NXG*.
+2023-05-09 17:31:31,990: INFO: Replacing L1C S2A_MSIL1C_20230121T075231_N0509_R135_T36NXG_20230121T093443 with L2A product:
+2023-05-09 17:31:31,991: INFO:               S2A_MSIL2A_20230121T075231_N0509_R135_T36NXG_20230121T110651
+2023-05-09 17:31:32,375: INFO:     0 L1C products remaining for download
+2023-05-09 17:31:32,375: INFO:     4 L2A products remaining for download
+2023-05-09 17:31:32,375: INFO: download source is   scihub
+2023-05-09 17:31:32,375: INFO: Downloading Sentinel-2 L2A products.
+2023-05-09 17:31:32,499: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,499: INFO: Image download and atmospheric correction for composite is complete.
+2023-05-09 17:31:32,499: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,499: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,500: INFO: Deleting downloaded L1C images for composite, keeping only derived L2A products
+2023-05-09 17:31:32,500: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,500: INFO: Deleting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L1C
+2023-05-09 17:31:32,500: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,501: INFO: Deletion of L1C images complete. Keeping only L2A images.
+2023-05-09 17:31:32,501: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,501: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,501: INFO: Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files.
+2023-05-09 17:31:32,501: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,503: INFO: No L2A images found for cloud masking. They may already have been done.
+2023-05-09 17:31:32,503: INFO: ---------------------------------------------------------------
+2023-05-09 17:31:32,503: INFO: Offsetting cloud masked L2A images for composite.
+2023-05-09 17:31:32,503: INFO: ---------------------------------------------------------------
+2023-05-09 17:34:54,253: INFO: ---------------------------------------------------------------
+2023-05-09 17:34:54,253: INFO: Offsetting of cloud masked L2A images for composite complete.
+2023-05-09 17:34:54,253: INFO: ---------------------------------------------------------------
+2023-05-09 17:34:54,254: INFO: ---------------------------------------------------------------
+2023-05-09 17:34:54,254: INFO: Producing quicklooks.
+2023-05-09 17:34:54,254: INFO: ---------------------------------------------------------------
+2023-05-09 17:34:54,255: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/quicklooks/S2A_MSIL2A_20230213T080031_NA509_R035_T36NXG_20230213T112005.png
+2023-05-09 17:35:02,478: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/quicklooks/S2A_MSIL2A_20230220T074941_NA509_R135_T36NXG_20230220T111156.png
+2023-05-09 17:35:12,354: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/quicklooks/S2A_MSIL2A_20230305T075811_NA509_R035_T36NXG_20230305T114158.png
+2023-05-09 17:35:20,932: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/quicklooks/S2A_MSIL2A_20230121T075231_NA509_R135_T36NXG_20230121T110651.png
+2023-05-09 17:35:32,635: INFO: Quicklooks complete.
+2023-05-09 17:35:32,635: INFO: ---------------------------------------------------------------
+2023-05-09 17:35:32,636: INFO: Zipping downloaded L2A images for composite after cloud masking and band stacking
+2023-05-09 17:35:32,636: INFO: ---------------------------------------------------------------
+2023-05-09 17:37:31,724: INFO: ---------------------------------------------------------------
+2023-05-09 17:37:31,724: INFO: Zipping complete
+2023-05-09 17:37:31,724: INFO: ---------------------------------------------------------------
+2023-05-09 17:37:31,724: INFO: ---------------------------------------------------------------
+2023-05-09 17:37:31,724: INFO: Building initial cloud-free median composite from directory /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked
+2023-05-09 17:37:31,724: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:40,253: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:40,254: INFO: Baseline composite complete.
+2023-05-09 17:43:40,254: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:40,254: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:40,254: INFO: Producing quicklooks.
+2023-05-09 17:43:40,254: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:40,255: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/quicklooks/composite_T36NXG_20230305T075811.png
+2023-05-09 17:43:48,903: INFO: Quicklooks complete.
+2023-05-09 17:43:48,903: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:48,903: INFO: Deleting intermediate cloud-masked L2A images used for the baseline composite
+2023-05-09 17:43:48,903: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:48,903: INFO: Deleting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/cloud_masked
+2023-05-09 17:43:50,889: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:50,890: INFO: Intermediate file products have been deleted.
+2023-05-09 17:43:50,890: INFO: They can be reprocessed from the downloaded L2A images.
+2023-05-09 17:43:50,890: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:50,890: INFO: ---------------------------------------------------------------
+2023-05-09 17:43:50,890: INFO: Compressing tiff files in directory /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite and all subdirectories
+2023-05-09 17:43:50,890: INFO: ---------------------------------------------------------------
+2023-05-09 17:44:27,176: INFO: ---------------------------------------------------------------
+2023-05-09 17:44:27,177: INFO: Baseline image composite, file compression, zipping and deletion of
+2023-05-09 17:44:27,177: INFO: intermediate file products (if selected) are complete.
+2023-05-09 17:44:27,177: INFO: ---------------------------------------------------------------
+2023-05-09 17:44:27,177: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-09 17:44:27,178: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-09 17:44:27,178: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-09 17:53:50,704: INFO: Creating the directory paths
+2023-05-09 17:53:50,704: INFO: ---------------------------------------------------------------
+2023-05-09 17:53:50,704: INFO: Creating an initial cloud-free median composite from Sentinel-2 as a baseline map
+2023-05-09 17:53:50,704: INFO: ---------------------------------------------------------------
+2023-05-09 17:53:50,704: INFO: Searching for images for initial composite.
+2023-05-09 17:53:52,047: INFO: --> Found 14 L1C and L2A products for the composite:
+2023-05-09 17:53:52,055: INFO: Removed 0 faulty scenes <200MB in size from the list:
+2023-05-09 17:53:52,059: INFO:     14 L1C products
+2023-05-09 17:53:52,059: INFO:     0 L2A products
+2023-05-09 17:53:52,059: INFO: Capping the number of L1C products to 4
+2023-05-09 17:53:52,059: INFO: Relative orbits found covering tile: [135]
+2023-05-09 17:53:52,061: INFO:     4 L1C products remain:
+2023-05-09 17:53:52,061: INFO:        S2A_MSIL1C_20230220T074941_N0509_R135_T36NYG_20230220T093430
+2023-05-09 17:53:52,061: INFO:        S2A_MSIL1C_20230210T075051_N0509_R135_T36NYG_20230210T093437
+2023-05-09 17:53:52,061: INFO:        S2A_MSIL1C_20230121T075231_N0509_R135_T36NYG_20230121T093443
+2023-05-09 17:53:52,061: INFO:        S2B_MSIL1C_20230106T075219_N0509_R135_T36NYG_20230106T093416
+2023-05-09 17:53:52,061: INFO: Checking for already downloaded and zipped L1C or L2A products and
+2023-05-09 17:53:52,061: INFO:   availability of matching L2A products for download.
+2023-05-09 17:53:52,062: INFO: Searching locally for file names containing: 20230220T074941_N0509_R135_T36NYG.
+2023-05-09 17:53:52,063: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L2A/S2A_MSIL2A_20230220T074941_N0509_R135_T36NYG_20230220T111156.SAFE
+2023-05-09 17:53:52,063: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/cloud_masked/S2A_MSIL2A_20230220T074941_N0509_R135_T36NYG_20230220T111156.tif
+2023-05-09 17:53:52,063: INFO: Searching on the data hub for files containing: *20230220T074941_N0509_R135_T36NYG*.
+2023-05-09 17:53:52,865: INFO: Replacing L1C S2A_MSIL1C_20230220T074941_N0509_R135_T36NYG_20230220T093430 with L2A product:
+2023-05-09 17:53:52,865: INFO:               S2A_MSIL2A_20230220T074941_N0509_R135_T36NYG_20230220T111156
+2023-05-09 17:53:52,866: INFO: Searching locally for file names containing: 20230210T075051_N0509_R135_T36NYG.
+2023-05-09 17:53:52,867: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L2A/S2A_MSIL2A_20230210T075051_N0509_R135_T36NYG_20230210T110753.SAFE
+2023-05-09 17:53:52,867: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/cloud_masked/S2A_MSIL2A_20230210T075051_N0509_R135_T36NYG_20230210T110753.tif
+2023-05-09 17:53:52,867: INFO: Searching on the data hub for files containing: *20230210T075051_N0509_R135_T36NYG*.
+2023-05-09 17:53:53,695: INFO: Replacing L1C S2A_MSIL1C_20230210T075051_N0509_R135_T36NYG_20230210T093437 with L2A product:
+2023-05-09 17:53:53,696: INFO:               S2A_MSIL2A_20230210T075051_N0509_R135_T36NYG_20230210T110753
+2023-05-09 17:53:53,697: INFO: Searching locally for file names containing: 20230121T075231_N0509_R135_T36NYG.
+2023-05-09 17:53:53,698: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L2A/S2A_MSIL2A_20230121T075231_N0509_R135_T36NYG_20230121T110651.SAFE
+2023-05-09 17:53:53,698: INFO:   Product already downloaded: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/cloud_masked/S2A_MSIL2A_20230121T075231_N0509_R135_T36NYG_20230121T110651.tif
+2023-05-09 17:53:53,698: INFO: Searching on the data hub for files containing: *20230121T075231_N0509_R135_T36NYG*.
+2023-05-09 17:53:54,530: INFO: Replacing L1C S2A_MSIL1C_20230121T075231_N0509_R135_T36NYG_20230121T093443 with L2A product:
+2023-05-09 17:53:54,531: INFO:               S2A_MSIL2A_20230121T075231_N0509_R135_T36NYG_20230121T110651
+2023-05-09 17:53:54,532: INFO: Searching locally for file names containing: 20230106T075219_N0509_R135_T36NYG.
+2023-05-09 17:53:54,533: INFO: Searching on the data hub for files containing: *20230106T075219_N0509_R135_T36NYG*.
+2023-05-09 17:53:55,405: INFO: Replacing L1C S2B_MSIL1C_20230106T075219_N0509_R135_T36NYG_20230106T093416 with L2A product:
+2023-05-09 17:53:55,406: INFO:               S2B_MSIL2A_20230106T075219_N0509_R135_T36NYG_20230106T101809
+2023-05-09 17:53:55,465: INFO:     0 L1C products remaining for download
+2023-05-09 17:53:55,465: INFO:     4 L2A products remaining for download
+2023-05-09 17:53:55,465: INFO: download source is   scihub
+2023-05-09 17:53:55,465: INFO: Downloading Sentinel-2 L2A products.
+2023-05-09 18:14:28,158: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,159: INFO: Image download and atmospheric correction for composite is complete.
+2023-05-09 18:14:28,159: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,159: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,159: INFO: Deleting downloaded L1C images for composite, keeping only derived L2A products
+2023-05-09 18:14:28,159: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,159: INFO: Deleting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L1C
+2023-05-09 18:14:28,161: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,161: INFO: Deletion of L1C images complete. Keeping only L2A images.
+2023-05-09 18:14:28,161: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,161: INFO: ---------------------------------------------------------------
+2023-05-09 18:14:28,161: INFO: Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files.
+2023-05-09 18:14:28,161: INFO: ---------------------------------------------------------------
+2023-05-09 18:16:43,789: INFO: ---------------------------------------------------------------
+2023-05-09 18:16:43,789: INFO: Offsetting cloud masked L2A images for composite.
+2023-05-09 18:16:43,789: INFO: ---------------------------------------------------------------
+2023-05-09 18:20:33,896: INFO: ---------------------------------------------------------------
+2023-05-09 18:20:33,896: INFO: Offsetting of cloud masked L2A images for composite complete.
+2023-05-09 18:20:33,896: INFO: ---------------------------------------------------------------
+2023-05-09 18:20:33,896: INFO: ---------------------------------------------------------------
+2023-05-09 18:20:33,896: INFO: Producing quicklooks.
+2023-05-09 18:20:33,896: INFO: ---------------------------------------------------------------
+2023-05-09 18:20:33,897: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/quicklooks/S2A_MSIL2A_20230220T074941_NA509_R135_T36NYG_20230220T111156.png
+2023-05-09 18:20:51,945: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/quicklooks/S2A_MSIL2A_20230121T075231_NA509_R135_T36NYG_20230121T110651.png
+2023-05-09 18:21:08,486: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/quicklooks/S2B_MSIL2A_20230106T075219_NA509_R135_T36NYG_20230106T101809.png
+2023-05-09 18:21:22,656: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/quicklooks/S2A_MSIL2A_20230210T075051_NA509_R135_T36NYG_20230210T110753.png
+2023-05-09 18:21:34,983: INFO: Quicklooks complete.
+2023-05-09 18:21:34,983: INFO: ---------------------------------------------------------------
+2023-05-09 18:21:34,983: INFO: Zipping downloaded L2A images for composite after cloud masking and band stacking
+2023-05-09 18:21:34,983: INFO: ---------------------------------------------------------------
+2023-05-09 18:25:40,766: INFO: ---------------------------------------------------------------
+2023-05-09 18:25:40,766: INFO: Zipping complete
+2023-05-09 18:25:40,766: INFO: ---------------------------------------------------------------
+2023-05-09 18:25:40,766: INFO: ---------------------------------------------------------------
+2023-05-09 18:25:40,766: INFO: Building initial cloud-free median composite from directory /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/cloud_masked
+2023-05-09 18:25:40,766: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:50,703: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:50,703: INFO: Baseline composite complete.
+2023-05-09 18:29:50,703: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:50,704: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:50,704: INFO: Producing quicklooks.
+2023-05-09 18:29:50,704: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:50,707: INFO: Creating quicklook: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/quicklooks/composite_T36NYG_20230220T074941.png
+2023-05-09 18:29:59,719: INFO: Quicklooks complete.
+2023-05-09 18:29:59,719: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:59,719: INFO: Deleting intermediate cloud-masked L2A images used for the baseline composite
+2023-05-09 18:29:59,719: INFO: ---------------------------------------------------------------
+2023-05-09 18:29:59,719: INFO: Deleting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/cloud_masked
+2023-05-09 18:30:01,843: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:01,843: INFO: Intermediate file products have been deleted.
+2023-05-09 18:30:01,843: INFO: They can be reprocessed from the downloaded L2A images.
+2023-05-09 18:30:01,843: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:01,843: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:01,843: INFO: Compressing tiff files in directory /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite and all subdirectories
+2023-05-09 18:30:01,843: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,541: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,541: INFO: Baseline image composite, file compression, zipping and deletion of
+2023-05-09 18:30:35,541: INFO: intermediate file products (if selected) are complete.
+2023-05-09 18:30:35,541: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,542: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_national_integration
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_national_filtering
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_national_manual_validation()
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,543: INFO: Starting acd_national_distribution()
+2023-05-09 18:30:35,544: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,544: INFO: ---------------------------------------------------------------
+2023-05-09 18:30:35,544: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-09 18:30:35,544: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,416: INFO: ****PROCESSING START****
+2023-05-10 09:36:38,442: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,442: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 09:36:38,442: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,443: INFO: Reading in parameters defined in the Config
+2023-05-10 09:36:38,443: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,443: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,443: INFO: Starting acd_to_config_to_log()
+2023-05-10 09:36:38,443: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,443: INFO: Options:
+2023-05-10 09:36:38,443: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 09:36:38,443: INFO:   --do_all
+2023-05-10 09:36:38,443: INFO:   --build_composite for baseline composite
+2023-05-10 09:36:38,443: INFO:   --download_source = "scihub"
+2023-05-10 09:36:38,443: INFO:   composite start date  : 20230315
+2023-05-10 09:36:38,444: INFO:   composite end date  : 20231231
+2023-05-10 09:36:38,444: INFO:   --download for change detection images
+2023-05-10 09:36:38,444: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 09:36:38,444: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 09:36:38,444: INFO:   --change to produce change detection layers and report images
+2023-05-10 09:36:38,444: INFO:   change start date  : 20230101
+2023-05-10 09:36:38,444: INFO:   change end date  : 20230314
+2023-05-10 09:36:38,444: INFO:   --update to update the baseline composite with new observations
+2023-05-10 09:36:38,444: INFO:   --quicklooks to create image quicklooks
+2023-05-10 09:36:38,444: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-10 09:36:38,444: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-10 09:36:38,444: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-10 09:36:38,444: INFO:            Keeps only L2A images, composites and report files.
+2023-05-10 09:36:38,444: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-10 09:36:38,444: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 09:36:38,444: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 09:36:38,445: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 09:36:38,445: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 09:36:38,445: INFO: EPSG used is: 21097
+2023-05-10 09:36:38,445: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 09:36:38,445: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 09:36:38,445: INFO: List of class labels:
+2023-05-10 09:36:38,445: INFO:   1 : primary forest
+2023-05-10 09:36:38,445: INFO:   2 : plantation forest
+2023-05-10 09:36:38,445: INFO:   3 : bare soil
+2023-05-10 09:36:38,445: INFO:   4 : crops
+2023-05-10 09:36:38,445: INFO:   5 : grassland
+2023-05-10 09:36:38,445: INFO:   6 : open water
+2023-05-10 09:36:38,445: INFO:   7 : burn scar
+2023-05-10 09:36:38,445: INFO:   8 : cloud
+2023-05-10 09:36:38,445: INFO:   9 : cloud shadow
+2023-05-10 09:36:38,445: INFO:   10 : haze
+2023-05-10 09:36:38,446: INFO:   11 : sparse woodland
+2023-05-10 09:36:38,446: INFO:   12 : dense woodland
+2023-05-10 09:36:38,446: INFO:   13 : artificial
+2023-05-10 09:36:38,446: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 09:36:38,446: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 09:36:38,446: INFO: ------------------------------------------------------------
+2023-05-10 09:36:38,446: INFO: Reporting Directories and Filepaths
+2023-05-10 09:36:38,446: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 09:36:38,446: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 09:36:38,446: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 09:36:38,446: INFO: Integrated Directory is   : ./integrated
+2023-05-10 09:36:38,446: INFO: ROI Directory is   : ./roi
+2023-05-10 09:36:38,446: INFO: Geometry Directory is   : ./geometry
+2023-05-10 09:36:38,446: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 09:36:38,446: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 09:36:38,447: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 09:36:38,447: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,447: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 09:36:38,447: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,889: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 09:36:38,889: INFO: These tiles are  :
+2023-05-10 09:36:38,889: INFO:   1 : 36NXG
+2023-05-10 09:36:38,889: INFO:   2 : 36NYG
+2023-05-10 09:36:38,889: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 09:36:38,895: INFO: Finished ROI tile intersection
+2023-05-10 09:36:38,896: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:38,896: INFO: Starting acd_integrated_raster():
+2023-05-10 09:36:38,896: INFO: ---------------------------------------------------------------
+2023-05-10 09:36:39,034: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-10 09:36:39,034: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-10 09:55:56,374: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-10 09:55:56,375: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-10 09:55:56,375: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-10 10:16:56,044: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-10 10:16:56,044: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,044: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 10:16:56,044: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,044: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,044: INFO: Starting acd_national_integration
+2023-05-10 10:16:56,044: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,044: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: Starting acd_national_filtering
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: Starting acd_national_manual_validation()
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: Starting acd_national_distribution()
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:16:56,045: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 10:16:56,045: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,145: INFO: ****PROCESSING START****
+2023-05-10 10:28:04,145: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,145: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 10:28:04,145: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,146: INFO: Reading in parameters defined in the Config
+2023-05-10 10:28:04,146: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,146: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,146: INFO: Starting acd_to_config_to_log()
+2023-05-10 10:28:04,146: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,146: INFO: Options:
+2023-05-10 10:28:04,146: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 10:28:04,146: INFO:   --do_all
+2023-05-10 10:28:04,146: INFO:   --build_composite for baseline composite
+2023-05-10 10:28:04,146: INFO:   --download_source = "scihub"
+2023-05-10 10:28:04,146: INFO:          composite start date  : 20230315
+2023-05-10 10:28:04,146: INFO:          composite end date  : 20231231
+2023-05-10 10:28:04,147: INFO:   --download for change detection images
+2023-05-10 10:28:04,147: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 10:28:04,147: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 10:28:04,147: INFO:   --change to produce change detection layers and report images
+2023-05-10 10:28:04,147: INFO:          change start date  : 20230101
+2023-05-10 10:28:04,147: INFO:          change end date  : 20230314
+2023-05-10 10:28:04,147: INFO:   --update to update the baseline composite with new observations
+2023-05-10 10:28:04,147: INFO:   --quicklooks to create image quicklooks
+2023-05-10 10:28:04,147: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-10 10:28:04,147: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-10 10:28:04,147: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-10 10:28:04,147: INFO:            Keeps only L2A images, composites and report files.
+2023-05-10 10:28:04,147: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-10 10:28:04,147: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 10:28:04,147: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 10:28:04,147: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 10:28:04,147: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 10:28:04,147: INFO: EPSG used is: 21097
+2023-05-10 10:28:04,148: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 10:28:04,148: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 10:28:04,148: INFO: List of class labels:
+2023-05-10 10:28:04,148: INFO:   1 : primary forest
+2023-05-10 10:28:04,148: INFO:   2 : plantation forest
+2023-05-10 10:28:04,148: INFO:   3 : bare soil
+2023-05-10 10:28:04,148: INFO:   4 : crops
+2023-05-10 10:28:04,148: INFO:   5 : grassland
+2023-05-10 10:28:04,148: INFO:   6 : open water
+2023-05-10 10:28:04,148: INFO:   7 : burn scar
+2023-05-10 10:28:04,148: INFO:   8 : cloud
+2023-05-10 10:28:04,148: INFO:   9 : cloud shadow
+2023-05-10 10:28:04,148: INFO:   10 : haze
+2023-05-10 10:28:04,148: INFO:   11 : sparse woodland
+2023-05-10 10:28:04,148: INFO:   12 : dense woodland
+2023-05-10 10:28:04,148: INFO:   13 : artificial
+2023-05-10 10:28:04,148: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 10:28:04,148: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 10:28:04,149: INFO: ------------------------------------------------------------
+2023-05-10 10:28:04,149: INFO: Reporting Directories and Filepaths
+2023-05-10 10:28:04,149: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 10:28:04,149: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 10:28:04,149: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 10:28:04,149: INFO: Integrated Directory is   : ./integrated
+2023-05-10 10:28:04,149: INFO: ROI Directory is   : ./roi
+2023-05-10 10:28:04,149: INFO: Geometry Directory is   : ./geometry
+2023-05-10 10:28:04,149: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 10:28:04,149: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 10:28:04,149: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 10:28:04,149: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,149: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 10:28:04,149: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,460: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 10:28:04,460: INFO: These tiles are  :
+2023-05-10 10:28:04,460: INFO:   1 : 36NXG
+2023-05-10 10:28:04,460: INFO:   2 : 36NYG
+2023-05-10 10:28:04,460: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 10:28:04,484: INFO: Finished ROI tile intersection
+2023-05-10 10:28:04,485: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,485: INFO: Starting acd_integrated_raster():
+2023-05-10 10:28:04,485: INFO: ---------------------------------------------------------------
+2023-05-10 10:28:04,552: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-10 10:28:04,552: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-10 10:49:54,049: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-10 10:49:54,050: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-10 10:49:54,051: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-10 11:44:19,655: INFO: ****PROCESSING START****
+2023-05-10 11:44:19,672: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,672: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 11:44:19,672: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,672: INFO: Reading in parameters defined in the Config
+2023-05-10 11:44:19,672: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,673: INFO: is this false?   config_dict['do_delete']  : False
+2023-05-10 11:44:19,673: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,673: INFO: Starting acd_to_config_to_log()
+2023-05-10 11:44:19,673: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,673: INFO: Options:
+2023-05-10 11:44:19,673: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 11:44:19,673: INFO:   --do_all
+2023-05-10 11:44:19,673: INFO:   --build_composite for baseline composite
+2023-05-10 11:44:19,673: INFO:   --download_source = "scihub"
+2023-05-10 11:44:19,673: INFO:          composite start date  : 20230315
+2023-05-10 11:44:19,674: INFO:          composite end date  : 20231231
+2023-05-10 11:44:19,674: INFO:   --download for change detection images
+2023-05-10 11:44:19,674: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 11:44:19,674: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 11:44:19,674: INFO:   --change to produce change detection layers and report images
+2023-05-10 11:44:19,674: INFO:          change start date  : 20230101
+2023-05-10 11:44:19,674: INFO:          change end date  : 20230314
+2023-05-10 11:44:19,674: INFO:   --update to update the baseline composite with new observations
+2023-05-10 11:44:19,674: INFO:   --quicklooks to create image quicklooks
+2023-05-10 11:44:19,674: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-10 11:44:19,674: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-10 11:44:19,674: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-10 11:44:19,674: INFO:            Keeps only L2A images, composites and report files.
+2023-05-10 11:44:19,674: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-10 11:44:19,674: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 11:44:19,675: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 11:44:19,675: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 11:44:19,675: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 11:44:19,675: INFO: EPSG used is: 21097
+2023-05-10 11:44:19,675: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 11:44:19,675: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 11:44:19,675: INFO: List of class labels:
+2023-05-10 11:44:19,675: INFO:   1 : primary forest
+2023-05-10 11:44:19,675: INFO:   2 : plantation forest
+2023-05-10 11:44:19,675: INFO:   3 : bare soil
+2023-05-10 11:44:19,675: INFO:   4 : crops
+2023-05-10 11:44:19,675: INFO:   5 : grassland
+2023-05-10 11:44:19,675: INFO:   6 : open water
+2023-05-10 11:44:19,675: INFO:   7 : burn scar
+2023-05-10 11:44:19,675: INFO:   8 : cloud
+2023-05-10 11:44:19,675: INFO:   9 : cloud shadow
+2023-05-10 11:44:19,676: INFO:   10 : haze
+2023-05-10 11:44:19,676: INFO:   11 : sparse woodland
+2023-05-10 11:44:19,676: INFO:   12 : dense woodland
+2023-05-10 11:44:19,676: INFO:   13 : artificial
+2023-05-10 11:44:19,676: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 11:44:19,676: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 11:44:19,676: INFO: ------------------------------------------------------------
+2023-05-10 11:44:19,676: INFO: Reporting Directories and Filepaths
+2023-05-10 11:44:19,676: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 11:44:19,676: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 11:44:19,676: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 11:44:19,676: INFO: Integrated Directory is   : ./integrated
+2023-05-10 11:44:19,676: INFO: ROI Directory is   : ./roi
+2023-05-10 11:44:19,676: INFO: Geometry Directory is   : ./geometry
+2023-05-10 11:44:19,676: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 11:44:19,676: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 11:44:19,676: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 11:44:19,677: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:19,677: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 11:44:19,677: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,169: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 11:44:20,170: INFO: These tiles are  :
+2023-05-10 11:44:20,170: INFO:   1 : 36NXG
+2023-05-10 11:44:20,170: INFO:   2 : 36NYG
+2023-05-10 11:44:20,170: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 11:44:20,175: INFO: Finished ROI tile intersection
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,176: INFO: Starting acd_integrated_raster():
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,176: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,176: INFO: Starting acd_national_integration
+2023-05-10 11:44:20,176: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: Starting acd_national_filtering
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: Starting acd_national_manual_validation()
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: Starting acd_national_distribution()
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:44:20,177: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 11:44:20,177: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,430: INFO: ****PROCESSING START****
+2023-05-10 11:47:18,431: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,431: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 11:47:18,431: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,431: INFO: Reading in parameters defined in the Config
+2023-05-10 11:47:18,431: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,431: INFO: is this false?   config_dict['do_delete']  : False
+2023-05-10 11:47:18,431: INFO: What type is this? might be string  :  <class 'str'>
+2023-05-10 11:47:18,431: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,432: INFO: Starting acd_to_config_to_log()
+2023-05-10 11:47:18,432: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,432: INFO: Options:
+2023-05-10 11:47:18,432: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 11:47:18,432: INFO:   --do_all
+2023-05-10 11:47:18,432: INFO:   --build_composite for baseline composite
+2023-05-10 11:47:18,432: INFO:   --download_source = "scihub"
+2023-05-10 11:47:18,432: INFO:          composite start date  : 20230315
+2023-05-10 11:47:18,432: INFO:          composite end date  : 20231231
+2023-05-10 11:47:18,432: INFO:   --download for change detection images
+2023-05-10 11:47:18,432: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 11:47:18,432: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 11:47:18,432: INFO:   --change to produce change detection layers and report images
+2023-05-10 11:47:18,432: INFO:          change start date  : 20230101
+2023-05-10 11:47:18,432: INFO:          change end date  : 20230314
+2023-05-10 11:47:18,432: INFO:   --update to update the baseline composite with new observations
+2023-05-10 11:47:18,433: INFO:   --quicklooks to create image quicklooks
+2023-05-10 11:47:18,433: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-10 11:47:18,433: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-10 11:47:18,433: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-10 11:47:18,433: INFO:            Keeps only L2A images, composites and report files.
+2023-05-10 11:47:18,433: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-10 11:47:18,433: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 11:47:18,433: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 11:47:18,433: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 11:47:18,433: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 11:47:18,433: INFO: EPSG used is: 21097
+2023-05-10 11:47:18,433: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 11:47:18,433: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 11:47:18,433: INFO: List of class labels:
+2023-05-10 11:47:18,433: INFO:   1 : primary forest
+2023-05-10 11:47:18,433: INFO:   2 : plantation forest
+2023-05-10 11:47:18,433: INFO:   3 : bare soil
+2023-05-10 11:47:18,434: INFO:   4 : crops
+2023-05-10 11:47:18,434: INFO:   5 : grassland
+2023-05-10 11:47:18,434: INFO:   6 : open water
+2023-05-10 11:47:18,434: INFO:   7 : burn scar
+2023-05-10 11:47:18,434: INFO:   8 : cloud
+2023-05-10 11:47:18,434: INFO:   9 : cloud shadow
+2023-05-10 11:47:18,434: INFO:   10 : haze
+2023-05-10 11:47:18,434: INFO:   11 : sparse woodland
+2023-05-10 11:47:18,434: INFO:   12 : dense woodland
+2023-05-10 11:47:18,434: INFO:   13 : artificial
+2023-05-10 11:47:18,434: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 11:47:18,434: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 11:47:18,434: INFO: ------------------------------------------------------------
+2023-05-10 11:47:18,434: INFO: Reporting Directories and Filepaths
+2023-05-10 11:47:18,434: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 11:47:18,434: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 11:47:18,435: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 11:47:18,435: INFO: Integrated Directory is   : ./integrated
+2023-05-10 11:47:18,435: INFO: ROI Directory is   : ./roi
+2023-05-10 11:47:18,435: INFO: Geometry Directory is   : ./geometry
+2023-05-10 11:47:18,435: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 11:47:18,435: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 11:47:18,435: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 11:47:18,435: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,435: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 11:47:18,435: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,675: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 11:47:18,675: INFO: These tiles are  :
+2023-05-10 11:47:18,675: INFO:   1 : 36NXG
+2023-05-10 11:47:18,675: INFO:   2 : 36NYG
+2023-05-10 11:47:18,675: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 11:47:18,709: INFO: Finished ROI tile intersection
+2023-05-10 11:47:18,710: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,710: INFO: Starting acd_integrated_raster():
+2023-05-10 11:47:18,710: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,710: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,710: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 11:47:18,710: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: Starting acd_national_integration
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: Starting acd_national_filtering
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: Starting acd_national_manual_validation()
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: Starting acd_national_distribution()
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,711: INFO: ---------------------------------------------------------------
+2023-05-10 11:47:18,712: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 11:47:18,712: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,837: INFO: ****PROCESSING START****
+2023-05-10 11:53:52,875: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,875: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 11:53:52,875: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,875: INFO: Reading in parameters defined in the Config
+2023-05-10 11:53:52,875: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,876: INFO: is this false?   config_dict['do_delete']  : false
+2023-05-10 11:53:52,876: INFO: What type is this? might be string  :  <class 'str'>
+2023-05-10 11:53:52,876: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,876: INFO: Starting acd_to_config_to_log()
+2023-05-10 11:53:52,876: INFO: ---------------------------------------------------------------
+2023-05-10 11:53:52,876: INFO: Options:
+2023-05-10 11:53:52,876: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 11:53:52,876: INFO:   --do_all
+2023-05-10 11:53:52,876: INFO:   --build_composite for baseline composite
+2023-05-10 11:53:52,876: INFO:   --download_source = "scihub"
+2023-05-10 11:53:52,876: INFO:          composite start date  : 20230315
+2023-05-10 11:53:52,876: INFO:          composite end date  : 20231231
+2023-05-10 12:01:45,812: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-10 12:01:45,833: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_national_integration
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_national_filtering
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_national_manual_validation()
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,834: INFO: Starting acd_national_distribution()
+2023-05-10 12:01:45,834: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,835: INFO: ---------------------------------------------------------------
+2023-05-10 12:01:45,835: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 12:01:45,835: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,155: INFO: ****PROCESSING START****
+2023-05-10 13:14:54,175: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,175: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:14:54,176: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,176: INFO: Reading in parameters defined in the Config
+2023-05-10 13:14:54,176: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,177: INFO: is this false?   config_dict['do_delete']  : false
+2023-05-10 13:14:54,177: INFO: What type is this? might be string  :  <class 'str'>
+2023-05-10 13:14:54,177: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,177: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:14:54,178: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,178: INFO: Options:
+2023-05-10 13:14:54,178: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:14:54,178: INFO:   --do_all
+2023-05-10 13:14:54,178: INFO:   --build_composite for baseline composite
+2023-05-10 13:14:54,178: INFO:   --download_source = "scihub"
+2023-05-10 13:14:54,178: INFO:          composite start date  : 20230315
+2023-05-10 13:14:54,178: INFO:          composite end date  : 20231231
+2023-05-10 13:14:54,179: INFO:   --download for change detection images
+2023-05-10 13:14:54,179: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:14:54,179: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 13:14:54,179: INFO:   --change to produce change detection layers and report images
+2023-05-10 13:14:54,179: INFO:          change start date  : 20230101
+2023-05-10 13:14:54,179: INFO:          change end date  : 20230314
+2023-05-10 13:14:54,179: INFO:   --update to update the baseline composite with new observations
+2023-05-10 13:14:54,179: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:14:54,180: INFO:   --remove downloaded L1C images and intermediate image products
+2023-05-10 13:14:54,180: INFO:            (cloud-masked band-stacked rasters, class images, change layers) after use.
+2023-05-10 13:14:54,180: INFO:            Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs.
+2023-05-10 13:14:54,180: INFO:            Keeps only L2A images, composites and report files.
+2023-05-10 13:14:54,180: INFO:            Overrides --zip for the above files. WARNING! FILE LOSS!
+2023-05-10 13:14:54,180: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 13:14:54,180: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 13:14:54,180: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:14:54,181: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:14:54,181: INFO: EPSG used is: 21097
+2023-05-10 13:14:54,181: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:14:54,181: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:14:54,181: INFO: List of class labels:
+2023-05-10 13:14:54,181: INFO:   1 : primary forest
+2023-05-10 13:14:54,181: INFO:   2 : plantation forest
+2023-05-10 13:14:54,181: INFO:   3 : bare soil
+2023-05-10 13:14:54,182: INFO:   4 : crops
+2023-05-10 13:14:54,182: INFO:   5 : grassland
+2023-05-10 13:14:54,182: INFO:   6 : open water
+2023-05-10 13:14:54,182: INFO:   7 : burn scar
+2023-05-10 13:14:54,182: INFO:   8 : cloud
+2023-05-10 13:14:54,182: INFO:   9 : cloud shadow
+2023-05-10 13:14:54,182: INFO:   10 : haze
+2023-05-10 13:14:54,182: INFO:   11 : sparse woodland
+2023-05-10 13:14:54,183: INFO:   12 : dense woodland
+2023-05-10 13:14:54,183: INFO:   13 : artificial
+2023-05-10 13:14:54,183: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:14:54,183: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:14:54,183: INFO: ------------------------------------------------------------
+2023-05-10 13:14:54,183: INFO: Reporting Directories and Filepaths
+2023-05-10 13:14:54,183: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:14:54,183: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:14:54,183: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:14:54,184: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:14:54,184: INFO: ROI Directory is   : ./roi
+2023-05-10 13:14:54,184: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:14:54,184: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:14:54,184: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:14:54,184: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:14:54,184: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,184: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:14:54,185: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,559: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:14:54,559: INFO: These tiles are  :
+2023-05-10 13:14:54,559: INFO:   1 : 36NXG
+2023-05-10 13:14:54,559: INFO:   2 : 36NYG
+2023-05-10 13:14:54,559: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:14:54,565: INFO: Finished ROI tile intersection
+2023-05-10 13:14:54,565: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,565: INFO: Starting acd_integrated_raster():
+2023-05-10 13:14:54,565: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,565: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_national_integration
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_national_filtering
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_national_manual_validation()
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,566: INFO: Starting acd_national_distribution()
+2023-05-10 13:14:54,567: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,567: INFO: ---------------------------------------------------------------
+2023-05-10 13:14:54,567: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 13:14:54,567: INFO: ---------------------------------------------------------------
+2023-05-10 13:23:48,443: INFO: ****PROCESSING START****
+2023-05-10 13:23:48,443: INFO: ---------------------------------------------------------------
+2023-05-10 13:23:48,443: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:23:48,443: INFO: ---------------------------------------------------------------
+2023-05-10 13:23:48,443: INFO: Reading in parameters defined in the Config
+2023-05-10 13:23:48,443: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,508: INFO: ****PROCESSING START****
+2023-05-10 13:24:05,508: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,508: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:24:05,509: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,509: INFO: Reading in parameters defined in the Config
+2023-05-10 13:24:05,509: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,509: INFO: is this false?   config_dict['do_delete']  : False
+2023-05-10 13:24:05,509: INFO: What type is this? might be string  :  <class 'bool'>
+2023-05-10 13:24:05,509: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,509: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:24:05,509: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,509: INFO: Options:
+2023-05-10 13:24:05,509: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:24:05,509: INFO:   --do_all
+2023-05-10 13:24:05,510: INFO:   --build_composite for baseline composite
+2023-05-10 13:24:05,510: INFO:   --download_source = "scihub"
+2023-05-10 13:24:05,510: INFO:          composite start date  : 20230315
+2023-05-10 13:24:05,510: INFO:          composite end date  : 20231231
+2023-05-10 13:24:05,510: INFO:   --download for change detection images
+2023-05-10 13:24:05,510: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:24:05,510: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 13:24:05,510: INFO:   --change to produce change detection layers and report images
+2023-05-10 13:24:05,510: INFO:          change start date  : 20230101
+2023-05-10 13:24:05,510: INFO:          change end date  : 20230314
+2023-05-10 13:24:05,510: INFO:   --update to update the baseline composite with new observations
+2023-05-10 13:24:05,510: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:24:05,510: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 13:24:05,510: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 13:24:05,510: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:24:05,510: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:24:05,510: INFO: EPSG used is: 21097
+2023-05-10 13:24:05,511: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:24:05,511: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:24:05,511: INFO: List of class labels:
+2023-05-10 13:24:05,511: INFO:   1 : primary forest
+2023-05-10 13:24:05,511: INFO:   2 : plantation forest
+2023-05-10 13:24:05,511: INFO:   3 : bare soil
+2023-05-10 13:24:05,511: INFO:   4 : crops
+2023-05-10 13:24:05,511: INFO:   5 : grassland
+2023-05-10 13:24:05,511: INFO:   6 : open water
+2023-05-10 13:24:05,511: INFO:   7 : burn scar
+2023-05-10 13:24:05,511: INFO:   8 : cloud
+2023-05-10 13:24:05,511: INFO:   9 : cloud shadow
+2023-05-10 13:24:05,511: INFO:   10 : haze
+2023-05-10 13:24:05,511: INFO:   11 : sparse woodland
+2023-05-10 13:24:05,511: INFO:   12 : dense woodland
+2023-05-10 13:24:05,511: INFO:   13 : artificial
+2023-05-10 13:24:05,511: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:24:05,512: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:24:05,512: INFO: ------------------------------------------------------------
+2023-05-10 13:24:05,512: INFO: Reporting Directories and Filepaths
+2023-05-10 13:24:05,512: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:24:05,512: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:24:05,512: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:24:05,512: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:24:05,512: INFO: ROI Directory is   : ./roi
+2023-05-10 13:24:05,512: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:24:05,512: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:24:05,512: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:24:05,512: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:24:05,512: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,512: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:24:05,512: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,752: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:24:05,752: INFO: These tiles are  :
+2023-05-10 13:24:05,752: INFO:   1 : 36NXG
+2023-05-10 13:24:05,752: INFO:   2 : 36NYG
+2023-05-10 13:24:05,752: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:24:05,795: INFO: Finished ROI tile intersection
+2023-05-10 13:24:05,795: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_integrated_raster():
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_national_integration
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_national_filtering
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,796: INFO: Starting acd_national_manual_validation()
+2023-05-10 13:24:05,797: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,797: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,797: INFO: Starting acd_national_distribution()
+2023-05-10 13:24:05,797: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,797: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:05,797: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 13:24:05,797: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,217: INFO: ****PROCESSING START****
+2023-05-10 13:24:46,217: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,217: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:24:46,217: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,217: INFO: Reading in parameters defined in the Config
+2023-05-10 13:24:46,217: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,218: INFO: is this false?   config_dict['do_delete']  : False
+2023-05-10 13:24:46,218: INFO: What type is this? might be string  :  <class 'bool'>
+2023-05-10 13:24:46,218: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,218: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:24:46,218: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,218: INFO: Options:
+2023-05-10 13:24:46,218: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:24:46,218: INFO:   --do_all
+2023-05-10 13:24:46,218: INFO:   --build_composite for baseline composite
+2023-05-10 13:24:46,218: INFO:   --download_source = "scihub"
+2023-05-10 13:24:46,218: INFO:          composite start date  : 20230315
+2023-05-10 13:24:46,219: INFO:          composite end date  : 20231231
+2023-05-10 13:24:46,219: INFO:   --download for change detection images
+2023-05-10 13:24:46,219: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:24:46,219: INFO:   --build_prob_image to save classification probability layers
+2023-05-10 13:24:46,219: INFO:   --change to produce change detection layers and report images
+2023-05-10 13:24:46,219: INFO:          change start date  : 20230101
+2023-05-10 13:24:46,219: INFO:          change end date  : 20230314
+2023-05-10 13:24:46,219: INFO:   --update to update the baseline composite with new observations
+2023-05-10 13:24:46,219: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:24:46,219: INFO:   --zip archives L2A images, and if --remove is not selected also L1C,
+2023-05-10 13:24:46,219: INFO:            cloud-masked band-stacked rasters, class images and change layers after use.
+2023-05-10 13:24:46,219: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:24:46,219: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:24:46,219: INFO: EPSG used is: 21097
+2023-05-10 13:24:46,219: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:24:46,219: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:24:46,220: INFO: List of class labels:
+2023-05-10 13:24:46,220: INFO:   1 : primary forest
+2023-05-10 13:24:46,220: INFO:   2 : plantation forest
+2023-05-10 13:24:46,220: INFO:   3 : bare soil
+2023-05-10 13:24:46,220: INFO:   4 : crops
+2023-05-10 13:24:46,220: INFO:   5 : grassland
+2023-05-10 13:24:46,220: INFO:   6 : open water
+2023-05-10 13:24:46,220: INFO:   7 : burn scar
+2023-05-10 13:24:46,220: INFO:   8 : cloud
+2023-05-10 13:24:46,220: INFO:   9 : cloud shadow
+2023-05-10 13:24:46,220: INFO:   10 : haze
+2023-05-10 13:24:46,220: INFO:   11 : sparse woodland
+2023-05-10 13:24:46,220: INFO:   12 : dense woodland
+2023-05-10 13:24:46,220: INFO:   13 : artificial
+2023-05-10 13:24:46,220: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:24:46,220: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:24:46,221: INFO: ------------------------------------------------------------
+2023-05-10 13:24:46,221: INFO: Reporting Directories and Filepaths
+2023-05-10 13:24:46,221: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:24:46,221: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:24:46,221: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:24:46,221: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:24:46,221: INFO: ROI Directory is   : ./roi
+2023-05-10 13:24:46,221: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:24:46,221: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:24:46,221: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:24:46,221: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:24:46,221: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,221: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:24:46,221: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,447: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:24:46,447: INFO: These tiles are  :
+2023-05-10 13:24:46,447: INFO:   1 : 36NXG
+2023-05-10 13:24:46,447: INFO:   2 : 36NYG
+2023-05-10 13:24:46,447: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:24:46,452: INFO: Finished ROI tile intersection
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,453: INFO: Starting acd_integrated_raster():
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,453: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,453: INFO: Starting acd_national_integration
+2023-05-10 13:24:46,453: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: Starting acd_national_filtering
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: Starting acd_national_manual_validation()
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: Starting acd_national_distribution()
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:24:46,454: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 13:24:46,454: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,277: INFO: ****PROCESSING START****
+2023-05-10 13:33:40,277: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,277: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:33:40,277: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,277: INFO: Reading in parameters defined in the Config
+2023-05-10 13:33:40,278: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,278: INFO: is this an integer?  21097
+2023-05-10 13:33:40,278: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,278: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:33:40,278: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,278: INFO: Options:
+2023-05-10 13:33:40,278: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:33:40,278: INFO:   --build_composite for baseline composite
+2023-05-10 13:33:40,279: INFO:   --download_source = "scihub"
+2023-05-10 13:33:40,279: INFO:          composite start date  : 20230315
+2023-05-10 13:33:40,279: INFO:          composite end date  : 20231231
+2023-05-10 13:33:40,279: INFO:   --download for change detection images
+2023-05-10 13:33:40,279: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:33:40,279: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:33:40,279: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:33:40,279: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:33:40,279: INFO: EPSG used is: 21097
+2023-05-10 13:33:40,279: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:33:40,279: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:33:40,279: INFO: List of class labels:
+2023-05-10 13:33:40,279: INFO:   1 : primary forest
+2023-05-10 13:33:40,279: INFO:   2 : plantation forest
+2023-05-10 13:33:40,280: INFO:   3 : bare soil
+2023-05-10 13:33:40,280: INFO:   4 : crops
+2023-05-10 13:33:40,280: INFO:   5 : grassland
+2023-05-10 13:33:40,280: INFO:   6 : open water
+2023-05-10 13:33:40,280: INFO:   7 : burn scar
+2023-05-10 13:33:40,280: INFO:   8 : cloud
+2023-05-10 13:33:40,280: INFO:   9 : cloud shadow
+2023-05-10 13:33:40,280: INFO:   10 : haze
+2023-05-10 13:33:40,280: INFO:   11 : sparse woodland
+2023-05-10 13:33:40,280: INFO:   12 : dense woodland
+2023-05-10 13:33:40,280: INFO:   13 : artificial
+2023-05-10 13:33:40,280: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:33:40,280: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:33:40,280: INFO: ------------------------------------------------------------
+2023-05-10 13:33:40,280: INFO: Reporting Directories and Filepaths
+2023-05-10 13:33:40,280: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:33:40,281: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:33:40,281: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:33:40,281: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:33:40,281: INFO: ROI Directory is   : ./roi
+2023-05-10 13:33:40,281: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:33:40,281: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:33:40,281: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:33:40,281: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:33:40,281: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,281: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:33:40,281: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,517: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:33:40,517: INFO: These tiles are  :
+2023-05-10 13:33:40,517: INFO:   1 : 36NXG
+2023-05-10 13:33:40,517: INFO:   2 : 36NYG
+2023-05-10 13:33:40,517: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:33:40,525: INFO: Finished ROI tile intersection
+2023-05-10 13:33:40,526: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,526: INFO: Starting acd_integrated_raster():
+2023-05-10 13:33:40,526: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,526: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,526: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 13:33:40,526: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: Starting acd_national_integration
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: Starting acd_national_filtering
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: Starting acd_national_manual_validation()
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: Starting acd_national_distribution()
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---------------------------------------------------------------
+2023-05-10 13:33:40,527: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 13:33:40,528: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,887: INFO: ****PROCESSING START****
+2023-05-10 13:35:50,887: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,887: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:35:50,887: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,887: INFO: Reading in parameters defined in the Config
+2023-05-10 13:35:50,887: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,888: INFO: is this an integer?  21097
+2023-05-10 13:35:50,888: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,888: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:35:50,888: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,888: INFO: Options:
+2023-05-10 13:35:50,888: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:35:50,888: INFO:   --build_composite for baseline composite
+2023-05-10 13:35:50,888: INFO:   --download_source = "scihub"
+2023-05-10 13:35:50,888: INFO:          composite start date  : 20230315
+2023-05-10 13:35:50,888: INFO:          composite end date  : 20231231
+2023-05-10 13:35:50,888: INFO:   --download for change detection images
+2023-05-10 13:35:50,888: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:35:50,889: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:35:50,889: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:35:50,889: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:35:50,889: INFO: EPSG used is: 21097
+2023-05-10 13:35:50,889: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:35:50,889: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:35:50,889: INFO: List of class labels:
+2023-05-10 13:35:50,889: INFO:   1 : primary forest
+2023-05-10 13:35:50,889: INFO:   2 : plantation forest
+2023-05-10 13:35:50,889: INFO:   3 : bare soil
+2023-05-10 13:35:50,889: INFO:   4 : crops
+2023-05-10 13:35:50,889: INFO:   5 : grassland
+2023-05-10 13:35:50,889: INFO:   6 : open water
+2023-05-10 13:35:50,889: INFO:   7 : burn scar
+2023-05-10 13:35:50,889: INFO:   8 : cloud
+2023-05-10 13:35:50,889: INFO:   9 : cloud shadow
+2023-05-10 13:35:50,890: INFO:   10 : haze
+2023-05-10 13:35:50,890: INFO:   11 : sparse woodland
+2023-05-10 13:35:50,890: INFO:   12 : dense woodland
+2023-05-10 13:35:50,890: INFO:   13 : artificial
+2023-05-10 13:35:50,890: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:35:50,890: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:35:50,890: INFO: ------------------------------------------------------------
+2023-05-10 13:35:50,890: INFO: Reporting Directories and Filepaths
+2023-05-10 13:35:50,890: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:35:50,890: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:35:50,890: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:35:50,890: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:35:50,890: INFO: ROI Directory is   : ./roi
+2023-05-10 13:35:50,890: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:35:50,890: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:35:50,890: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:35:50,891: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:35:50,891: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:50,891: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:35:50,891: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:51,133: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:35:51,133: INFO: These tiles are  :
+2023-05-10 13:35:51,133: INFO:   1 : 36NXG
+2023-05-10 13:35:51,133: INFO:   2 : 36NYG
+2023-05-10 13:35:51,133: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:35:51,150: INFO: Finished ROI tile intersection
+2023-05-10 13:35:51,151: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:51,151: INFO: Starting acd_integrated_raster():
+2023-05-10 13:35:51,151: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:51,200: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-10 13:35:51,200: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-10 13:35:52,314: ERROR: Could not complete ACD Raster Process for Tile  36NXG
+2023-05-10 13:35:52,314: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/composite/L1C'
+2023-05-10 13:35:52,314: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-10 13:35:52,314: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-10 13:35:52,314: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-10 13:35:52,775: ERROR: Could not complete ACD Raster Process for Tile  36NYG
+2023-05-10 13:35:52,775: ERROR: error received   :  [Errno 2] No such file or directory: '/data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/composite/L1C'
+2023-05-10 13:35:52,776: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-10 13:35:52,776: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,776: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 13:35:52,776: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: Starting acd_national_integration
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: Starting acd_national_filtering
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,777: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 13:35:52,777: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: Starting acd_national_manual_validation()
+2023-05-10 13:35:52,778: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: Starting acd_national_distribution()
+2023-05-10 13:35:52,778: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: ---------------------------------------------------------------
+2023-05-10 13:35:52,778: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 13:35:52,779: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,918: INFO: ****PROCESSING START****
+2023-05-10 13:37:04,936: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,936: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 13:37:04,936: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,936: INFO: Reading in parameters defined in the Config
+2023-05-10 13:37:04,937: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,937: INFO: is this an integer?  21097
+2023-05-10 13:37:04,937: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,937: INFO: Starting acd_to_config_to_log()
+2023-05-10 13:37:04,937: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,937: INFO: Options:
+2023-05-10 13:37:04,937: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 13:37:04,937: INFO:   --build_composite for baseline composite
+2023-05-10 13:37:04,937: INFO:   --download_source = "scihub"
+2023-05-10 13:37:04,938: INFO:          composite start date  : 20230315
+2023-05-10 13:37:04,938: INFO:          composite end date  : 20231231
+2023-05-10 13:37:04,938: INFO:   --download for change detection images
+2023-05-10 13:37:04,938: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 13:37:04,938: INFO:   --quicklooks to create image quicklooks
+2023-05-10 13:37:04,938: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 13:37:04,938: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 13:37:04,938: INFO: EPSG used is: 21097
+2023-05-10 13:37:04,938: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 13:37:04,938: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 13:37:04,938: INFO: List of class labels:
+2023-05-10 13:37:04,938: INFO:   1 : primary forest
+2023-05-10 13:37:04,938: INFO:   2 : plantation forest
+2023-05-10 13:37:04,938: INFO:   3 : bare soil
+2023-05-10 13:37:04,938: INFO:   4 : crops
+2023-05-10 13:37:04,938: INFO:   5 : grassland
+2023-05-10 13:37:04,939: INFO:   6 : open water
+2023-05-10 13:37:04,939: INFO:   7 : burn scar
+2023-05-10 13:37:04,939: INFO:   8 : cloud
+2023-05-10 13:37:04,939: INFO:   9 : cloud shadow
+2023-05-10 13:37:04,939: INFO:   10 : haze
+2023-05-10 13:37:04,939: INFO:   11 : sparse woodland
+2023-05-10 13:37:04,939: INFO:   12 : dense woodland
+2023-05-10 13:37:04,939: INFO:   13 : artificial
+2023-05-10 13:37:04,939: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 13:37:04,939: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 13:37:04,939: INFO: ------------------------------------------------------------
+2023-05-10 13:37:04,939: INFO: Reporting Directories and Filepaths
+2023-05-10 13:37:04,939: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 13:37:04,939: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 13:37:04,939: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 13:37:04,939: INFO: Integrated Directory is   : ./integrated
+2023-05-10 13:37:04,939: INFO: ROI Directory is   : ./roi
+2023-05-10 13:37:04,940: INFO: Geometry Directory is   : ./geometry
+2023-05-10 13:37:04,940: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 13:37:04,940: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 13:37:04,940: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 13:37:04,940: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:04,940: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 13:37:04,940: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:05,312: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 13:37:05,313: INFO: These tiles are  :
+2023-05-10 13:37:05,313: INFO:   1 : 36NXG
+2023-05-10 13:37:05,313: INFO:   2 : 36NYG
+2023-05-10 13:37:05,313: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 13:37:05,328: INFO: Finished ROI tile intersection
+2023-05-10 13:37:05,329: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:05,329: INFO: Starting acd_integrated_raster():
+2023-05-10 13:37:05,329: INFO: ---------------------------------------------------------------
+2023-05-10 13:37:05,333: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-10 13:37:05,334: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-10 14:06:16,297: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-10 14:06:16,373: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-10 14:06:16,373: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-10 15:11:44,189: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,208: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,208: INFO: Starting acd_national_integration
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,208: INFO: Starting acd_national_filtering
+2023-05-10 15:11:44,208: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: Starting acd_national_manual_validation()
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: Starting acd_national_distribution()
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 15:11:44,209: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 15:11:44,209: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,520: INFO: ****PROCESSING START****
+2023-05-10 16:30:15,545: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,545: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-10 16:30:15,545: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,545: INFO: Reading in parameters defined in the Config
+2023-05-10 16:30:15,545: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,545: INFO: is this an integer?  21097
+2023-05-10 16:30:15,545: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,546: INFO: Starting acd_to_config_to_log()
+2023-05-10 16:30:15,546: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,546: INFO: Options:
+2023-05-10 16:30:15,546: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-10 16:30:15,546: INFO:   --build_composite for baseline composite
+2023-05-10 16:30:15,546: INFO:   --download_source = "scihub"
+2023-05-10 16:30:15,546: INFO:          composite start date  : 20230315
+2023-05-10 16:30:15,546: INFO:          composite end date  : 20231231
+2023-05-10 16:30:15,546: INFO:   --download for change detection images
+2023-05-10 16:30:15,546: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-10 16:30:15,546: INFO:   --quicklooks to create image quicklooks
+2023-05-10 16:30:15,546: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-10 16:30:15,546: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-10 16:30:15,546: INFO: EPSG used is: 21097
+2023-05-10 16:30:15,546: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-10 16:30:15,546: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-10 16:30:15,547: INFO: List of class labels:
+2023-05-10 16:30:15,547: INFO:   1 : primary forest
+2023-05-10 16:30:15,547: INFO:   2 : plantation forest
+2023-05-10 16:30:15,547: INFO:   3 : bare soil
+2023-05-10 16:30:15,547: INFO:   4 : crops
+2023-05-10 16:30:15,547: INFO:   5 : grassland
+2023-05-10 16:30:15,547: INFO:   6 : open water
+2023-05-10 16:30:15,547: INFO:   7 : burn scar
+2023-05-10 16:30:15,547: INFO:   8 : cloud
+2023-05-10 16:30:15,547: INFO:   9 : cloud shadow
+2023-05-10 16:30:15,547: INFO:   10 : haze
+2023-05-10 16:30:15,547: INFO:   11 : sparse woodland
+2023-05-10 16:30:15,547: INFO:   12 : dense woodland
+2023-05-10 16:30:15,547: INFO:   13 : artificial
+2023-05-10 16:30:15,547: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-10 16:30:15,547: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-10 16:30:15,547: INFO: ------------------------------------------------------------
+2023-05-10 16:30:15,548: INFO: Reporting Directories and Filepaths
+2023-05-10 16:30:15,548: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-10 16:30:15,548: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-10 16:30:15,548: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-10 16:30:15,548: INFO: Integrated Directory is   : ./integrated
+2023-05-10 16:30:15,548: INFO: ROI Directory is   : ./roi
+2023-05-10 16:30:15,548: INFO: Geometry Directory is   : ./geometry
+2023-05-10 16:30:15,548: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-10 16:30:15,548: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-10 16:30:15,548: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-10 16:30:15,548: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,548: INFO: Starting acd_roi_tile_intersection()
+2023-05-10 16:30:15,548: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,826: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-10 16:30:15,826: INFO: These tiles are  :
+2023-05-10 16:30:15,826: INFO:   1 : 36NXG
+2023-05-10 16:30:15,826: INFO:   2 : 36NYG
+2023-05-10 16:30:15,826: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-10 16:30:15,832: INFO: Finished ROI tile intersection
+2023-05-10 16:30:15,833: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,833: INFO: Starting acd_integrated_raster():
+2023-05-10 16:30:15,833: INFO: ---------------------------------------------------------------
+2023-05-10 16:30:15,890: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-10 16:30:15,891: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-10 19:43:42,298: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-10 19:43:42,343: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-10 19:43:42,343: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
+2023-05-10 20:54:28,971: INFO: Finished ACD Raster Processes for Tile :  36NYG
+2023-05-10 20:54:29,002: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,002: INFO: Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile
+2023-05-10 20:54:29,002: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,002: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,002: INFO: Starting acd_national_integration
+2023-05-10 20:54:29,002: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,002: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,002: INFO: Starting acd_national_filtering
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: Starting acd_national_dataframe_to_shapefile()
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: Starting acd_national_manual_validation()
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: Starting acd_national_distribution()
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-10 20:54:29,003: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-10 20:54:29,003: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,009: INFO: ****PROCESSING START****
+2023-05-11 08:54:24,027: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,027: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-11 08:54:24,027: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,027: INFO: Reading in parameters defined in the Config
+2023-05-11 08:54:24,028: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,028: INFO: is this an integer?  21097
+2023-05-11 08:54:24,028: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,028: INFO: Starting acd_to_config_to_log()
+2023-05-11 08:54:24,028: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,028: INFO: Options:
+2023-05-11 08:54:24,028: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-11 08:54:24,028: INFO:   --build_composite for baseline composite
+2023-05-11 08:54:24,028: INFO:   --download_source = "scihub"
+2023-05-11 08:54:24,028: INFO:          composite start date  : 20230315
+2023-05-11 08:54:24,028: INFO:          composite end date  : 20231231
+2023-05-11 08:54:24,028: INFO:   --download for change detection images
+2023-05-11 08:54:24,029: INFO:   --classify to apply the random forest model and create classification layers
+2023-05-11 08:54:24,029: INFO:   --quicklooks to create image quicklooks
+2023-05-11 08:54:24,029: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-11 08:54:24,029: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-11 08:54:24,029: INFO: EPSG used is: 21097
+2023-05-11 08:54:24,029: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-11 08:54:24,029: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-11 08:54:24,029: INFO: List of class labels:
+2023-05-11 08:54:24,029: INFO:   1 : primary forest
+2023-05-11 08:54:24,029: INFO:   2 : plantation forest
+2023-05-11 08:54:24,029: INFO:   3 : bare soil
+2023-05-11 08:54:24,029: INFO:   4 : crops
+2023-05-11 08:54:24,029: INFO:   5 : grassland
+2023-05-11 08:54:24,029: INFO:   6 : open water
+2023-05-11 08:54:24,029: INFO:   7 : burn scar
+2023-05-11 08:54:24,029: INFO:   8 : cloud
+2023-05-11 08:54:24,029: INFO:   9 : cloud shadow
+2023-05-11 08:54:24,029: INFO:   10 : haze
+2023-05-11 08:54:24,029: INFO:   11 : sparse woodland
+2023-05-11 08:54:24,030: INFO:   12 : dense woodland
+2023-05-11 08:54:24,030: INFO:   13 : artificial
+2023-05-11 08:54:24,030: INFO: Detecting changes from any of the classes: [1, 11, 12]
+2023-05-11 08:54:24,030: INFO:                     to any of the classes: [3, 4, 5, 13]
+2023-05-11 08:54:24,030: INFO: ------------------------------------------------------------
+2023-05-11 08:54:24,030: INFO: Reporting Directories and Filepaths
+2023-05-11 08:54:24,030: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-11 08:54:24,030: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-11 08:54:24,030: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-11 08:54:24,030: INFO: Integrated Directory is   : ./integrated
+2023-05-11 08:54:24,030: INFO: ROI Directory is   : ./roi
+2023-05-11 08:54:24,030: INFO: Geometry Directory is   : ./geometry
+2023-05-11 08:54:24,030: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-11 08:54:24,030: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-11 08:54:24,030: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-11 08:54:24,030: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,030: INFO: Starting acd_roi_tile_intersection()
+2023-05-11 08:54:24,030: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,394: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-11 08:54:24,394: INFO: These tiles are  :
+2023-05-11 08:54:24,395: INFO:   1 : 36NXG
+2023-05-11 08:54:24,395: INFO:   2 : 36NYG
+2023-05-11 08:54:24,395: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-11 08:54:24,417: INFO: Finished ROI tile intersection
+2023-05-11 08:54:24,417: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,417: INFO: Starting acd_integrated_raster():
+2023-05-11 08:54:24,417: INFO: ---------------------------------------------------------------
+2023-05-11 08:54:24,470: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-11 08:54:24,470: INFO: individual tile directory path  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG
+2023-05-11 12:11:47,604: INFO: Finished ACD Raster Processes for Tile :  36NXG
+2023-05-11 12:11:47,631: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-11 12:11:47,631: INFO: This individual tile directory already exists  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG
