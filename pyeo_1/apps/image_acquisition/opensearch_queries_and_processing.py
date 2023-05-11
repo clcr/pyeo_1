@@ -35,6 +35,7 @@ PASSWORD = CONFIG["authentication"]["password"]
 REFRESH_TOKEN = CONFIG["tokens"]["refresh"]
 
 SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
+MIN_IMAGE_SIZE = CONFIG["sentinel2_properties"]["min_image_size"]
 
 
 def build_request_string(
@@ -137,7 +138,7 @@ def filter_valid_size_s2_products(response_dataframe: pd.DataFrame) -> pd.DataFr
     response_dataframe["size"] = response_dataframe["size"].apply(
         lambda x: float(x) * 1e-6
     )
-    response_dataframe = response_dataframe.query("size >= " + str(500))
+    response_dataframe = response_dataframe.query("size >= " + MIN_IMAGE_SIZE)
 
     response_dataframe = response_dataframe.reset_index(drop=True)
     return response_dataframe
