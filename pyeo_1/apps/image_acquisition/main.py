@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import shutil
 from datetime import datetime
 
 import geopandas as gpd
@@ -101,7 +102,7 @@ async def main() -> None:
                             f"Download for product: {product_name} with UUID: {product_uuid} failed!"
                         )
                         try:
-                            os.remove(f"{SAFE_DOWNLOAD_PATH}/{product_name}")
+                            shutil.rmtree(f"{SAFE_DOWNLOAD_PATH}/{product_name}")
                             LOGGER.info(
                                 f"Incomplete or otherwise faulty product: {product_name} removed. This product will have to be redownloaded."
                             )
