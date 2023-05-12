@@ -44,12 +44,16 @@ PASSWORD = CONFIG["authentication"]["password"]
 SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
 
 
-async def main() -> None:
-    s2_geometry_path = CONFIG["sentinel2_properties"]["tiles_to_process"]
-    max_cloud_cover = CONFIG["sentinel2_properties"]["max_cloud_cover"]
-    start_date = CONFIG["sentinel2_properties"]["start_date"]
-    end_date = CONFIG["sentinel2_properties"]["end_date"]
-    max_records = CONFIG["sentinel2_properties"]["max_records"]
+async def download(geom_path,
+                   max_cloud_cover,
+                   start_date,
+                   end_date
+                   ) -> None:
+    s2_geometry_path = geom_path
+    max_cloud_cover = max_cloud_cover
+    start_date = start_date
+    end_date = end_date
+    max_records = 100
 
     auth_token = get_access_token(refresh=False)
 
@@ -132,3 +136,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+

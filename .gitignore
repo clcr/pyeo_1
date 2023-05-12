@@ -5,3 +5,4 @@
 *.swp
 log/national_vector_test.txt
 credentials/credentials.ini
+.idea/
