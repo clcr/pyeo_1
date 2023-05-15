@@ -15,17 +15,19 @@ def band_naming(band: int, log):
     band_name : str
 
     """
+    # note to self : + 1 from Python
+    # fields may get shortened (laundered)
 
     if band == 1:
-        band_name = "AvailImages"
+        band_name = "band1"
     elif band == 2:
         band_name = "band2"
     elif band == 3:
         band_name = "band3"
     elif band == 4:
-        band_name = "ChangeDays"
+        band_name = "band4"
     elif band == 5:
-        band_name = "NDetections"
+        band_name = "band5"
     elif band == 6:
         band_name = "band6"
     elif band == 7:
@@ -33,11 +35,11 @@ def band_naming(band: int, log):
     elif band == 8:
         band_name = "band8"
     elif band == 9:
-        band_name = "Confidence"
+        band_name = "band9"
     elif band == 10:
         band_name = "band10"
     elif band == 11:
-        band_name = "FirstChange"
+        band_name = "band11"
     elif band == 12:
         band_name = "band12"
     elif band == 13:
@@ -45,7 +47,7 @@ def band_naming(band: int, log):
     elif band == 14:
         band_name = "band14"
     elif band == 15:
-        band_name = "BinaryDec"
+        band_name = "band15"
     elif band == 16:
         band_name = "band16"
     elif band == 17:
@@ -64,19 +66,21 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
-    
+
     Parameters:
     ----------------
 
     change_report_path : str
         path to a change report raster
     band : int
-        an integer from 1 - 7, indicating the desired band to vectorise.
+        an integer from 1 - 18, indicating the desired band to vectorise.
+        the integer corresponds to GDAL numbering, i.e. starting at 1
+        instead of 0 as in Python.
     log : logging.Logger
         log variable
     conda_env_name : str
         String of the conda_env_name for specifying which GDAL and PROJ_LIB installation to use
-    
+
     Returns
     ----------------
     out_filename : str
@@ -87,13 +91,14 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     from tempfile import TemporaryDirectory
     from osgeo import gdal, ogr, osr
     from pathlib import Path
-    #import signal
+
+    # import signal
 
     #### set up timeout
-    #class TimeoutException(Exception):
-      #  pass
+    # class TimeoutException(Exception):
+    #  pass
 
-    #def timeout_handler(signum, frame):
+    # def timeout_handler(signum, frame):
     #    raise TimeoutException("Computation timed out.")
 
     # # Set the timeout to 2 hours (in seconds)
@@ -109,7 +114,7 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
     os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
-    #log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
+    # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
     # let GDAL use Python to raise Exceptions, instead of printing to sys.stdout
     gdal.UseExceptions()
@@ -159,9 +164,9 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
                 [],
             )
             # cancel the alarm if Polygonize finishes before the timeout
-            #signal.alarm(0)
-        #except TimeoutException:
-          #  log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
+            # signal.alarm(0)
+        # except TimeoutException:
+        #  log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
         except RuntimeError as error:
             log.error(f"GDAL Polygonize failed: \n {error}")
         except Exception as error:
@@ -237,11 +242,11 @@ def filter_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
 
 def boundingBoxToOffsets(bbox, geot):
 
-    """ 
-    
+    """
+
     This function converts a bounding box to offsets.
     The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
-    
+
     Parameters
     ----------------
 
@@ -262,7 +267,7 @@ def boundingBoxToOffsets(bbox, geot):
 def geotFromOffsets(row_offset, col_offset, geot):
 
     """
-    
+
     This function calculates a new geotransform from offsets.
     The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
 
@@ -271,7 +276,7 @@ def geotFromOffsets(row_offset, col_offset, geot):
     row_offset : int
     col_offset : int
     geot : variable
-    
+
     Returns
     ----------------
     new_geot : float
@@ -291,7 +296,28 @@ def geotFromOffsets(row_offset, col_offset, geot):
 
 def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
 
-    """ """
+    """ 
+    
+    This function sets the feature stats to calculate from the array.
+
+    Parameters
+    ----------
+
+    fid : int
+    min : int
+    max : int
+    mean : float
+    median : float
+    sd : float
+    sum : int
+    count : int
+    report_band : int
+
+    Returns
+    ---------
+
+    featstats : dict
+    """
 
     names = [
         f"rb{report_band}_min",
@@ -341,7 +367,7 @@ def zonal_statistics(
     Returns
     ----------------
     zstats_df
-    
+
     """
 
     from osgeo import gdal, ogr
@@ -531,13 +557,13 @@ def merge_and_calculate_spatial(
     ------------
 
     rb_ndetections_zstats_df : pd.DataFrame()
-        Pandas DataFrame object for report band 4 (ndetections)
+        Pandas DataFrame object for report band 5 (ndetections)
 
     rb_confidence_zstats_df : pd.DataFrame()
-        Pandas DataFrame object for report band 8 (confidence)
+        Pandas DataFrame object for report band 9 (confidence)
 
     rb_first_changedate_zstats_df : pd.DataFrame()
-        Pandas DataFrame object for report band 10 (approved first change date)
+        Pandas DataFrame object for report band 4 (approved first change date)
 
     path_to_vectorised_binary : str
         Path to the vectorised binary shapefile
@@ -580,10 +606,12 @@ def merge_and_calculate_spatial(
 
     # convert first date of change detection in days, to change date
     # columns_to_apply = ["rb7_min", "rb7_max", "rb7_mean", "rb7_median"]
-    columns_to_apply = ["rb11_min", "rb11_max", "rb11_mean", "rb11_median"]
+    columns_to_apply = ["rb4_min", "rb4_max", "rb4_mean", "rb4_median"]
 
     for column in columns_to_apply:
-        rb_first_changedate_zstats_df[column] = rb_first_changedate_zstats_df[column].apply(serial_date_to_string)
+        rb_first_changedate_zstats_df[column] = rb_first_changedate_zstats_df[
+            column
+        ].apply(serial_date_to_string)
 
     # table join on id
     merged = binary_dec.merge(rb_ndetections_zstats_df, on="id", how="inner")
@@ -718,7 +746,10 @@ def vector_report_generation(
 
     # 22 minutes
     path_vectorised_binary = vectorise_from_band(
-        change_report_path=change_report_path, band=14, log=log, conda_env_name=conda_env_name
+        change_report_path=change_report_path,
+        band=15,
+        log=log,
+        conda_env_name=conda_env_name,
     )
     # was band=6
 
@@ -731,7 +762,7 @@ def vector_report_generation(
     rb_ndetections_zstats_df = zonal_statistics(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
-        report_band=4,
+        report_band=5,
         log=log,
         conda_env_name=conda_env_name,
     )
@@ -740,7 +771,7 @@ def vector_report_generation(
     rb_confidence_zstats_df = zonal_statistics(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
-        report_band=8,
+        report_band=9,
         log=log,
         conda_env_name=conda_env_name,
     )
@@ -749,7 +780,7 @@ def vector_report_generation(
     rb_first_changedate_zstats_df = zonal_statistics(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
-        report_band=10,
+        report_band=4,
         log=log,
         conda_env_name=conda_env_name,
     )
