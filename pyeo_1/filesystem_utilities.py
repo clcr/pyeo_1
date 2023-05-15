@@ -63,6 +63,7 @@ def init_log(log_path):
     log.info("****PROCESSING START****")
     return log
 
+
 def init_log_acd(log_path, logger_name):
     """
     This function differs slightly to `init_log` in that it accomodates a logger_name. This enables \n
@@ -97,6 +98,7 @@ def init_log_acd(log_path, logger_name):
     logger.info("****PROCESSING START****")
 
     return logger
+
 
 def create_file_structure(root):
     """
@@ -954,8 +956,9 @@ def serial_date_to_string(srl_no: int):
     )  # could require srl_no - 1, if day 1 is 2000-01-01
     return new_date.strftime("%Y-%m-%d")
 
+
 def zip_contents(directory: str, notstartswith=None):
-        
+
     """
     This function zips the contents of the directory passed
 
@@ -977,24 +980,27 @@ def zip_contents(directory: str, notstartswith=None):
             for i in notstartswith:
                 if f.startswith(i):
                     do_it = False
-                    log.info('Skipping file that starts with \'{}\':   {}'.format(i,f))
+                    log.info("Skipping file that starts with '{}':   {}".format(i, f))
         if do_it:
             file_to_zip = os.path.join(directory, f)
             zipped_file = file_to_zip.split(".")[0]
-            log.info('Zipping   {}'.format(file_to_zip))
+            log.info("Zipping   {}".format(file_to_zip))
             if os.path.isdir(file_to_zip):
-                shutil.make_archive(zipped_file, 'zip', file_to_zip)
+                shutil.make_archive(zipped_file, "zip", file_to_zip)
             else:
-                with zipfile.ZipFile(zipped_file+".zip", "w", compression=zipfile.ZIP_DEFLATED) as zf:
+                with zipfile.ZipFile(
+                    zipped_file + ".zip", "w", compression=zipfile.ZIP_DEFLATED
+                ) as zf:
                     zf.write(file_to_zip, os.path.basename(file_to_zip))
-            if (os.path.exists(zipped_file+".zip")):
+            if os.path.exists(zipped_file + ".zip"):
                 if os.path.isdir(file_to_zip):
                     shutil.rmtree(file_to_zip)
                 else:
                     os.remove(file_to_zip)
             else:
-                log.error("Zipping failed: {}".format(zipped_file+".zip"))
+                log.error("Zipping failed: {}".format(zipped_file + ".zip"))
     return
+
 
 def unzip_contents(zippath: str, ifstartswith=None, ending=None):
 
@@ -1006,7 +1012,7 @@ def unzip_contents(zippath: str, ifstartswith=None, ending=None):
     Zippath (str)
         Path to the zipped folder, to unzip.
     """
-    dirpath = zippath[:-4] # cut away the  .zip ending
+    dirpath = zippath[:-4]  # cut away the  .zip ending
     if ifstartswith is not None and ending is not None:
         if dirpath.startswith(ifstartswith):
             dirpath = dirpath + ending
@@ -1015,11 +1021,7 @@ def unzip_contents(zippath: str, ifstartswith=None, ending=None):
         os.makedirs(dirpath)
     if os.path.exists(dirpath):
         if os.path.exists(zippath):
-            shutil.unpack_archive(
-                filename=zippath,
-                extract_dir=dirpath,
-                format='zip'
-                )
+            shutil.unpack_archive(filename=zippath, extract_dir=dirpath, format="zip")
             os.remove(zippath)
     else:
         log.error("Unzipping failed")
