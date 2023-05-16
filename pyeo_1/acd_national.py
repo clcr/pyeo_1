@@ -50,41 +50,45 @@ def automatic_change_detection_national(path_to_config):
 
     # report errors if any ROI files are missing, i.e. "I cannot find X ROI"
 
-    acd_log.info("---------------------------------------------------------------")
-    acd_log.info("Starting acd_integrated_raster():")
-    acd_log.info("---------------------------------------------------------------")
-    acd_integrated_raster(config_dict, acd_log, tilelist_filepath, config)
 
-    acd_log.info("---------------------------------------------------------------")
-    acd_log.info(
-        "Starting acd_by_tile_vectorisation(), vectorising each change report raster, by tile"
-    )
-    acd_log.info("---------------------------------------------------------------")
+    if config_dict["do_raster"]:
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting acd_integrated_raster():")
+        acd_log.info("---------------------------------------------------------------")
+        acd_integrated_raster(config_dict, acd_log, tilelist_filepath, config)
 
     # potential todo: integrated_vectorisation to accomodate the tilelist_df
     # and skip already existing vectors
+    if config_dict["do_vectorise"]:
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting acd_by_tile_vectorisation()")
+        acd_log.info("  vectorising each change report raster, by tile")
+        acd_log.info("---------------------------------------------------------------")
 
-    acd_integrated_vectorisation(
-        root_dir=config_dict["tile_dir"],
-        log=acd_log,
-        epsg=config_dict["epsg"],
-        level_1_boundaries_path=config_dict["level_1_boundaries_path"],
-        conda_env_name=config_dict["conda_env_name"],
-        delete_existing=config_dict["do_delete_existing_vector"],
-        tilelist_filepath=tilelist_filepath,
-    )
+        acd_integrated_vectorisation(
+            root_dir=config_dict["tile_dir"],
+            log=acd_log,
+            epsg=config_dict["epsg"],
+            level_1_boundaries_path=config_dict["level_1_boundaries_path"],
+            conda_env_name=config_dict["conda_env_name"],
+            delete_existing=config_dict["do_delete_existing_vector"],
+            tilelist_filepath=tilelist_filepath,
+        )
 
-    acd_log.info("---------------------------------------------------------------")
-    acd_log.info("Starting acd_national_integration")
-    acd_log.info("---------------------------------------------------------------")
+    #if config_dict["do_vectorise"] and config_dict["do_integrate"]:
+    if config_dict["do_integrate"]:
+            
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting acd_national_integration")
+        acd_log.info("---------------------------------------------------------------")
 
-    acd_national_integration(
-        root_dir=config_dict["tile_dir"],
-        log=acd_log,
-        epsg=config_dict["epsg"],
-        conda_env_name=config_dict["conda_env_name"],
-        config_dict=config_dict,
-    )
+        acd_national_integration(
+            root_dir=config_dict["tile_dir"],
+            log=acd_log,
+            epsg=config_dict["epsg"],
+            conda_env_name=config_dict["conda_env_name"],
+            config_dict=config_dict,
+        )
     # Heiko - KFS want aggregated statistics at county scale, instead of over one big shapefile
     # Heiko - integration at the ROI scale
 
@@ -185,7 +189,8 @@ def acd_initialisation(path_to_config):
 
     log.info("Reading in parameters defined in the Config")
     log.info("---------------------------------------------------------------")
-
+    
+    config_dict["do_raster"] = config.getboolean("raster_processing_parameters", "do_raster")
     config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
     config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
     config_dict["do_classify"] = config.getboolean(
@@ -284,6 +289,9 @@ def acd_initialisation(path_to_config):
     config_dict["do_delete_existing_vector"] = config.getboolean(
         "vector_processing_parameters", "do_delete_existing_vector"
     )
+
+    config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
+    config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict, log, config
@@ -317,48 +325,51 @@ def acd_config_to_log(config_dict: dict, log, config):
         log.info(
             "  Running in production mode, avoiding any development versions of functions."
         )
-    if config_dict["do_all"]:
-        log.info("  --do_all")
-    if config_dict["build_composite"]:
-        log.info("  --build_composite for baseline composite")
-        log.info("  --download_source = {}".format(config_dict["download_source"]))
-        log.info(f"         composite start date  : {config_dict['start_date']}")
-        log.info(f"         composite end date  : {config_dict['end_date']}")
-    if config_dict["do_download"]:
-        log.info("  --download for change detection images")
-        if not config_dict["build_composite"]:
+    if config_dict["do_raster"]:
+        log.info("  --do_raster")
+        log.info("      raster pipeline enabled")
+        if config_dict["do_all"]:
+            log.info("  --do_all")
+        if config_dict["build_composite"]:
+            log.info("  --build_composite for baseline composite")
             log.info("  --download_source = {}".format(config_dict["download_source"]))
-    if config_dict["do_classify"]:
-        log.info(
-            "  --classify to apply the random forest model and create classification layers"
-        )
-    if config_dict["build_prob_image"]:
-        log.info("  --build_prob_image to save classification probability layers")
-    if config_dict["do_change"]:
-        log.info("  --change to produce change detection layers and report images")
-        log.info(f"         change start date  : {config_dict['composite_start']}")
-        log.info(f"         change end date  : {config_dict['composite_end']}")
-    if config_dict["do_update"]:
-        log.info("  --update to update the baseline composite with new observations")
-    if config_dict["do_quicklooks"]:
-        log.info("  --quicklooks to create image quicklooks")
-    if config_dict["do_delete"]:
-        log.info("  --remove downloaded L1C images and intermediate image products")
-        log.info(
-            "           (cloud-masked band-stacked rasters, class images, change layers) after use."
-        )
-        log.info(
-            "           Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs."
-        )
-        log.info("           Keeps only L2A images, composites and report files.")
-        log.info("           Overrides --zip for the above files. WARNING! FILE LOSS!")
-    if config_dict["do_zip"]:
-        log.info(
-            "  --zip archives L2A images, and if --remove is not selected also L1C,"
-        )
-        log.info(
-            "           cloud-masked band-stacked rasters, class images and change layers after use."
-        )
+            log.info(f"         composite start date  : {config_dict['start_date']}")
+            log.info(f"         composite end date  : {config_dict['end_date']}")
+        if config_dict["do_download"]:
+            log.info("  --download for change detection images")
+            if not config_dict["build_composite"]:
+                log.info("  --download_source = {}".format(config_dict["download_source"]))
+        if config_dict["do_classify"]:
+            log.info(
+                "  --classify to apply the random forest model and create classification layers"
+            )
+        if config_dict["build_prob_image"]:
+            log.info("  --build_prob_image to save classification probability layers")
+        if config_dict["do_change"]:
+            log.info("  --change to produce change detection layers and report images")
+            log.info(f"         change start date  : {config_dict['composite_start']}")
+            log.info(f"         change end date  : {config_dict['composite_end']}")
+        if config_dict["do_update"]:
+            log.info("  --update to update the baseline composite with new observations")
+        if config_dict["do_quicklooks"]:
+            log.info("  --quicklooks to create image quicklooks")
+        if config_dict["do_delete"]:
+            log.info("  --remove downloaded L1C images and intermediate image products")
+            log.info(
+                "           (cloud-masked band-stacked rasters, class images, change layers) after use."
+            )
+            log.info(
+                "           Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs."
+            )
+            log.info("           Keeps only L2A images, composites and report files.")
+            log.info("           Overrides --zip for the above files. WARNING! FILE LOSS!")
+        if config_dict["do_zip"]:
+            log.info(
+                "  --zip archives L2A images, and if --remove is not selected also L1C,"
+            )
+            log.info(
+                "           cloud-masked band-stacked rasters, class images and change layers after use."
+            )
     if config_dict["do_delete_existing_vector"]:
         log.info(
             "  --do_delete_existing_vector , when vectorising the change report rasters, "
@@ -366,6 +377,13 @@ def acd_config_to_log(config_dict: dict, log, config):
         log.info(
             "            existing vectors files will be deleted and new vector files created."
         )
+    if config_dict["do_vectorise"]:
+        log.info("  --do_vectorise")
+        log.info("      raster change reports will be vectorised")
+
+    if config_dict["do_vectorise"] and config_dict["do_integrate"]:
+        log.info("  --do_integrate")
+        log.info("      vectorised reports will be merged together")
 
     # reporting more parameters
     log.info(f"EPSG used is: {config_dict['epsg']}")
@@ -2613,6 +2631,10 @@ def acd_national_integration(
 
     # glob through passed directory, return files matching the two patterns
     vectorised_paths = glob.glob(os.path.join(root_dir, search_pattern))
+    log.info(f"Number of change Report Shapefiles to integrate  :  {len(vectorised_paths)}")
+    log.info("Paths of shapefiles to integrate are:")
+    for number, path in enumerate(vectorised_paths):
+        log.info(f"{number} : {path}")
 
     # specify gdal and proj installation, this is geopandas'
     home = str(Path.home())
@@ -2626,14 +2648,16 @@ def acd_national_integration(
     # initialise empty geodataframe
     merged_gdf = gpd.GeoDataFrame()
 
-    # read in ROI
+    # specify roi path
     roi_filepath = os.path.join(config_dict["roi_dir"], config_dict["roi_filename"])
     
+    # logic if roi path does not exist
     if not os.path.exists(roi_filepath):
         log.error("Could not open ROI, filepath does not exist")
         log.error(f"Exiting acd_national(), ensure  {roi_filepath}  exists")
         sys.exit(1)
 
+    # read in ROI, reproject
     log.info("Reading in ROI")
     roi = gpd.read_file(roi_filepath)
     log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
@@ -2641,21 +2665,34 @@ def acd_national_integration(
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
     with TemporaryDirectory(dir=os.getcwd()) as td:
-        for vector in vectorised_paths[:-1]:
+        for vector in vectorised_paths:
             try:
+                # read in shapefile, reproject
                 log.info(f"Reading in change report shapefile   :  {vector}")
                 shape = gpd.read_file(vector)
                 log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
                 shape = shape.to_crs(epsg)
-                # spatial filter intersection
+
+                # spatial filter intersection of shapefile with ROI
                 log.info(f"Intersecting {vector} with {roi_filepath}")
                 intersected = shape.overlay(roi, how="intersection")
 
                 # join the two gdfs
                 merged_gdf = pd.concat([merged_gdf, intersected], ignore_index=True)
                 log.info(f"Intersection: Success")
+
+                # explode to convert any multipolygons created from intersecting to individual polygons
+                merged_gdf = merged_gdf.explode(index_parts=False)
+
+                # recompute area
+                merged_gdf["area"] = merged_gdf.area
+
+                log.info(f"Integrated geodataframe length is currently  :  {len(merged_gdf['area'])}")
             except:
                 log.error(f"failed to merge geodataframe: {vector}")
+
+    # write integrated geodataframe to shapefile
+    with TemporaryDirectory(dir=os.getcwd()) as td:
         try:
             out_path = f"{os.path.join(root_dir, 'national_geodataframe.shp')}"
             log.info(f"Merging loop complete, now writing integrated shapefile to {out_path}")
