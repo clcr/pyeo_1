@@ -92,23 +92,6 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     from osgeo import gdal, ogr, osr
     from pathlib import Path
 
-    # import signal
-
-    #### set up timeout
-    # class TimeoutException(Exception):
-    #  pass
-
-    # def timeout_handler(signum, frame):
-    #    raise TimeoutException("Computation timed out.")
-
-    # # Set the timeout to 2 hours (in seconds)
-    # timeout_seconds = 2 * 60 * 60
-
-    # # Set the signal handler
-    # signal.signal(signal.SIGALRM, timeout_handler)
-    # signal.alarm(timeout_seconds)
-    # ####
-
     # specify gdal and proj installation, this is GDAL's
     home = str(Path.home())
     os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
@@ -163,10 +146,7 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
                 dst_field,  # -1 for no field column
                 [],
             )
-            # cancel the alarm if Polygonize finishes before the timeout
-            # signal.alarm(0)
-        # except TimeoutException:
-        #  log.error("GDAL Polygonize took more than 2 hours, skipping to next tile")
+            
         except RuntimeError as error:
             log.error(f"GDAL Polygonize failed: \n {error}")
         except Exception as error:
@@ -386,7 +366,7 @@ def zonal_statistics(
     os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
     os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
-    log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
+    #log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
     with TemporaryDirectory(dir=os.getcwd()) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -688,7 +668,7 @@ def merge_and_calculate_spatial(
         try:
             log.info("Deleting intermediate change report vectorisation files")
             directory = os.path.dirname(change_report_path)
-            binary_dec_pattern = f"{directory}/*BinaryDec*"
+            binary_dec_pattern = f"{directory}/*band*"
             zstats_pattern = f"{directory}/*zstats*"
 
             intermediate_files = glob.glob(binary_dec_pattern)
