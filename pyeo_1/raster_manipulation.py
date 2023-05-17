@@ -6072,3 +6072,48 @@ def compress_tiff(in_path, out_path):
             log.error("Error opening GeoTiff file: {}".format(in_path))
             log.error("  {}".format(e))
     return
+
+
+def write_n_band_tiff(tiff_paths: list, output_path: str) -> None:
+    """
+    This function takes a list of tiff paths and merges the tiffs into a single n-band image.
+
+    Parameters
+    ----------
+    tiff_paths : list
+        List of tiff input images to merge
+    output_path : str
+        The path to the output GeoTiff file.
+    """
+
+    reference = gdal.Open(tiff_paths[0])
+    num_rows = reference.RasterYSize
+    num_cols = reference.RasterXSize
+    num_bands = len(tiff_paths)
+
+    driver = gdal.GetDriverByName("GTiff")
+    output = driver.Create(output_path, num_cols, num_rows, num_bands, gdal.GDT_Byte)
+
+    for band_num, input_path in enumerate(tiff_paths):
+        input_image = gdal.Open(input_path)
+
+        band = input_image.GetRasterBand(1)
+        band_data = band.ReadAsArray()
+
+        output_band = output.GetRasterBand(band_num + 1)
+        output_band.WriteArray(band_data)
+
+        output_band.SetColorInterpretation(band.GetColorInterpretation())
+
+        output_band.SetNoDataValue(band.GetNoDataValue())
+
+        input_image = None
+
+    output.SetGeoTransform(reference.GetGeoTransform())
+    output.SetProjection(reference.GetProjection())
+
+    output = None
+
+    log.info(f"Successfully merged {num_bands} TIFF images into {output_path}.")
+
+    return
