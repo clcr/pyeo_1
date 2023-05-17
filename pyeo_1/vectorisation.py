@@ -162,10 +162,10 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     return out_filename
 
 
-def filter_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
+def clean_zero_nodata_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
     """
 
-    This function filters the vectorised bands.
+    This function removes 0s and nodata values from the vectorised bands.
 
     Parameters
     ----------------
@@ -203,17 +203,20 @@ def filter_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
         fieldname = os.path.splitext(vectorised_band_path.split("_")[-1])[0]
 
         # filter out 0 and 32767 (nodata) values
-        filtered = shp.loc[(shp[fieldname] != 0) & (shp[fieldname] != 32767)]
+        cleaned = shp.loc[(shp[fieldname] != 0) & (shp[fieldname] != 32767)]
+
+        # copy to avoid SettingWithCopyWarning
+        cleaned_copy = cleaned.copy()
 
         # assign explicit id from index
-        filtered["id"] = filtered.reset_index().index
+        cleaned_copy.loc[:, "id"] = cleaned.reset_index().index
 
         # save to shapefile
         filename = f"{os.path.splitext(vectorised_band_path)[0]}_filtered.shp"
-        filtered.to_file(filename=filename, driver="ESRI Shapefile")
+        cleaned_copy.to_file(filename=filename, driver="ESRI Shapefile")
 
     # remove variables to reduce memory (RAM) consumption
-    del (shp, filtered)
+    del (shp, cleaned, cleaned_copy)
 
     log.info(f"filtering complete and saved at  : {filename}")
 
@@ -733,7 +736,7 @@ def vector_report_generation(
     )
     # was band=6
 
-    path_vectorised_binary_filtered = filter_vectorised_band(
+    path_vectorised_binary_filtered = clean_zero_nodata_vectorised_band(
         vectorised_band_path=path_vectorised_binary,
         log=log,
         conda_env_name=conda_env_name,

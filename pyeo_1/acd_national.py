@@ -4,6 +4,7 @@ import os
 import sys
 import shutil
 import glob
+import logging
 from pathlib import Path
 from pyeo_1 import filesystem_utilities
 from pyeo_1 import vectorisation
@@ -50,7 +51,6 @@ def automatic_change_detection_national(path_to_config):
 
     # report errors if any ROI files are missing, i.e. "I cannot find X ROI"
 
-
     if config_dict["do_raster"]:
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_raster():")
@@ -75,7 +75,6 @@ def automatic_change_detection_national(path_to_config):
             tilelist_filepath=tilelist_filepath,
         )
 
-    #if config_dict["do_vectorise"] and config_dict["do_integrate"]:
     if config_dict["do_integrate"]:
             
         acd_log.info("---------------------------------------------------------------")
@@ -95,14 +94,16 @@ def automatic_change_detection_national(path_to_config):
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_national_filtering")
     acd_log.info("---------------------------------------------------------------")
-    # acd_national_filtering()
-    # Ivan - ROI clipping?
+    if config_dict["counties_of_interest"]:
+        acd_national_filtering(log=acd_log,
+                               config_dict=config_dict)
+        
     # Ivan - multiple filters e.g. time,
 
-    acd_log.info("---------------------------------------------------------------")
-    acd_log.info("Starting acd_national_dataframe_to_shapefile()")
-    acd_log.info("---------------------------------------------------------------")
-    # acd_national_dataframe_to_shapefile()
+    # acd_log.info("---------------------------------------------------------------")
+    # acd_log.info("Starting acd_national_dataframe_to_shapefile()")
+    # acd_log.info("---------------------------------------------------------------")
+    # # acd_national_dataframe_to_shapefile()
 
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_national_manual_validation()")
@@ -292,6 +293,10 @@ def acd_initialisation(path_to_config):
 
     config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
     config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
+    config_dict["counties_of_interest"] = json.loads(
+        config["vector_processing_parameters"]["counties_of_interest"]
+    )
+    config_dict["minimum_area_to_report_m2"] = int(config["vector_processing_parameters"]["minimum_area_to_report_m2"])
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict, log, config
@@ -381,10 +386,18 @@ def acd_config_to_log(config_dict: dict, log, config):
         log.info("  --do_vectorise")
         log.info("      raster change reports will be vectorised")
 
-    if config_dict["do_vectorise"] and config_dict["do_integrate"]:
+    if config_dict["do_integrate"]:
         log.info("  --do_integrate")
         log.info("      vectorised reports will be merged together")
 
+    if config_dict["counties_of_interest"]:
+        log.info("  --counties_of_interest")
+        log.info("        Counties to filter the national geodataframe:")
+        for n, county in enumerate(config_dict["counties_of_interest"]):
+            log.info(f"        {n}  :  {county}")
+
+        log.info("  --minimum_area_to_report_m2")
+        log.info(f"       Only Change Detections > {config_dict['minimum_area_to_report_m2']} metres squared will be reported")
     # reporting more parameters
     log.info(f"EPSG used is: {config_dict['epsg']}")
     log.info(f"List of image bands: {config_dict['bands']}")
@@ -1550,16 +1563,11 @@ def acd_by_tile_raster(
                 if len(add) > 0:
                     if config_dict["do_dev"]:
                         add = pd.DataFrame(add)
-                        tile_log.info(
-                            "Types for concatenation: {}, {}".format(
-                                type(l2a_products), type(add)
-                            )
-                        )
                         l2a_products = pd.concat([l2a_products, add])
                         # TODO: test the above fix for:
                         # pyeo_1/pyeo_1/apps/change_detection/tile_based_change_detection_from_cover_maps.py:456: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
                     else:
-                        l2a_products = l2a_products.append(add)
+                        l2a_products = pd.concat([l2a_products, add])
 
                 tile_log.info(
                     "    {} L1C products remaining for download".format(
@@ -2468,13 +2476,13 @@ def acd_by_tile_raster(
 
 
 def acd_integrated_vectorisation(
-    root_dir,
-    log,
-    epsg,
-    level_1_boundaries_path,
-    conda_env_name,
-    delete_existing,
-    tilelist_filepath,
+    root_dir: str,
+    log: logging.Logger,
+    epsg: int,
+    level_1_boundaries_path: str,
+    conda_env_name: str,
+    delete_existing: bool,
+    tilelist_filepath: str,
 ):
     """
 
@@ -2489,7 +2497,7 @@ def acd_integrated_vectorisation(
     ----------
     root_dir : str
         The path to the root directory of the tiles directory
-    log
+    log : logging.Logger
         The logger object
     epsg : int
         The epsg code for the spatial area
@@ -2510,6 +2518,7 @@ def acd_integrated_vectorisation(
 
     import glob
     import os
+
 
     tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
     report_tif_pattern = "/output/probabilities/report*.tif"
@@ -2599,7 +2608,7 @@ def acd_integrated_vectorisation(
 
 
 def acd_national_integration(
-    root_dir: str, log, epsg: int, conda_env_name: str, config_dict: dict
+    root_dir: str, log: logging.Logger, epsg: int, conda_env_name: str, config_dict: dict
 ):
 
     """
@@ -2613,7 +2622,8 @@ def acd_national_integration(
     Parameters:
     ----------
     root_dir : str
-    log :
+    log : logging.Logger
+        a Logger object
     epsg : int
     conda_env_name : str
     config_dict : dict
@@ -2660,7 +2670,7 @@ def acd_national_integration(
     # read in ROI, reproject
     log.info("Reading in ROI")
     roi = gpd.read_file(roi_filepath)
-    log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
+    #log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
     roi = roi.to_crs(epsg)
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
@@ -2670,7 +2680,7 @@ def acd_national_integration(
                 # read in shapefile, reproject
                 log.info(f"Reading in change report shapefile   :  {vector}")
                 shape = gpd.read_file(vector)
-                log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
+                #log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
                 shape = shape.to_crs(epsg)
 
                 # spatial filter intersection of shapefile with ROI
@@ -2709,18 +2719,74 @@ def acd_national_integration(
 
     return
 
-    # def acd_national_filtering():
-    #     """
+def acd_national_filtering(log: logging.Logger, config_dict: dict):
+    """
 
-    #     This function:
-    #         - Applies filters to the national vectorised change report, as specified in the pyeo.ini
-    #             - The planned filters are:
-    #                 - Counties
-    #                 - Minimum Area
-    #                 - Date Period
+    This function:
+        - Applies filters to the national vectorised change report, as specified in the pyeo.ini
+            - The planned filters are:
+                - Counties
+                - Minimum Area
+                - Date Period?
 
-    #     """
-    #     pass
+                
+    Parameters:
+    ----------
+
+    log : logging.Logger
+        The logger object
+    config_dict : dict
+        config dictionary containing runtime parameters
+
+    Returns:
+    ----------
+    None
+    """
+
+    # specify gdal and proj installation, this is geopandas'
+    home = str(Path.home())
+    conda_env_name = config_dict["conda_env_name"]
+    os.environ[
+        "GDAL_DATA"
+    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
+    os.environ[
+        "PROJ_LIB"
+    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+
+    # find national_geodataframe
+    search_pattern = "national_geodataframe.shp"
+    national_change_report_path = glob.glob(os.path.join(config_dict["tile_dir"], search_pattern))[0]
+
+    # read in national geodataframe created before by the integrated step
+    if os.path.exists(national_change_report_path):
+        national_gdf = gpd.read_file(national_change_report_path)
+    else:
+        log.error(f"national geodataframe does not exist, have you set 'do_integrate' to True in pyeo_1.ini?")
+        sys.exit(1)
+
+    # create a query based on the county list provided in pyeo_1.ini
+    query_values = " or ".join(f"County == '{county_name}'" for county_name in config_dict["counties_of_interest"])
+
+    # apply the county query filter
+    filtered = national_gdf.query(query_values)
+
+    # create a query based on minimum area provided in pyeo_1.ini
+    query_values = f"area > {config_dict['minimum_area_to_report_m2']}"
+
+    # apply the minimum area filter
+    filtered = filtered.query(query_values)
+
+    # write filtered geodataframe to shapefile
+    with TemporaryDirectory(dir=os.getcwd()) as td:
+        try:
+            out_path = f"{os.path.join(config_dict['tile_dir'], 'national_geodataframe_filtered.shp')}"
+            log.info(f"Filtering complete, now writing filtered national shapefile to :")
+            log.info(f"        {out_path}")
+            filtered.to_file(filename=out_path)
+        except:
+            log.error(f"failed to write output at :  {out_path}")
+
+    return
 
     # def acd_national_dataframe_to_shapefile():
     #     """
@@ -2793,7 +2859,7 @@ def acd_national_integration(
     # create tiles folder structure
     # log.info("\nCreating the directory structure if not already present")
 
-    filesystem_utilities.create_folder_structure_for_tiles(tile_dir)
+    # filesystem_utilities.create_folder_structure_for_tiles(tile_dir)
 
     # try:
 

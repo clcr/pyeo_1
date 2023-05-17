@@ -1,0 +1,1148 @@
+2023-05-17 12:52:00,611: INFO: ****PROCESSING START****
+2023-05-17 12:52:00,612: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,612: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 12:52:00,612: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,612: INFO: Reading in parameters defined in the Config
+2023-05-17 12:52:00,612: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,613: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,613: INFO: Starting acd_to_config_to_log()
+2023-05-17 12:52:00,613: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,613: INFO: Options:
+2023-05-17 12:52:00,613: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 12:52:00,613: INFO:   --counties_of_interest
+2023-05-17 12:52:00,613: INFO:         Counties to filter the national geodataframe:
+2023-05-17 12:52:00,613: INFO:         0  :  Kwale
+2023-05-17 12:52:00,613: INFO:         1  :  TransNzoia
+2023-05-17 12:52:00,613: INFO: EPSG used is: 21097
+2023-05-17 12:52:00,613: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 12:52:00,613: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 12:52:00,613: INFO: 
+2023-05-17 12:52:00,614: INFO: List of class labels:
+2023-05-17 12:52:00,614: INFO:   1 : primary forest
+2023-05-17 12:52:00,614: INFO:   2 : plantation forest
+2023-05-17 12:52:00,614: INFO:   3 : bare soil
+2023-05-17 12:52:00,614: INFO:   4 : crops
+2023-05-17 12:52:00,614: INFO:   5 : grassland
+2023-05-17 12:52:00,614: INFO:   6 : open water
+2023-05-17 12:52:00,614: INFO:   7 : burn scar
+2023-05-17 12:52:00,614: INFO:   8 : cloud
+2023-05-17 12:52:00,614: INFO:   9 : cloud shadow
+2023-05-17 12:52:00,614: INFO:   10 : haze
+2023-05-17 12:52:00,614: INFO:   11 : sparse woodland
+2023-05-17 12:52:00,614: INFO:   12 : dense woodland
+2023-05-17 12:52:00,614: INFO:   13 : artificial
+2023-05-17 12:52:00,614: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 12:52:00,614: INFO:                     to any of the classes: [3]
+2023-05-17 12:52:00,615: INFO: ------------------------------------------------------------
+2023-05-17 12:52:00,615: INFO: Reporting Directories and Filepaths
+2023-05-17 12:52:00,615: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 12:52:00,615: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 12:52:00,615: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 12:52:00,615: INFO: Integrated Directory is   : ./integrated
+2023-05-17 12:52:00,615: INFO: ROI Directory is   : ./roi
+2023-05-17 12:52:00,615: INFO: Geometry Directory is   : ./geometry
+2023-05-17 12:52:00,615: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 12:52:00,615: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 12:52:00,615: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 12:52:00,615: INFO: -------------------------------------------
+2023-05-17 12:52:00,615: INFO: Streaming config parameters to log file for reference
+2023-05-17 12:52:00,615: INFO: planet
+2023-05-17 12:52:00,615: INFO:      api_key :  
+2023-05-17 12:52:00,616: INFO: forest_sentinel
+2023-05-17 12:52:00,616: INFO:      start_date :  20230101
+2023-05-17 12:52:00,616: INFO:      end_date :  20231231
+2023-05-17 12:52:00,616: INFO:      composite_start :  20220601
+2023-05-17 12:52:00,616: INFO:      composite_end :  20221231
+2023-05-17 12:52:00,616: INFO:      epsg :  21097
+2023-05-17 12:52:00,616: INFO:      cloud_cover :  25
+2023-05-17 12:52:00,616: INFO:      cloud_certainty_threshold :  0
+2023-05-17 12:52:00,616: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 12:52:00,616: INFO: environment
+2023-05-17 12:52:00,616: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 12:52:00,616: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 12:52:00,617: INFO:      integrated_dir :  ./integrated
+2023-05-17 12:52:00,617: INFO:      roi_dir :  ./roi
+2023-05-17 12:52:00,617: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 12:52:00,617: INFO:      geometry_dir :  ./geometry
+2023-05-17 12:52:00,617: INFO:      log_dir :  ./log
+2023-05-17 12:52:00,617: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 12:52:00,617: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 12:52:00,617: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 12:52:00,617: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 12:52:00,617: INFO: raster_processing_parameters
+2023-05-17 12:52:00,617: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 12:52:00,617: INFO:      resolution_string :  "10m"
+2023-05-17 12:52:00,617: INFO:      output_resolution :  10
+2023-05-17 12:52:00,618: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 12:52:00,618: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 12:52:00,618: INFO:      download_limit :  10
+2023-05-17 12:52:00,618: INFO:      faulty_granule_threshold :  200
+2023-05-17 12:52:00,618: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 12:52:00,618: INFO:      change_from_classes :  [1, 2]
+2023-05-17 12:52:00,618: INFO:      change_to_classes :  [3]
+2023-05-17 12:52:00,618: INFO:      sieve :  0
+2023-05-17 12:52:00,618: INFO:      chunks :  10
+2023-05-17 12:52:00,618: INFO:      download_source :  "scihub"
+2023-05-17 12:52:00,618: INFO:      do_raster :  False
+2023-05-17 12:52:00,618: INFO:      do_build_composite :  False
+2023-05-17 12:52:00,618: INFO:      do_all :  False
+2023-05-17 12:52:00,618: INFO:      do_download :  False
+2023-05-17 12:52:00,618: INFO:      do_build_prob_image :  False
+2023-05-17 12:52:00,618: INFO:      do_classify :  False
+2023-05-17 12:52:00,619: INFO:      do_change :  False
+2023-05-17 12:52:00,619: INFO:      do_dev :  False
+2023-05-17 12:52:00,619: INFO:      do_update :  False
+2023-05-17 12:52:00,619: INFO:      do_quicklooks :  False
+2023-05-17 12:52:00,619: INFO:      do_delete :  False
+2023-05-17 12:52:00,619: INFO:      do_zip :  False
+2023-05-17 12:52:00,619: INFO:      do_skip_existing :  False
+2023-05-17 12:52:00,619: INFO: vector_processing_parameters
+2023-05-17 12:52:00,619: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 12:52:00,619: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 12:52:00,619: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 12:52:00,619: INFO:      do_delete_existing_vector :  False
+2023-05-17 12:52:00,619: INFO:      do_vectorise :  False
+2023-05-17 12:52:00,619: INFO:      do_integrate :  False
+2023-05-17 12:52:00,619: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 12:52:00,620: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:00,620: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 12:52:00,620: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:01,388: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 12:52:01,388: INFO: These tiles are  :
+2023-05-17 12:52:01,388: INFO:   1 : 36NXG
+2023-05-17 12:52:01,388: INFO:   2 : 36NYG
+2023-05-17 12:52:01,388: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 12:52:01,784: INFO: Finished ROI tile intersection
+2023-05-17 12:52:01,785: INFO: ---------------------------------------------------------------
+2023-05-17 12:52:01,785: INFO: Starting acd_national_filtering
+2023-05-17 12:52:01,785: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,524: INFO: ****PROCESSING START****
+2023-05-17 12:58:12,525: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,525: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 12:58:12,525: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,525: INFO: Reading in parameters defined in the Config
+2023-05-17 12:58:12,525: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,526: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,526: INFO: Starting acd_to_config_to_log()
+2023-05-17 12:58:12,526: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,526: INFO: Options:
+2023-05-17 12:58:12,526: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 12:58:12,526: INFO:   --counties_of_interest
+2023-05-17 12:58:12,526: INFO:         Counties to filter the national geodataframe:
+2023-05-17 12:58:12,526: INFO:         0  :  Kwale
+2023-05-17 12:58:12,526: INFO:         1  :  TransNzoia
+2023-05-17 12:58:12,526: INFO: EPSG used is: 21097
+2023-05-17 12:58:12,526: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 12:58:12,526: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 12:58:12,527: INFO: 
+2023-05-17 12:58:12,527: INFO: List of class labels:
+2023-05-17 12:58:12,527: INFO:   1 : primary forest
+2023-05-17 12:58:12,527: INFO:   2 : plantation forest
+2023-05-17 12:58:12,527: INFO:   3 : bare soil
+2023-05-17 12:58:12,527: INFO:   4 : crops
+2023-05-17 12:58:12,527: INFO:   5 : grassland
+2023-05-17 12:58:12,527: INFO:   6 : open water
+2023-05-17 12:58:12,527: INFO:   7 : burn scar
+2023-05-17 12:58:12,527: INFO:   8 : cloud
+2023-05-17 12:58:12,527: INFO:   9 : cloud shadow
+2023-05-17 12:58:12,527: INFO:   10 : haze
+2023-05-17 12:58:12,527: INFO:   11 : sparse woodland
+2023-05-17 12:58:12,527: INFO:   12 : dense woodland
+2023-05-17 12:58:12,527: INFO:   13 : artificial
+2023-05-17 12:58:12,527: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 12:58:12,528: INFO:                     to any of the classes: [3]
+2023-05-17 12:58:12,528: INFO: ------------------------------------------------------------
+2023-05-17 12:58:12,528: INFO: Reporting Directories and Filepaths
+2023-05-17 12:58:12,528: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 12:58:12,528: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 12:58:12,528: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 12:58:12,528: INFO: Integrated Directory is   : ./integrated
+2023-05-17 12:58:12,528: INFO: ROI Directory is   : ./roi
+2023-05-17 12:58:12,528: INFO: Geometry Directory is   : ./geometry
+2023-05-17 12:58:12,528: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 12:58:12,528: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 12:58:12,528: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 12:58:12,528: INFO: -------------------------------------------
+2023-05-17 12:58:12,528: INFO: Streaming config parameters to log file for reference
+2023-05-17 12:58:12,528: INFO: planet
+2023-05-17 12:58:12,529: INFO:      api_key :  
+2023-05-17 12:58:12,529: INFO: forest_sentinel
+2023-05-17 12:58:12,529: INFO:      start_date :  20230101
+2023-05-17 12:58:12,529: INFO:      end_date :  20231231
+2023-05-17 12:58:12,529: INFO:      composite_start :  20220601
+2023-05-17 12:58:12,529: INFO:      composite_end :  20221231
+2023-05-17 12:58:12,529: INFO:      epsg :  21097
+2023-05-17 12:58:12,529: INFO:      cloud_cover :  25
+2023-05-17 12:58:12,529: INFO:      cloud_certainty_threshold :  0
+2023-05-17 12:58:12,529: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 12:58:12,529: INFO: environment
+2023-05-17 12:58:12,529: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 12:58:12,529: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 12:58:12,530: INFO:      integrated_dir :  ./integrated
+2023-05-17 12:58:12,530: INFO:      roi_dir :  ./roi
+2023-05-17 12:58:12,530: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 12:58:12,530: INFO:      geometry_dir :  ./geometry
+2023-05-17 12:58:12,530: INFO:      log_dir :  ./log
+2023-05-17 12:58:12,530: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 12:58:12,530: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 12:58:12,530: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 12:58:12,530: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 12:58:12,530: INFO: raster_processing_parameters
+2023-05-17 12:58:12,530: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 12:58:12,530: INFO:      resolution_string :  "10m"
+2023-05-17 12:58:12,530: INFO:      output_resolution :  10
+2023-05-17 12:58:12,530: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 12:58:12,531: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 12:58:12,531: INFO:      download_limit :  10
+2023-05-17 12:58:12,531: INFO:      faulty_granule_threshold :  200
+2023-05-17 12:58:12,531: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 12:58:12,531: INFO:      change_from_classes :  [1, 2]
+2023-05-17 12:58:12,531: INFO:      change_to_classes :  [3]
+2023-05-17 12:58:12,531: INFO:      sieve :  0
+2023-05-17 12:58:12,531: INFO:      chunks :  10
+2023-05-17 12:58:12,531: INFO:      download_source :  "scihub"
+2023-05-17 12:58:12,531: INFO:      do_raster :  False
+2023-05-17 12:58:12,531: INFO:      do_build_composite :  False
+2023-05-17 12:58:12,531: INFO:      do_all :  False
+2023-05-17 12:58:12,531: INFO:      do_download :  False
+2023-05-17 12:58:12,531: INFO:      do_build_prob_image :  False
+2023-05-17 12:58:12,531: INFO:      do_classify :  False
+2023-05-17 12:58:12,532: INFO:      do_change :  False
+2023-05-17 12:58:12,532: INFO:      do_dev :  False
+2023-05-17 12:58:12,532: INFO:      do_update :  False
+2023-05-17 12:58:12,532: INFO:      do_quicklooks :  False
+2023-05-17 12:58:12,532: INFO:      do_delete :  False
+2023-05-17 12:58:12,532: INFO:      do_zip :  False
+2023-05-17 12:58:12,532: INFO:      do_skip_existing :  False
+2023-05-17 12:58:12,532: INFO: vector_processing_parameters
+2023-05-17 12:58:12,532: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 12:58:12,532: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 12:58:12,532: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 12:58:12,532: INFO:      do_delete_existing_vector :  False
+2023-05-17 12:58:12,532: INFO:      do_vectorise :  False
+2023-05-17 12:58:12,532: INFO:      do_integrate :  True
+2023-05-17 12:58:12,532: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 12:58:12,533: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,533: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 12:58:12,533: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,983: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 12:58:12,983: INFO: These tiles are  :
+2023-05-17 12:58:12,983: INFO:   1 : 36NXG
+2023-05-17 12:58:12,983: INFO:   2 : 36NYG
+2023-05-17 12:58:12,983: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 12:58:12,987: INFO: Finished ROI tile intersection
+2023-05-17 12:58:12,988: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,988: INFO: Starting acd_national_integration
+2023-05-17 12:58:12,988: INFO: ---------------------------------------------------------------
+2023-05-17 12:58:12,992: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 12:58:12,992: INFO: Paths of shapefiles to integrate are:
+2023-05-17 12:58:12,992: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 12:58:12,992: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 12:58:12,992: INFO: Reading in ROI
+2023-05-17 12:58:13,013: INFO: Ensuring ROI is of EPSG  :  21097
+2023-05-17 12:58:13,024: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 13:00:23,285: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 13:00:23,424: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp with ./roi/kfs_roi_subset.shp
+2023-05-17 13:01:00,726: INFO: Intersection: Success
+2023-05-17 13:01:00,749: INFO: Integrated geodataframe length is currently  :  751
+2023-05-17 13:01:00,749: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 13:03:33,549: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 13:03:33,693: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp with ./roi/kfs_roi_subset.shp
+2023-05-17 13:04:17,675: INFO: Intersection: Success
+2023-05-17 13:04:17,757: INFO: Integrated geodataframe length is currently  :  5051
+2023-05-17 13:04:17,760: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 13:04:20,389: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 13:04:20,389: INFO: ---------------------------------------------------------------
+2023-05-17 13:04:20,389: INFO: ---------------------------------------------------------------
+2023-05-17 13:04:20,389: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 13:04:20,389: INFO: ---------------------------------------------------------------
+2023-05-17 13:04:20,389: INFO: ---------------------------------------------------------------
+2023-05-17 13:04:21,205: INFO: ---------------------------------------------------------------
+2023-05-17 13:04:21,207: INFO: Starting acd_national_filtering
+2023-05-17 13:04:21,207: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:08,926: INFO: ****PROCESSING START****
+2023-05-17 14:08:09,177: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,177: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 14:08:09,177: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,177: INFO: Reading in parameters defined in the Config
+2023-05-17 14:08:09,177: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,177: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,178: INFO: Starting acd_to_config_to_log()
+2023-05-17 14:08:09,178: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,178: INFO: Options:
+2023-05-17 14:08:09,178: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 14:08:09,178: INFO:   --do_integrate
+2023-05-17 14:08:09,178: INFO:       vectorised reports will be merged together
+2023-05-17 14:08:09,178: INFO:   --counties_of_interest
+2023-05-17 14:08:09,178: INFO:         Counties to filter the national geodataframe:
+2023-05-17 14:08:09,178: INFO:         0  :  Kwale
+2023-05-17 14:08:09,178: INFO:         1  :  TransNzoia
+2023-05-17 14:08:09,178: INFO: EPSG used is: 21097
+2023-05-17 14:08:09,178: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 14:08:09,178: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:08:09,178: INFO: 
+2023-05-17 14:08:09,178: INFO: List of class labels:
+2023-05-17 14:08:09,179: INFO:   1 : primary forest
+2023-05-17 14:08:09,179: INFO:   2 : plantation forest
+2023-05-17 14:08:09,179: INFO:   3 : bare soil
+2023-05-17 14:08:09,179: INFO:   4 : crops
+2023-05-17 14:08:09,179: INFO:   5 : grassland
+2023-05-17 14:08:09,179: INFO:   6 : open water
+2023-05-17 14:08:09,179: INFO:   7 : burn scar
+2023-05-17 14:08:09,179: INFO:   8 : cloud
+2023-05-17 14:08:09,179: INFO:   9 : cloud shadow
+2023-05-17 14:08:09,179: INFO:   10 : haze
+2023-05-17 14:08:09,179: INFO:   11 : sparse woodland
+2023-05-17 14:08:09,179: INFO:   12 : dense woodland
+2023-05-17 14:08:09,179: INFO:   13 : artificial
+2023-05-17 14:08:09,179: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 14:08:09,179: INFO:                     to any of the classes: [3]
+2023-05-17 14:08:09,179: INFO: ------------------------------------------------------------
+2023-05-17 14:08:09,180: INFO: Reporting Directories and Filepaths
+2023-05-17 14:08:09,180: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:08:09,180: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:08:09,180: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 14:08:09,180: INFO: Integrated Directory is   : ./integrated
+2023-05-17 14:08:09,180: INFO: ROI Directory is   : ./roi
+2023-05-17 14:08:09,180: INFO: Geometry Directory is   : ./geometry
+2023-05-17 14:08:09,180: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 14:08:09,180: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:08:09,180: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 14:08:09,180: INFO: -------------------------------------------
+2023-05-17 14:08:09,180: INFO: Streaming config parameters to log file for reference
+2023-05-17 14:08:09,181: INFO: planet
+2023-05-17 14:08:09,181: INFO:      api_key :  
+2023-05-17 14:08:09,181: INFO: forest_sentinel
+2023-05-17 14:08:09,181: INFO:      start_date :  20230101
+2023-05-17 14:08:09,181: INFO:      end_date :  20231231
+2023-05-17 14:08:09,181: INFO:      composite_start :  20220601
+2023-05-17 14:08:09,181: INFO:      composite_end :  20221231
+2023-05-17 14:08:09,181: INFO:      epsg :  21097
+2023-05-17 14:08:09,181: INFO:      cloud_cover :  25
+2023-05-17 14:08:09,181: INFO:      cloud_certainty_threshold :  0
+2023-05-17 14:08:09,181: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:08:09,181: INFO: environment
+2023-05-17 14:08:09,181: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:08:09,181: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:08:09,182: INFO:      integrated_dir :  ./integrated
+2023-05-17 14:08:09,182: INFO:      roi_dir :  ./roi
+2023-05-17 14:08:09,182: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 14:08:09,182: INFO:      geometry_dir :  ./geometry
+2023-05-17 14:08:09,182: INFO:      log_dir :  ./log
+2023-05-17 14:08:09,182: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 14:08:09,182: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 14:08:09,182: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 14:08:09,182: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:08:09,182: INFO: raster_processing_parameters
+2023-05-17 14:08:09,182: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 14:08:09,182: INFO:      resolution_string :  "10m"
+2023-05-17 14:08:09,182: INFO:      output_resolution :  10
+2023-05-17 14:08:09,182: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 14:08:09,183: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 14:08:09,183: INFO:      download_limit :  10
+2023-05-17 14:08:09,183: INFO:      faulty_granule_threshold :  200
+2023-05-17 14:08:09,183: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 14:08:09,183: INFO:      change_from_classes :  [1, 2]
+2023-05-17 14:08:09,183: INFO:      change_to_classes :  [3]
+2023-05-17 14:08:09,183: INFO:      sieve :  0
+2023-05-17 14:08:09,183: INFO:      chunks :  10
+2023-05-17 14:08:09,183: INFO:      download_source :  "scihub"
+2023-05-17 14:08:09,183: INFO:      do_raster :  False
+2023-05-17 14:08:09,183: INFO:      do_build_composite :  False
+2023-05-17 14:08:09,183: INFO:      do_all :  False
+2023-05-17 14:08:09,183: INFO:      do_download :  False
+2023-05-17 14:08:09,183: INFO:      do_build_prob_image :  False
+2023-05-17 14:08:09,183: INFO:      do_classify :  False
+2023-05-17 14:08:09,184: INFO:      do_change :  False
+2023-05-17 14:08:09,184: INFO:      do_dev :  False
+2023-05-17 14:08:09,184: INFO:      do_update :  False
+2023-05-17 14:08:09,184: INFO:      do_quicklooks :  False
+2023-05-17 14:08:09,184: INFO:      do_delete :  False
+2023-05-17 14:08:09,184: INFO:      do_zip :  False
+2023-05-17 14:08:09,184: INFO:      do_skip_existing :  False
+2023-05-17 14:08:09,184: INFO: vector_processing_parameters
+2023-05-17 14:08:09,184: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 14:08:09,184: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 14:08:09,184: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 14:08:09,184: INFO:      do_delete_existing_vector :  False
+2023-05-17 14:08:09,184: INFO:      do_vectorise :  False
+2023-05-17 14:08:09,184: INFO:      do_integrate :  True
+2023-05-17 14:08:09,184: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 14:08:09,185: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 14:08:09,185: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,185: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 14:08:09,185: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:09,983: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 14:08:09,983: INFO: These tiles are  :
+2023-05-17 14:08:09,983: INFO:   1 : 36NXG
+2023-05-17 14:08:09,984: INFO:   2 : 36NYG
+2023-05-17 14:08:09,984: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 14:08:10,520: INFO: Finished ROI tile intersection
+2023-05-17 14:08:10,521: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:10,521: INFO: Starting acd_national_integration
+2023-05-17 14:08:10,521: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:10,526: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 14:08:10,526: INFO: Paths of shapefiles to integrate are:
+2023-05-17 14:08:10,526: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:08:10,526: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:08:10,527: INFO: Reading in ROI
+2023-05-17 14:08:10,569: INFO: Ensuring ROI is of EPSG  :  21097
+2023-05-17 14:08:10,594: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:08:24,995: ERROR: failed to merge geodataframe: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:08:25,126: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:08:25,720: ERROR: failed to merge geodataframe: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:08:25,724: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:08:25,729: ERROR: failed to write output at :  /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:08:25,730: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:08:25,730: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:25,730: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:25,730: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 14:08:25,730: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:25,730: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:25,731: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:25,731: INFO: Starting acd_national_filtering
+2023-05-17 14:08:25,731: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,728: INFO: ****PROCESSING START****
+2023-05-17 14:08:40,728: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,728: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 14:08:40,728: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,728: INFO: Reading in parameters defined in the Config
+2023-05-17 14:08:40,728: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,729: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,729: INFO: Starting acd_to_config_to_log()
+2023-05-17 14:08:40,729: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,729: INFO: Options:
+2023-05-17 14:08:40,729: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 14:08:40,729: INFO:   --counties_of_interest
+2023-05-17 14:08:40,729: INFO:         Counties to filter the national geodataframe:
+2023-05-17 14:08:40,729: INFO:         0  :  Kwale
+2023-05-17 14:08:40,729: INFO:         1  :  TransNzoia
+2023-05-17 14:08:40,730: INFO: EPSG used is: 21097
+2023-05-17 14:08:40,730: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 14:08:40,730: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:08:40,730: INFO: 
+2023-05-17 14:08:40,730: INFO: List of class labels:
+2023-05-17 14:08:40,730: INFO:   1 : primary forest
+2023-05-17 14:08:40,730: INFO:   2 : plantation forest
+2023-05-17 14:08:40,730: INFO:   3 : bare soil
+2023-05-17 14:08:40,730: INFO:   4 : crops
+2023-05-17 14:08:40,730: INFO:   5 : grassland
+2023-05-17 14:08:40,730: INFO:   6 : open water
+2023-05-17 14:08:40,730: INFO:   7 : burn scar
+2023-05-17 14:08:40,730: INFO:   8 : cloud
+2023-05-17 14:08:40,730: INFO:   9 : cloud shadow
+2023-05-17 14:08:40,730: INFO:   10 : haze
+2023-05-17 14:08:40,730: INFO:   11 : sparse woodland
+2023-05-17 14:08:40,731: INFO:   12 : dense woodland
+2023-05-17 14:08:40,731: INFO:   13 : artificial
+2023-05-17 14:08:40,731: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 14:08:40,731: INFO:                     to any of the classes: [3]
+2023-05-17 14:08:40,731: INFO: ------------------------------------------------------------
+2023-05-17 14:08:40,731: INFO: Reporting Directories and Filepaths
+2023-05-17 14:08:40,731: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:08:40,731: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:08:40,731: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 14:08:40,731: INFO: Integrated Directory is   : ./integrated
+2023-05-17 14:08:40,731: INFO: ROI Directory is   : ./roi
+2023-05-17 14:08:40,731: INFO: Geometry Directory is   : ./geometry
+2023-05-17 14:08:40,731: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 14:08:40,731: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:08:40,731: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 14:08:40,732: INFO: -------------------------------------------
+2023-05-17 14:08:40,732: INFO: Streaming config parameters to log file for reference
+2023-05-17 14:08:40,732: INFO: planet
+2023-05-17 14:08:40,732: INFO:      api_key :  
+2023-05-17 14:08:40,732: INFO: forest_sentinel
+2023-05-17 14:08:40,732: INFO:      start_date :  20230101
+2023-05-17 14:08:40,732: INFO:      end_date :  20231231
+2023-05-17 14:08:40,732: INFO:      composite_start :  20220601
+2023-05-17 14:08:40,732: INFO:      composite_end :  20221231
+2023-05-17 14:08:40,732: INFO:      epsg :  21097
+2023-05-17 14:08:40,732: INFO:      cloud_cover :  25
+2023-05-17 14:08:40,732: INFO:      cloud_certainty_threshold :  0
+2023-05-17 14:08:40,732: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:08:40,732: INFO: environment
+2023-05-17 14:08:40,732: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:08:40,733: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:08:40,733: INFO:      integrated_dir :  ./integrated
+2023-05-17 14:08:40,733: INFO:      roi_dir :  ./roi
+2023-05-17 14:08:40,733: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 14:08:40,733: INFO:      geometry_dir :  ./geometry
+2023-05-17 14:08:40,733: INFO:      log_dir :  ./log
+2023-05-17 14:08:40,733: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 14:08:40,733: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 14:08:40,733: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 14:08:40,733: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:08:40,733: INFO: raster_processing_parameters
+2023-05-17 14:08:40,733: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 14:08:40,733: INFO:      resolution_string :  "10m"
+2023-05-17 14:08:40,733: INFO:      output_resolution :  10
+2023-05-17 14:08:40,733: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 14:08:40,734: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 14:08:40,734: INFO:      download_limit :  10
+2023-05-17 14:08:40,734: INFO:      faulty_granule_threshold :  200
+2023-05-17 14:08:40,734: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 14:08:40,734: INFO:      change_from_classes :  [1, 2]
+2023-05-17 14:08:40,734: INFO:      change_to_classes :  [3]
+2023-05-17 14:08:40,734: INFO:      sieve :  0
+2023-05-17 14:08:40,734: INFO:      chunks :  10
+2023-05-17 14:08:40,734: INFO:      download_source :  "scihub"
+2023-05-17 14:08:40,734: INFO:      do_raster :  False
+2023-05-17 14:08:40,734: INFO:      do_build_composite :  False
+2023-05-17 14:08:40,734: INFO:      do_all :  False
+2023-05-17 14:08:40,734: INFO:      do_download :  False
+2023-05-17 14:08:40,734: INFO:      do_build_prob_image :  False
+2023-05-17 14:08:40,734: INFO:      do_classify :  False
+2023-05-17 14:08:40,735: INFO:      do_change :  False
+2023-05-17 14:08:40,735: INFO:      do_dev :  False
+2023-05-17 14:08:40,735: INFO:      do_update :  False
+2023-05-17 14:08:40,735: INFO:      do_quicklooks :  False
+2023-05-17 14:08:40,735: INFO:      do_delete :  False
+2023-05-17 14:08:40,735: INFO:      do_zip :  False
+2023-05-17 14:08:40,735: INFO:      do_skip_existing :  False
+2023-05-17 14:08:40,735: INFO: vector_processing_parameters
+2023-05-17 14:08:40,735: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 14:08:40,735: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 14:08:40,735: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 14:08:40,735: INFO:      do_delete_existing_vector :  False
+2023-05-17 14:08:40,735: INFO:      do_vectorise :  False
+2023-05-17 14:08:40,735: INFO:      do_integrate :  False
+2023-05-17 14:08:40,735: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 14:08:40,735: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 14:08:40,736: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,736: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 14:08:40,736: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,957: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 14:08:40,958: INFO: These tiles are  :
+2023-05-17 14:08:40,958: INFO:   1 : 36NXG
+2023-05-17 14:08:40,958: INFO:   2 : 36NYG
+2023-05-17 14:08:40,958: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 14:08:40,962: INFO: Finished ROI tile intersection
+2023-05-17 14:08:40,963: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:40,963: INFO: Starting acd_national_filtering
+2023-05-17 14:08:40,963: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:44,160: INFO: Filtering complete, now writing filtered national shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe_filtered.shp
+2023-05-17 14:08:46,790: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:46,790: INFO: Starting acd_national_manual_validation()
+2023-05-17 14:08:46,790: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:46,790: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:46,790: INFO: Starting acd_national_distribution()
+2023-05-17 14:08:46,790: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:46,790: INFO: ---------------------------------------------------------------
+2023-05-17 14:08:46,791: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-17 14:08:46,791: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,460: INFO: ****PROCESSING START****
+2023-05-17 14:18:41,461: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,461: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 14:18:41,461: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,461: INFO: Reading in parameters defined in the Config
+2023-05-17 14:18:41,461: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,462: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,462: INFO: Starting acd_to_config_to_log()
+2023-05-17 14:18:41,462: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,462: INFO: Options:
+2023-05-17 14:18:41,462: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 14:18:41,462: INFO:   --do_integrate
+2023-05-17 14:18:41,462: INFO:       vectorised reports will be merged together
+2023-05-17 14:18:41,462: INFO:   --counties_of_interest
+2023-05-17 14:18:41,462: INFO:         Counties to filter the national geodataframe:
+2023-05-17 14:18:41,462: INFO:         0  :  Kwale
+2023-05-17 14:18:41,462: INFO:         1  :  TransNzoia
+2023-05-17 14:18:41,462: INFO: EPSG used is: 21097
+2023-05-17 14:18:41,463: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 14:18:41,463: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:18:41,463: INFO: 
+2023-05-17 14:18:41,463: INFO: List of class labels:
+2023-05-17 14:18:41,463: INFO:   1 : primary forest
+2023-05-17 14:18:41,463: INFO:   2 : plantation forest
+2023-05-17 14:18:41,463: INFO:   3 : bare soil
+2023-05-17 14:18:41,463: INFO:   4 : crops
+2023-05-17 14:18:41,463: INFO:   5 : grassland
+2023-05-17 14:18:41,463: INFO:   6 : open water
+2023-05-17 14:18:41,463: INFO:   7 : burn scar
+2023-05-17 14:18:41,463: INFO:   8 : cloud
+2023-05-17 14:18:41,463: INFO:   9 : cloud shadow
+2023-05-17 14:18:41,463: INFO:   10 : haze
+2023-05-17 14:18:41,463: INFO:   11 : sparse woodland
+2023-05-17 14:18:41,463: INFO:   12 : dense woodland
+2023-05-17 14:18:41,463: INFO:   13 : artificial
+2023-05-17 14:18:41,464: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 14:18:41,464: INFO:                     to any of the classes: [3]
+2023-05-17 14:18:41,464: INFO: ------------------------------------------------------------
+2023-05-17 14:18:41,464: INFO: Reporting Directories and Filepaths
+2023-05-17 14:18:41,464: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:18:41,464: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:18:41,464: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 14:18:41,464: INFO: Integrated Directory is   : ./integrated
+2023-05-17 14:18:41,464: INFO: ROI Directory is   : ./roi
+2023-05-17 14:18:41,464: INFO: Geometry Directory is   : ./geometry
+2023-05-17 14:18:41,464: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 14:18:41,464: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:18:41,464: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 14:18:41,464: INFO: -------------------------------------------
+2023-05-17 14:18:41,464: INFO: Streaming config parameters to log file for reference
+2023-05-17 14:18:41,464: INFO: planet
+2023-05-17 14:18:41,465: INFO:      api_key :  
+2023-05-17 14:18:41,465: INFO: forest_sentinel
+2023-05-17 14:18:41,465: INFO:      start_date :  20230101
+2023-05-17 14:18:41,465: INFO:      end_date :  20231231
+2023-05-17 14:18:41,465: INFO:      composite_start :  20220601
+2023-05-17 14:18:41,465: INFO:      composite_end :  20221231
+2023-05-17 14:18:41,465: INFO:      epsg :  21097
+2023-05-17 14:18:41,465: INFO:      cloud_cover :  25
+2023-05-17 14:18:41,465: INFO:      cloud_certainty_threshold :  0
+2023-05-17 14:18:41,465: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:18:41,465: INFO: environment
+2023-05-17 14:18:41,465: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:18:41,465: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:18:41,465: INFO:      integrated_dir :  ./integrated
+2023-05-17 14:18:41,465: INFO:      roi_dir :  ./roi
+2023-05-17 14:18:41,466: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 14:18:41,466: INFO:      geometry_dir :  ./geometry
+2023-05-17 14:18:41,466: INFO:      log_dir :  ./log
+2023-05-17 14:18:41,466: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 14:18:41,466: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 14:18:41,466: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 14:18:41,466: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:18:41,466: INFO: raster_processing_parameters
+2023-05-17 14:18:41,466: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 14:18:41,466: INFO:      resolution_string :  "10m"
+2023-05-17 14:18:41,466: INFO:      output_resolution :  10
+2023-05-17 14:18:41,466: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 14:18:41,466: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 14:18:41,466: INFO:      download_limit :  10
+2023-05-17 14:18:41,466: INFO:      faulty_granule_threshold :  200
+2023-05-17 14:18:41,467: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 14:18:41,467: INFO:      change_from_classes :  [1, 2]
+2023-05-17 14:18:41,467: INFO:      change_to_classes :  [3]
+2023-05-17 14:18:41,467: INFO:      sieve :  0
+2023-05-17 14:18:41,467: INFO:      chunks :  10
+2023-05-17 14:18:41,467: INFO:      download_source :  "scihub"
+2023-05-17 14:18:41,467: INFO:      do_raster :  False
+2023-05-17 14:18:41,467: INFO:      do_build_composite :  False
+2023-05-17 14:18:41,467: INFO:      do_all :  False
+2023-05-17 14:18:41,467: INFO:      do_download :  False
+2023-05-17 14:18:41,467: INFO:      do_build_prob_image :  False
+2023-05-17 14:18:41,467: INFO:      do_classify :  False
+2023-05-17 14:18:41,467: INFO:      do_change :  False
+2023-05-17 14:18:41,467: INFO:      do_dev :  False
+2023-05-17 14:18:41,467: INFO:      do_update :  False
+2023-05-17 14:18:41,467: INFO:      do_quicklooks :  False
+2023-05-17 14:18:41,467: INFO:      do_delete :  False
+2023-05-17 14:18:41,468: INFO:      do_zip :  False
+2023-05-17 14:18:41,468: INFO:      do_skip_existing :  False
+2023-05-17 14:18:41,468: INFO: vector_processing_parameters
+2023-05-17 14:18:41,468: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 14:18:41,468: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 14:18:41,468: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 14:18:41,468: INFO:      do_delete_existing_vector :  False
+2023-05-17 14:18:41,468: INFO:      do_vectorise :  False
+2023-05-17 14:18:41,468: INFO:      do_integrate :  True
+2023-05-17 14:18:41,468: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 14:18:41,468: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 14:18:41,468: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,468: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 14:18:41,468: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,884: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 14:18:41,884: INFO: These tiles are  :
+2023-05-17 14:18:41,884: INFO:   1 : 36NXG
+2023-05-17 14:18:41,884: INFO:   2 : 36NYG
+2023-05-17 14:18:41,884: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 14:18:41,900: INFO: Finished ROI tile intersection
+2023-05-17 14:18:41,900: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,901: INFO: Starting acd_national_integration
+2023-05-17 14:18:41,901: INFO: ---------------------------------------------------------------
+2023-05-17 14:18:41,904: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 14:18:41,904: INFO: Paths of shapefiles to integrate are:
+2023-05-17 14:18:41,904: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:18:41,904: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:18:41,904: INFO: Reading in ROI
+2023-05-17 14:18:41,923: INFO: Ensuring ROI is of EPSG  :  21097
+2023-05-17 14:18:41,934: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:19:00,059: ERROR: failed to merge geodataframe: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:19:00,206: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:19:00,455: ERROR: failed to merge geodataframe: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:19:00,458: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:19:00,462: ERROR: failed to write output at :  /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:19:00,463: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:19:00,463: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:00,463: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:00,463: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 14:19:00,463: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:00,463: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:00,464: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:00,464: INFO: Starting acd_national_filtering
+2023-05-17 14:19:00,464: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,544: INFO: ****PROCESSING START****
+2023-05-17 14:19:16,544: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,544: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 14:19:16,544: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,544: INFO: Reading in parameters defined in the Config
+2023-05-17 14:19:16,544: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,545: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,545: INFO: Starting acd_to_config_to_log()
+2023-05-17 14:19:16,545: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,545: INFO: Options:
+2023-05-17 14:19:16,545: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 14:19:16,545: INFO:   --do_integrate
+2023-05-17 14:19:16,545: INFO:       vectorised reports will be merged together
+2023-05-17 14:19:16,545: INFO:   --counties_of_interest
+2023-05-17 14:19:16,545: INFO:         Counties to filter the national geodataframe:
+2023-05-17 14:19:16,545: INFO:         0  :  Kwale
+2023-05-17 14:19:16,545: INFO:         1  :  TransNzoia
+2023-05-17 14:19:16,546: INFO: EPSG used is: 21097
+2023-05-17 14:19:16,546: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 14:19:16,546: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:19:16,546: INFO: 
+2023-05-17 14:19:16,546: INFO: List of class labels:
+2023-05-17 14:19:16,546: INFO:   1 : primary forest
+2023-05-17 14:19:16,546: INFO:   2 : plantation forest
+2023-05-17 14:19:16,546: INFO:   3 : bare soil
+2023-05-17 14:19:16,546: INFO:   4 : crops
+2023-05-17 14:19:16,546: INFO:   5 : grassland
+2023-05-17 14:19:16,546: INFO:   6 : open water
+2023-05-17 14:19:16,546: INFO:   7 : burn scar
+2023-05-17 14:19:16,546: INFO:   8 : cloud
+2023-05-17 14:19:16,546: INFO:   9 : cloud shadow
+2023-05-17 14:19:16,546: INFO:   10 : haze
+2023-05-17 14:19:16,546: INFO:   11 : sparse woodland
+2023-05-17 14:19:16,547: INFO:   12 : dense woodland
+2023-05-17 14:19:16,547: INFO:   13 : artificial
+2023-05-17 14:19:16,547: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 14:19:16,547: INFO:                     to any of the classes: [3]
+2023-05-17 14:19:16,547: INFO: ------------------------------------------------------------
+2023-05-17 14:19:16,547: INFO: Reporting Directories and Filepaths
+2023-05-17 14:19:16,547: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:19:16,547: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:19:16,547: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 14:19:16,547: INFO: Integrated Directory is   : ./integrated
+2023-05-17 14:19:16,547: INFO: ROI Directory is   : ./roi
+2023-05-17 14:19:16,547: INFO: Geometry Directory is   : ./geometry
+2023-05-17 14:19:16,547: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 14:19:16,547: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:19:16,547: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 14:19:16,547: INFO: -------------------------------------------
+2023-05-17 14:19:16,547: INFO: Streaming config parameters to log file for reference
+2023-05-17 14:19:16,548: INFO: planet
+2023-05-17 14:19:16,548: INFO:      api_key :  
+2023-05-17 14:19:16,548: INFO: forest_sentinel
+2023-05-17 14:19:16,548: INFO:      start_date :  20230101
+2023-05-17 14:19:16,548: INFO:      end_date :  20231231
+2023-05-17 14:19:16,548: INFO:      composite_start :  20220601
+2023-05-17 14:19:16,548: INFO:      composite_end :  20221231
+2023-05-17 14:19:16,548: INFO:      epsg :  21097
+2023-05-17 14:19:16,548: INFO:      cloud_cover :  25
+2023-05-17 14:19:16,548: INFO:      cloud_certainty_threshold :  0
+2023-05-17 14:19:16,548: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:19:16,548: INFO: environment
+2023-05-17 14:19:16,548: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:19:16,548: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:19:16,548: INFO:      integrated_dir :  ./integrated
+2023-05-17 14:19:16,549: INFO:      roi_dir :  ./roi
+2023-05-17 14:19:16,549: INFO:      roi_filename :  kfs_roi_subset.shp
+2023-05-17 14:19:16,549: INFO:      geometry_dir :  ./geometry
+2023-05-17 14:19:16,549: INFO:      log_dir :  ./log
+2023-05-17 14:19:16,549: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 14:19:16,549: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 14:19:16,549: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 14:19:16,549: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:19:16,549: INFO: raster_processing_parameters
+2023-05-17 14:19:16,549: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 14:19:16,549: INFO:      resolution_string :  "10m"
+2023-05-17 14:19:16,549: INFO:      output_resolution :  10
+2023-05-17 14:19:16,549: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 14:19:16,549: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 14:19:16,550: INFO:      download_limit :  10
+2023-05-17 14:19:16,550: INFO:      faulty_granule_threshold :  200
+2023-05-17 14:19:16,550: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 14:19:16,550: INFO:      change_from_classes :  [1, 2]
+2023-05-17 14:19:16,550: INFO:      change_to_classes :  [3]
+2023-05-17 14:19:16,550: INFO:      sieve :  0
+2023-05-17 14:19:16,550: INFO:      chunks :  10
+2023-05-17 14:19:16,550: INFO:      download_source :  "scihub"
+2023-05-17 14:19:16,550: INFO:      do_raster :  False
+2023-05-17 14:19:16,550: INFO:      do_build_composite :  False
+2023-05-17 14:19:16,550: INFO:      do_all :  False
+2023-05-17 14:19:16,550: INFO:      do_download :  False
+2023-05-17 14:19:16,550: INFO:      do_build_prob_image :  False
+2023-05-17 14:19:16,550: INFO:      do_classify :  False
+2023-05-17 14:19:16,550: INFO:      do_change :  False
+2023-05-17 14:19:16,550: INFO:      do_dev :  False
+2023-05-17 14:19:16,550: INFO:      do_update :  False
+2023-05-17 14:19:16,551: INFO:      do_quicklooks :  False
+2023-05-17 14:19:16,551: INFO:      do_delete :  False
+2023-05-17 14:19:16,551: INFO:      do_zip :  False
+2023-05-17 14:19:16,551: INFO:      do_skip_existing :  False
+2023-05-17 14:19:16,551: INFO: vector_processing_parameters
+2023-05-17 14:19:16,551: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 14:19:16,551: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 14:19:16,551: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 14:19:16,551: INFO:      do_delete_existing_vector :  False
+2023-05-17 14:19:16,551: INFO:      do_vectorise :  False
+2023-05-17 14:19:16,551: INFO:      do_integrate :  True
+2023-05-17 14:19:16,551: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 14:19:16,551: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 14:19:16,551: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,551: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 14:19:16,551: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,769: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 14:19:16,769: INFO: These tiles are  :
+2023-05-17 14:19:16,769: INFO:   1 : 36NXG
+2023-05-17 14:19:16,769: INFO:   2 : 36NYG
+2023-05-17 14:19:16,769: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 14:19:16,772: INFO: Finished ROI tile intersection
+2023-05-17 14:19:16,773: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,773: INFO: Starting acd_national_integration
+2023-05-17 14:19:16,773: INFO: ---------------------------------------------------------------
+2023-05-17 14:19:16,775: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 14:19:16,775: INFO: Paths of shapefiles to integrate are:
+2023-05-17 14:19:16,775: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:19:16,775: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:19:16,776: INFO: Reading in ROI
+2023-05-17 14:19:16,795: INFO: Ensuring ROI is of EPSG  :  21097
+2023-05-17 14:19:16,806: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:21:23,723: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 14:21:23,862: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp with ./roi/kfs_roi_subset.shp
+2023-05-17 14:22:00,115: INFO: Intersection: Success
+2023-05-17 14:22:00,133: INFO: Integrated geodataframe length is currently  :  751
+2023-05-17 14:22:00,134: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:25:25,646: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 14:25:25,795: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp with ./roi/kfs_roi_subset.shp
+2023-05-17 14:26:10,878: INFO: Intersection: Success
+2023-05-17 14:26:10,962: INFO: Integrated geodataframe length is currently  :  5051
+2023-05-17 14:26:10,965: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:26:14,070: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:26:14,071: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:14,071: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:14,071: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 14:26:14,071: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:14,072: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:15,631: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:15,632: INFO: Starting acd_national_filtering
+2023-05-17 14:26:15,633: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:18,490: INFO: Filtering complete, now writing filtered national shapefile to :
+2023-05-17 14:26:18,490: INFO:         /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe_filtered.shp
+2023-05-17 14:26:20,916: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:20,916: INFO: Starting acd_national_manual_validation()
+2023-05-17 14:26:20,916: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:20,916: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:20,916: INFO: Starting acd_national_distribution()
+2023-05-17 14:26:20,916: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:20,917: INFO: ---------------------------------------------------------------
+2023-05-17 14:26:20,917: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-17 14:26:20,917: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,298: INFO: ****PROCESSING START****
+2023-05-17 14:37:04,298: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,298: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 14:37:04,298: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,298: INFO: Reading in parameters defined in the Config
+2023-05-17 14:37:04,298: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,299: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,299: INFO: Starting acd_to_config_to_log()
+2023-05-17 14:37:04,299: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,299: INFO: Options:
+2023-05-17 14:37:04,299: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 14:37:04,299: INFO:   --do_integrate
+2023-05-17 14:37:04,299: INFO:       vectorised reports will be merged together
+2023-05-17 14:37:04,299: INFO:   --counties_of_interest
+2023-05-17 14:37:04,299: INFO:         Counties to filter the national geodataframe:
+2023-05-17 14:37:04,299: INFO:         0  :  Kwale
+2023-05-17 14:37:04,299: INFO:         1  :  TransNzoia
+2023-05-17 14:37:04,299: INFO: EPSG used is: 21097
+2023-05-17 14:37:04,300: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 14:37:04,300: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:37:04,300: INFO: 
+2023-05-17 14:37:04,300: INFO: List of class labels:
+2023-05-17 14:37:04,300: INFO:   1 : primary forest
+2023-05-17 14:37:04,300: INFO:   2 : plantation forest
+2023-05-17 14:37:04,300: INFO:   3 : bare soil
+2023-05-17 14:37:04,300: INFO:   4 : crops
+2023-05-17 14:37:04,300: INFO:   5 : grassland
+2023-05-17 14:37:04,300: INFO:   6 : open water
+2023-05-17 14:37:04,300: INFO:   7 : burn scar
+2023-05-17 14:37:04,300: INFO:   8 : cloud
+2023-05-17 14:37:04,300: INFO:   9 : cloud shadow
+2023-05-17 14:37:04,300: INFO:   10 : haze
+2023-05-17 14:37:04,300: INFO:   11 : sparse woodland
+2023-05-17 14:37:04,300: INFO:   12 : dense woodland
+2023-05-17 14:37:04,301: INFO:   13 : artificial
+2023-05-17 14:37:04,301: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 14:37:04,301: INFO:                     to any of the classes: [3]
+2023-05-17 14:37:04,301: INFO: ------------------------------------------------------------
+2023-05-17 14:37:04,301: INFO: Reporting Directories and Filepaths
+2023-05-17 14:37:04,301: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:37:04,301: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:37:04,301: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 14:37:04,301: INFO: Integrated Directory is   : ./integrated
+2023-05-17 14:37:04,301: INFO: ROI Directory is   : ./roi
+2023-05-17 14:37:04,301: INFO: Geometry Directory is   : ./geometry
+2023-05-17 14:37:04,301: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 14:37:04,301: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:37:04,301: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 14:37:04,301: INFO: -------------------------------------------
+2023-05-17 14:37:04,301: INFO: Streaming config parameters to log file for reference
+2023-05-17 14:37:04,301: INFO: planet
+2023-05-17 14:37:04,302: INFO:      api_key :  
+2023-05-17 14:37:04,302: INFO: forest_sentinel
+2023-05-17 14:37:04,302: INFO:      start_date :  20230101
+2023-05-17 14:37:04,302: INFO:      end_date :  20231231
+2023-05-17 14:37:04,302: INFO:      composite_start :  20220601
+2023-05-17 14:37:04,302: INFO:      composite_end :  20221231
+2023-05-17 14:37:04,302: INFO:      epsg :  21097
+2023-05-17 14:37:04,302: INFO:      cloud_cover :  25
+2023-05-17 14:37:04,302: INFO:      cloud_certainty_threshold :  0
+2023-05-17 14:37:04,302: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 14:37:04,302: INFO: environment
+2023-05-17 14:37:04,302: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 14:37:04,302: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 14:37:04,302: INFO:      integrated_dir :  ./integrated
+2023-05-17 14:37:04,303: INFO:      roi_dir :  ./roi
+2023-05-17 14:37:04,303: INFO:      roi_filename :  kfs_roi_subset_c.shp
+2023-05-17 14:37:04,303: INFO:      geometry_dir :  ./geometry
+2023-05-17 14:37:04,303: INFO:      log_dir :  ./log
+2023-05-17 14:37:04,303: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 14:37:04,303: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 14:37:04,303: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 14:37:04,303: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 14:37:04,303: INFO: raster_processing_parameters
+2023-05-17 14:37:04,303: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 14:37:04,303: INFO:      resolution_string :  "10m"
+2023-05-17 14:37:04,303: INFO:      output_resolution :  10
+2023-05-17 14:37:04,303: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 14:37:04,303: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 14:37:04,303: INFO:      download_limit :  10
+2023-05-17 14:37:04,304: INFO:      faulty_granule_threshold :  200
+2023-05-17 14:37:04,304: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 14:37:04,304: INFO:      change_from_classes :  [1, 2]
+2023-05-17 14:37:04,304: INFO:      change_to_classes :  [3]
+2023-05-17 14:37:04,304: INFO:      sieve :  0
+2023-05-17 14:37:04,304: INFO:      chunks :  10
+2023-05-17 14:37:04,304: INFO:      download_source :  "scihub"
+2023-05-17 14:37:04,304: INFO:      do_raster :  False
+2023-05-17 14:37:04,304: INFO:      do_build_composite :  False
+2023-05-17 14:37:04,304: INFO:      do_all :  False
+2023-05-17 14:37:04,304: INFO:      do_download :  False
+2023-05-17 14:37:04,304: INFO:      do_build_prob_image :  False
+2023-05-17 14:37:04,304: INFO:      do_classify :  False
+2023-05-17 14:37:04,304: INFO:      do_change :  False
+2023-05-17 14:37:04,304: INFO:      do_dev :  False
+2023-05-17 14:37:04,304: INFO:      do_update :  False
+2023-05-17 14:37:04,305: INFO:      do_quicklooks :  False
+2023-05-17 14:37:04,305: INFO:      do_delete :  False
+2023-05-17 14:37:04,305: INFO:      do_zip :  False
+2023-05-17 14:37:04,305: INFO:      do_skip_existing :  False
+2023-05-17 14:37:04,305: INFO: vector_processing_parameters
+2023-05-17 14:37:04,305: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 14:37:04,305: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 14:37:04,305: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 14:37:04,305: INFO:      do_delete_existing_vector :  False
+2023-05-17 14:37:04,305: INFO:      do_vectorise :  False
+2023-05-17 14:37:04,305: INFO:      do_integrate :  True
+2023-05-17 14:37:04,305: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 14:37:04,305: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 14:37:04,305: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,305: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 14:37:04,305: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,543: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 14:37:04,544: INFO: These tiles are  :
+2023-05-17 14:37:04,544: INFO:   1 : 36NXG
+2023-05-17 14:37:04,544: INFO:   2 : 36NYG
+2023-05-17 14:37:04,544: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 14:37:04,565: INFO: Finished ROI tile intersection
+2023-05-17 14:37:04,566: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,566: INFO: Starting acd_national_integration
+2023-05-17 14:37:04,566: INFO: ---------------------------------------------------------------
+2023-05-17 14:37:04,568: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 14:37:04,569: INFO: Paths of shapefiles to integrate are:
+2023-05-17 14:37:04,569: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:37:04,569: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:37:04,569: INFO: Reading in ROI
+2023-05-17 14:37:04,589: INFO: Ensuring ROI is of EPSG  :  21097
+2023-05-17 14:37:04,601: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 14:39:10,724: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 14:39:10,889: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-17 14:39:49,315: INFO: Intersection: Success
+2023-05-17 14:39:49,379: INFO: Integrated geodataframe length is currently  :  3874
+2023-05-17 14:39:49,379: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 14:42:16,704: INFO: Ensuring change report shapefile is of EPSG  :  21097
+2023-05-17 14:42:16,846: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-17 14:43:01,126: INFO: Intersection: Success
+2023-05-17 14:43:01,260: INFO: Integrated geodataframe length is currently  :  8174
+2023-05-17 14:43:01,262: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:43:05,128: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 14:43:05,128: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:05,128: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:05,128: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 14:43:05,128: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:05,128: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:05,913: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:05,913: INFO: Starting acd_national_filtering
+2023-05-17 14:43:05,913: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:10,489: INFO: Filtering complete, now writing filtered national shapefile to :
+2023-05-17 14:43:10,489: INFO:         /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe_filtered.shp
+2023-05-17 14:43:18,369: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:18,370: INFO: Starting acd_national_manual_validation()
+2023-05-17 14:43:18,370: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:18,370: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:18,370: INFO: Starting acd_national_distribution()
+2023-05-17 14:43:18,370: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:18,370: INFO: ---------------------------------------------------------------
+2023-05-17 14:43:18,370: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-17 14:43:18,370: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,817: INFO: ****PROCESSING START****
+2023-05-17 16:00:01,901: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,901: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-17 16:00:01,901: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,901: INFO: Reading in parameters defined in the Config
+2023-05-17 16:00:01,902: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,903: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,904: INFO: Starting acd_to_config_to_log()
+2023-05-17 16:00:01,904: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,905: INFO: Options:
+2023-05-17 16:00:01,905: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-17 16:00:01,905: INFO:   --do_integrate
+2023-05-17 16:00:01,905: INFO:       vectorised reports will be merged together
+2023-05-17 16:00:01,905: INFO:   --counties_of_interest
+2023-05-17 16:00:01,905: INFO:         Counties to filter the national geodataframe:
+2023-05-17 16:00:01,905: INFO:         0  :  Kwale
+2023-05-17 16:00:01,905: INFO:         1  :  TransNzoia
+2023-05-17 16:00:01,905: INFO:   --minimum_area_to_report_m2
+2023-05-17 16:00:01,905: INFO:        Only Change Detections > 120 will be reported
+2023-05-17 16:00:01,905: INFO: EPSG used is: 21097
+2023-05-17 16:00:01,905: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-17 16:00:01,905: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 16:00:01,906: INFO: 
+2023-05-17 16:00:01,906: INFO: List of class labels:
+2023-05-17 16:00:01,906: INFO:   1 : primary forest
+2023-05-17 16:00:01,906: INFO:   2 : plantation forest
+2023-05-17 16:00:01,906: INFO:   3 : bare soil
+2023-05-17 16:00:01,906: INFO:   4 : crops
+2023-05-17 16:00:01,906: INFO:   5 : grassland
+2023-05-17 16:00:01,906: INFO:   6 : open water
+2023-05-17 16:00:01,906: INFO:   7 : burn scar
+2023-05-17 16:00:01,907: INFO:   8 : cloud
+2023-05-17 16:00:01,907: INFO:   9 : cloud shadow
+2023-05-17 16:00:01,907: INFO:   10 : haze
+2023-05-17 16:00:01,907: INFO:   11 : sparse woodland
+2023-05-17 16:00:01,908: INFO:   12 : dense woodland
+2023-05-17 16:00:01,908: INFO:   13 : artificial
+2023-05-17 16:00:01,908: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-17 16:00:01,908: INFO:                     to any of the classes: [3]
+2023-05-17 16:00:01,908: INFO: ------------------------------------------------------------
+2023-05-17 16:00:01,908: INFO: Reporting Directories and Filepaths
+2023-05-17 16:00:01,908: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 16:00:01,908: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 16:00:01,909: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-17 16:00:01,909: INFO: Integrated Directory is   : ./integrated
+2023-05-17 16:00:01,909: INFO: ROI Directory is   : ./roi
+2023-05-17 16:00:01,909: INFO: Geometry Directory is   : ./geometry
+2023-05-17 16:00:01,909: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-17 16:00:01,909: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 16:00:01,909: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-17 16:00:01,909: INFO: -------------------------------------------
+2023-05-17 16:00:01,909: INFO: Streaming config parameters to log file for reference
+2023-05-17 16:00:01,909: INFO: planet
+2023-05-17 16:00:01,910: INFO:      api_key :  
+2023-05-17 16:00:01,910: INFO: forest_sentinel
+2023-05-17 16:00:01,910: INFO:      start_date :  20230101
+2023-05-17 16:00:01,910: INFO:      end_date :  20231231
+2023-05-17 16:00:01,910: INFO:      composite_start :  20220601
+2023-05-17 16:00:01,910: INFO:      composite_end :  20221231
+2023-05-17 16:00:01,910: INFO:      epsg :  21097
+2023-05-17 16:00:01,910: INFO:      cloud_cover :  25
+2023-05-17 16:00:01,911: INFO:      cloud_certainty_threshold :  0
+2023-05-17 16:00:01,912: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-17 16:00:01,914: INFO: environment
+2023-05-17 16:00:01,914: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-17 16:00:01,914: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-17 16:00:01,914: INFO:      integrated_dir :  ./integrated
+2023-05-17 16:00:01,915: INFO:      roi_dir :  ./roi
+2023-05-17 16:00:01,915: INFO:      roi_filename :  kfs_roi_subset_c.shp
+2023-05-17 16:00:01,915: INFO:      geometry_dir :  ./geometry
+2023-05-17 16:00:01,916: INFO:      log_dir :  ./log
+2023-05-17 16:00:01,916: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-17 16:00:01,916: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-17 16:00:01,916: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-17 16:00:01,917: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-17 16:00:01,917: INFO: raster_processing_parameters
+2023-05-17 16:00:01,917: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-17 16:00:01,917: INFO:      resolution_string :  "10m"
+2023-05-17 16:00:01,917: INFO:      output_resolution :  10
+2023-05-17 16:00:01,917: INFO:      buffer_size_cloud_masking :  20
+2023-05-17 16:00:01,917: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-17 16:00:01,917: INFO:      download_limit :  10
+2023-05-17 16:00:01,917: INFO:      faulty_granule_threshold :  200
+2023-05-17 16:00:01,918: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-17 16:00:01,918: INFO:      change_from_classes :  [1, 2]
+2023-05-17 16:00:01,918: INFO:      change_to_classes :  [3]
+2023-05-17 16:00:01,918: INFO:      sieve :  0
+2023-05-17 16:00:01,918: INFO:      chunks :  10
+2023-05-17 16:00:01,918: INFO:      download_source :  "scihub"
+2023-05-17 16:00:01,918: INFO:      do_raster :  False
+2023-05-17 16:00:01,918: INFO:      do_build_composite :  False
+2023-05-17 16:00:01,918: INFO:      do_all :  False
+2023-05-17 16:00:01,918: INFO:      do_download :  False
+2023-05-17 16:00:01,920: INFO:      do_build_prob_image :  False
+2023-05-17 16:00:01,920: INFO:      do_classify :  False
+2023-05-17 16:00:01,920: INFO:      do_change :  False
+2023-05-17 16:00:01,920: INFO:      do_dev :  False
+2023-05-17 16:00:01,920: INFO:      do_update :  False
+2023-05-17 16:00:01,920: INFO:      do_quicklooks :  False
+2023-05-17 16:00:01,920: INFO:      do_delete :  False
+2023-05-17 16:00:01,920: INFO:      do_zip :  False
+2023-05-17 16:00:01,920: INFO:      do_skip_existing :  False
+2023-05-17 16:00:01,920: INFO: vector_processing_parameters
+2023-05-17 16:00:01,920: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-17 16:00:01,920: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-17 16:00:01,920: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-17 16:00:01,921: INFO:      do_delete_existing_vector :  False
+2023-05-17 16:00:01,921: INFO:      do_vectorise :  False
+2023-05-17 16:00:01,921: INFO:      do_integrate :  True
+2023-05-17 16:00:01,921: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-17 16:00:01,921: INFO:      minimum_area_to_report_m2 :  120
+2023-05-17 16:00:01,921: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:01,921: INFO: Starting acd_roi_tile_intersection()
+2023-05-17 16:00:01,921: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:02,859: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-17 16:00:02,860: INFO: These tiles are  :
+2023-05-17 16:00:02,860: INFO:   1 : 36NXG
+2023-05-17 16:00:02,860: INFO:   2 : 36NYG
+2023-05-17 16:00:02,860: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-17 16:00:02,881: INFO: Finished ROI tile intersection
+2023-05-17 16:00:02,882: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:02,882: INFO: Starting acd_national_integration
+2023-05-17 16:00:02,882: INFO: ---------------------------------------------------------------
+2023-05-17 16:00:02,891: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-17 16:00:02,891: INFO: Paths of shapefiles to integrate are:
+2023-05-17 16:00:02,892: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 16:00:02,892: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 16:00:02,892: INFO: Reading in ROI
+2023-05-17 16:00:02,969: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-17 16:02:26,199: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-17 16:03:06,091: INFO: Intersection: Success
+2023-05-17 16:03:06,156: INFO: Integrated geodataframe length is currently  :  3874
+2023-05-17 16:03:06,156: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-17 16:05:41,764: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-17 16:06:25,107: INFO: Intersection: Success
+2023-05-17 16:06:25,247: INFO: Integrated geodataframe length is currently  :  8174
+2023-05-17 16:06:25,250: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 16:06:29,877: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-17 16:06:29,877: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:29,877: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:29,877: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-17 16:06:29,877: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:29,877: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:30,760: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:30,761: INFO: Starting acd_national_filtering
+2023-05-17 16:06:30,761: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:35,602: INFO: Filtering complete, now writing filtered national shapefile to :
+2023-05-17 16:06:35,602: INFO:         /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe_filtered.shp
+2023-05-17 16:06:37,036: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:37,037: INFO: Starting acd_national_manual_validation()
+2023-05-17 16:06:37,037: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:37,037: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:37,037: INFO: Starting acd_national_distribution()
+2023-05-17 16:06:37,038: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:37,038: INFO: ---------------------------------------------------------------
+2023-05-17 16:06:37,038: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-17 16:06:37,038: INFO: ---------------------------------------------------------------
