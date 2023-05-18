@@ -2551,41 +2551,7 @@ def acd_integrated_vectorisation(
         log.info(f"{n+1}  :  {tile_path}")
         log.info("---------------------------------------------------------------")
 
-    # #### raster.tif checking method
-    # tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
-    # report_tif_pattern = "/output/probabilities/report*.tif"
-    # search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
-
-    # tiles_paths = glob.glob(os.path.join(root_dir, search_pattern))
-
-    # # extract tile names from file paths
-    # tile_names = [fp.split("/")[-3] for fp in tiles_paths]
-
-    # ####
-
-    # # check if tilelist_filepath exists
-    # if os.path.exists(tilelist_filepath):
-
-    #     tilelist_df = pd.read_csv(tilelist_filepath)
-    #     # create a categorical variable based on the order of tilelist_df
-    #     cat_var = pd.Categorical(
-    #         tile_names, categories=tilelist_df["tile"], ordered=True
-    #     )
-
-    #     # sort the file paths based on the order of the categorical variable
-    #     sorted_filepaths = [fp for _, fp in sorted(zip(cat_var.codes, tiles_paths))]
-
-    #     try:
-    #         log.info(
-    #             f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:"
-    #         )
-
-    #         # log the order of filepaths to vectorise
-    #         for n, tile_path in enumerate(sorted_filepaths):
-    #             log.info(f"{n+1}  :  {tile_path}")
-    #         log.info("---------------------------------------------------------------")
-
-            # vectorise per path logic
+    # vectorise per path logic
     for report in sorted_filepaths:
         if delete_existing:
 
@@ -2622,11 +2588,6 @@ def acd_integrated_vectorisation(
             )
         except:
             log.info(f"Failed to vectorise {report}, moving on to the next")
-
-    # else:
-    #     log.error(
-    #         f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand"
-    #     )
 
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
