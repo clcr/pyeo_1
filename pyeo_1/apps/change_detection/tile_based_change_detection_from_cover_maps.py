@@ -26,6 +26,7 @@ import pyeo_1.queries_and_downloads
 import pyeo_1.raster_manipulation
 import pyeo_1.filesystem_utilities
 #from pyeo_1.filesystem_utilities import get_filenames
+import pyeo_1.apps.change_detection.image_acquisition.main as image_acquisition_pipeline
 
 
 import configparser
@@ -39,6 +40,27 @@ from osgeo import gdal
 import pandas as pd
 import datetime as dt
 import zipfile
+# import copy
+import argparse
+import configparser
+import datetime as dt
+# import glob
+import json
+import os
+import shutil
+import sys
+import zipfile
+
+import numpy as np
+import pandas as pd
+from osgeo import gdal
+
+import pyeo_1.classification
+import pyeo_1.filesystem_utilities
+import pyeo_1.queries_and_downloads
+import pyeo_1.raster_manipulation
+
+# from pyeo_1.filesystem_utilities import get_filenames
 #from tempfile import TemporaryDirectory
 
 gdal.UseExceptions()
@@ -229,9 +251,8 @@ def rolling_detection(config_path,
         #         [...download the data for the composite...]
         #     [...calculate the median composite from the available data...]
         if use_new_api:
-            import pyeo_1.apps.change_detection.image_acquisition.main as image_acquisition_pipeline
             image_acquisition_pipeline.download(
-                geom_path="/home/reag/code/pyeo-sepal/pyeo/apps/image_acquisition/config/kenya_tile_geoms.geojson",
+                geom_path="./image_acquisition/config/kenya_tile_geoms.geojson",
                 max_cloud_cover=cloud_cover,
                 start_date=start_date,
                 end_date=end_date
