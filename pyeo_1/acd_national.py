@@ -2519,84 +2519,114 @@ def acd_integrated_vectorisation(
     import glob
     import os
 
+    # check if tilelist_filepath exists
+    if not os.path.exists(tilelist_filepath):
+        log.error(f"{tilelist_filepath} does not exist")
+        log.error("exiting pipeline")
+        sys.exit(1)
 
+    # get list of tiles from tilelist
+    tilelist_df = pd.read_csv(tilelist_filepath)
+
+    # get all report.tif that are within the root_dir with search pattern
     tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
     report_tif_pattern = "/output/probabilities/report*.tif"
     search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
 
     tiles_paths = glob.glob(os.path.join(root_dir, search_pattern))
 
-    # extract tile names from file paths
-    tile_names = [fp.split("/")[-3] for fp in tiles_paths]
+    # only keep filepaths which match tilelist
+    matching_filepaths = []
 
-    # check if tilelist_filepath exists
-    if os.path.exists(tilelist_filepath):
+    for filepath in tiles_paths:
+        if tilelist_df["tile"].str.contains(filepath.split("/")[-1].split("_")[2]).any():
+            matching_filepaths.append(filepath)
 
-        tilelist_df = pd.read_csv(tilelist_filepath)
-        # create a categorical variable based on the order of tilelist_df
-        cat_var = pd.Categorical(
-            tile_names, categories=tilelist_df["tile"], ordered=True
-        )
+    # sort filepaths in ascending order
+    sorted_filepaths = sorted(matching_filepaths)
+    log.info(f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:")
+    
+    # log the filepaths to vectorise
+    for n, tile_path in enumerate(sorted_filepaths):
+        log.info(f"{n+1}  :  {tile_path}")
+        log.info("---------------------------------------------------------------")
 
-        # sort the file paths based on the order of the categorical variable
-        sorted_filepaths = [fp for _, fp in sorted(zip(cat_var.codes, tiles_paths))]
+    # #### raster.tif checking method
+    # tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
+    # report_tif_pattern = "/output/probabilities/report*.tif"
+    # search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
 
-        try:
-            log.info(
-                f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:"
-            )
+    # tiles_paths = glob.glob(os.path.join(root_dir, search_pattern))
 
-            # log the order of filepaths to vectorise
-            for n, tile_path in enumerate(sorted_filepaths):
-                log.info(f"{n+1}  :  {tile_path}")
-            log.info("---------------------------------------------------------------")
+    # # extract tile names from file paths
+    # tile_names = [fp.split("/")[-3] for fp in tiles_paths]
+
+    # ####
+
+    # # check if tilelist_filepath exists
+    # if os.path.exists(tilelist_filepath):
+
+    #     tilelist_df = pd.read_csv(tilelist_filepath)
+    #     # create a categorical variable based on the order of tilelist_df
+    #     cat_var = pd.Categorical(
+    #         tile_names, categories=tilelist_df["tile"], ordered=True
+    #     )
+
+    #     # sort the file paths based on the order of the categorical variable
+    #     sorted_filepaths = [fp for _, fp in sorted(zip(cat_var.codes, tiles_paths))]
+
+    #     try:
+    #         log.info(
+    #             f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:"
+    #         )
+
+    #         # log the order of filepaths to vectorise
+    #         for n, tile_path in enumerate(sorted_filepaths):
+    #             log.info(f"{n+1}  :  {tile_path}")
+    #         log.info("---------------------------------------------------------------")
 
             # vectorise per path logic
-            for report in sorted_filepaths:
-                if delete_existing:
+    for report in sorted_filepaths:
+        if delete_existing:
 
-                    # get list of existing report files in report path
-                    log.info(
-                        "delete_existing flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs"
-                    )
-                    directory = os.path.dirname(report)
-                    report_shp_pattern = "/report*"
-                    search_shp_pattern = f"{directory}{report_shp_pattern}"
-                    existing_files = glob.glob(search_shp_pattern)
+            # get list of existing report files in report path
+            log.info(
+                "delete_existing flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs"
+            )
+            directory = os.path.dirname(report)
+            report_shp_pattern = "/report*"
+            search_shp_pattern = f"{directory}{report_shp_pattern}"
+            existing_files = glob.glob(search_shp_pattern)
 
-                    # exclude .tif files from the delete list
-                    files_to_remove = [
-                        file for file in existing_files if not file.endswith(".tif")
-                    ]
+            # exclude .tif files from the delete list
+            files_to_remove = [
+                file for file in existing_files if not file.endswith(".tif")
+            ]
 
-                    for file in files_to_remove:
-                        try:
-                            os.remove(file)
-                        except:
-                            log.error(f"Could not delete {file}, skipping")
+            for file in files_to_remove:
                 try:
-                    vectorisation.vector_report_generation(
-                        raster_change_report_path=report,
-                        write_csv=False,
-                        write_pkl=True,
-                        write_shapefile=True,
-                        log=log,
-                        epsg=epsg,
-                        level_1_boundaries_path=level_1_boundaries_path,
-                        conda_env_name=conda_env_name,
-                        delete_intermediates=True,
-                    )
+                    os.remove(file)
                 except:
-                    log.info(f"Failed to vectorise {report}, moving on to the next")
+                    log.error(f"Could not delete {file}, skipping")
+        try:
+            vectorisation.vector_report_generation(
+                raster_change_report_path=report,
+                write_csv=False,
+                write_pkl=True,
+                write_shapefile=True,
+                log=log,
+                epsg=epsg,
+                level_1_boundaries_path=level_1_boundaries_path,
+                conda_env_name=conda_env_name,
+                delete_intermediates=True,
+            )
+        except:
+            log.info(f"Failed to vectorise {report}, moving on to the next")
 
-        except Exception as error:
-            # log.error(f"Could not open {tilelist_filepath}")
-            log.error(f"An error occurred  {error}")
-
-    else:
-        log.error(
-            f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand"
-        )
+    # else:
+    #     log.error(
+    #         f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand"
+    #     )
 
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
@@ -2643,7 +2673,7 @@ def acd_national_integration(
     vectorised_paths = glob.glob(os.path.join(root_dir, search_pattern))
     log.info(f"Number of change Report Shapefiles to integrate  :  {len(vectorised_paths)}")
     log.info("Paths of shapefiles to integrate are:")
-    for number, path in enumerate(vectorised_paths):
+    for number, path in enumerate(sorted(vectorised_paths)):
         log.info(f"{number} : {path}")
 
     # specify gdal and proj installation, this is geopandas'
@@ -2675,7 +2705,7 @@ def acd_national_integration(
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
     with TemporaryDirectory(dir=os.getcwd()) as td:
-        for vector in vectorised_paths:
+        for vector in sorted(vectorised_paths):
             try:
                 # read in shapefile, reproject
                 log.info(f"Reading in change report shapefile   :  {vector}")
