@@ -163,6 +163,9 @@ def rolling_detection(config_path,
     faulty_granule_threshold = int(conf['processing_parameters']['faulty_granule_threshold'])
     sieve = int(conf['processing_parameters']['sieve'])
     use_new_api = bool(conf['fores_sentinel']['use_new_api'])
+    dataspace_username = str(conf['pyeo2_flow']['dataspace_username'])
+    dataspace_password = str(conf['pyeo2_flow']['dataspace_password'])
+    tiles_to_process = str(conf['pyeo2_flow']['tiles_to_process'])
 
     pyeo_1.filesystem_utilities.create_folder_structure_for_tiles(tile_root_dir)
     log = pyeo_1.filesystem_utilities.init_log(os.path.join(tile_root_dir, "log", tile_id+"_log.txt"))
@@ -230,7 +233,7 @@ def rolling_detection(config_path,
         if arg_start_date == "LATEST":
             report_file_name = [f for f in os.listdir(probability_image_dir) if os.path.isfile(f) and f.startswith("report_") and f.endswith(".tif")][0]
             report_file_path = os.path.join(probability_image_dir, report_file_name)
-            after_timestamp  = pyeo_1.filesystem_utilities.get_change_detection_dates(os.path.basename(report_file_path))[-1]
+            after_timestamp = pyeo_1.filesystem_utilities.get_change_detection_dates(os.path.basename(report_file_path))[-1]
             after_timestamp.strftime("%Y%m%d") # Returns the yyyymmdd string of the acquisition date from which the latest classified image was derived
         elif arg_start_date:
             start_date = arg_start_date
@@ -250,319 +253,323 @@ def rolling_detection(config_path,
         #     if do_download or do_all:
         #         [...download the data for the composite...]
         #     [...calculate the median composite from the available data...]
-        if use_new_api:
-            image_acquisition_pipeline.download(
-                geom_path="./image_acquisition/config/kenya_tile_geoms.geojson",
-                max_cloud_cover=cloud_cover,
-                start_date=start_date,
-                end_date=end_date
-            )
-        else:
-            if build_composite or do_all:
-                log.info("---------------------------------------------------------------")
-                log.info("Creating an initial cloud-free median composite from Sentinel-2 as a baseline map")
-                log.info("---------------------------------------------------------------")
-                log.info("Searching for images for initial composite.")
+        if do_all or build_composite:
+            if use_new_api:
+                image_acquisition_pipeline.download(
+                    geom_path="./image_acquisition/config/kenya_tile_geoms.geojson",
+                    max_cloud_cover=cloud_cover,
+                    start_date=composite_start_date,
+                    end_date=composite_end_date,
+                    safe_download_path=composite_l2_image_dir,
+                    username=dataspace_username,
+                    password=dataspace_password
+                )
+            else:
+                if build_composite or do_all:
+                    log.info("---------------------------------------------------------------")
+                    log.info("Creating an initial cloud-free median composite from Sentinel-2 as a baseline map")
+                    log.info("---------------------------------------------------------------")
+                    log.info("Searching for images for initial composite.")
 
-                '''
-                # could use this as a shortcut
+                    '''
+                    # could use this as a shortcut
+    
+                    test1 = api.query(tileid = tile_id, platformname = 'Sentinel-2', processinglevel = 'Level-1C')
+                    test2 = api.query(tileid = tile_id, platformname = 'Sentinel-2', processinglevel = 'Level-2A')
+    
+                    '''
 
-                test1 = api.query(tileid = tile_id, platformname = 'Sentinel-2', processinglevel = 'Level-1C')
-                test2 = api.query(tileid = tile_id, platformname = 'Sentinel-2', processinglevel = 'Level-2A')
+                    composite_products_all = pyeo_1.queries_and_downloads.check_for_s2_data_by_date(root_dir,
+                                                                                                  composite_start_date,
+                                                                                                  composite_end_date,
+                                                                                                  conf,
+                                                                                                  cloud_cover=cloud_cover,
+                                                                                                  tile_id=tile_id,
+                                                                                                  producttype=None #"S2MSI2A" or "S2MSI1C"
+                                                                                                  )
 
-                '''
+                    #TODO: retrieve metadata on nodata percentage and prioritise download of images with low values
+                    # This method currently only works for L2A products and needs expanding to L1C
+                    '''
+                    composite_products_all = pyeo_1.queries_and_downloads.get_nodata_percentage(sen_user, sen_pass, composite_products_all)
+                    log.info("NO_DATA_PERCENTAGE:")
+                    for uuid, metadata in composite_products_all.items():
+                        log.info("{}: {}".format(metadata['title'], metadata['No_data_percentage']))
+                    '''
 
-                composite_products_all = pyeo_1.queries_and_downloads.check_for_s2_data_by_date(root_dir,
-                                                                                              composite_start_date,
-                                                                                              composite_end_date,
-                                                                                              conf,
-                                                                                              cloud_cover=cloud_cover,
-                                                                                              tile_id=tile_id,
-                                                                                              producttype=None #"S2MSI2A" or "S2MSI1C"
-                                                                                              )
+                    log.info("--> Found {} L1C and L2A products for the composite:".format(len(composite_products_all)))
+                    df_all = pd.DataFrame.from_dict(composite_products_all, orient='index')
 
-                #TODO: retrieve metadata on nodata percentage and prioritise download of images with low values
-                # This method currently only works for L2A products and needs expanding to L1C
-                '''
-                composite_products_all = pyeo_1.queries_and_downloads.get_nodata_percentage(sen_user, sen_pass, composite_products_all)
-                log.info("NO_DATA_PERCENTAGE:")
-                for uuid, metadata in composite_products_all.items():
-                    log.info("{}: {}".format(metadata['title'], metadata['No_data_percentage']))
-                '''
+                    # check granule sizes on the server
+                    df_all['size'] = df_all['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                    df = df_all.query('size >= '+str(faulty_granule_threshold))
+                    log.info("Removed {} faulty scenes <{}MB in size from the list:".format(len(df_all)-len(df), faulty_granule_threshold))
+                    df_faulty = df_all.query('size < '+str(faulty_granule_threshold))
+                    for r in range(len(df_faulty)):
+                        log.info("   {} MB: {}".format(df_faulty.iloc[r,:]['size'], df_faulty.iloc[r,:]['title']))
 
-                log.info("--> Found {} L1C and L2A products for the composite:".format(len(composite_products_all)))
-                df_all = pd.DataFrame.from_dict(composite_products_all, orient='index')
-
-                # check granule sizes on the server
-                df_all['size'] = df_all['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
-                df = df_all.query('size >= '+str(faulty_granule_threshold))
-                log.info("Removed {} faulty scenes <{}MB in size from the list:".format(len(df_all)-len(df), faulty_granule_threshold))
-                df_faulty = df_all.query('size < '+str(faulty_granule_threshold))
-                for r in range(len(df_faulty)):
-                    log.info("   {} MB: {}".format(df_faulty.iloc[r,:]['size'], df_faulty.iloc[r,:]['title']))
-
-                l1c_products = df[df.processinglevel == 'Level-1C']
-                l2a_products = df[df.processinglevel == 'Level-2A']
-                log.info("    {} L1C products".format(l1c_products.shape[0]))
-                log.info("    {} L2A products".format(l2a_products.shape[0]))
-
-                # during compositing stage, limit the number of images to download
-                # to avoid only downloading partially covered granules with low cloud cover (which is calculated over the whole granule,
-                # incl. missing values), we need to stratify our search for low cloud cover by relative orbit number
-
-                rel_orbits = np.unique(l1c_products['relativeorbitnumber'])
-                if len(rel_orbits) > 0:
-                    if l1c_products.shape[0] > max_image_number / len(rel_orbits):
-                        log.info("Capping the number of L1C products to {}".format(max_image_number))
-                        log.info("Relative orbits found covering tile: {}".format(rel_orbits))
-                        uuids = []
-                        for orb in rel_orbits:
-                            uuids = uuids + list(l1c_products.loc[l1c_products['relativeorbitnumber'] == orb].sort_values(by=['cloudcoverpercentage'], ascending=True)['uuid'][:int(max_image_number/len(rel_orbits))])
-                        l1c_products = l1c_products[l1c_products['uuid'].isin(uuids)]
-                        log.info("    {} L1C products remain:".format(l1c_products.shape[0]))
-                        for product in l1c_products['title']:
-                            log.info("       {}".format(product))
-
-                rel_orbits = np.unique(l2a_products['relativeorbitnumber'])
-                if len(rel_orbits) > 0:
-                    if l2a_products.shape[0] > max_image_number/len(rel_orbits):
-                        log.info("Capping the number of L2A products to {}".format(max_image_number))
-                        log.info("Relative orbits found covering tile: {}".format(rel_orbits))
-                        uuids = []
-                        for orb in rel_orbits:
-                            uuids = uuids + list(l2a_products.loc[l2a_products['relativeorbitnumber'] == orb].sort_values(by=['cloudcoverpercentage'], ascending=True)['uuid'][:int(max_image_number/len(rel_orbits))])
-                        l2a_products = l2a_products[l2a_products['uuid'].isin(uuids)]
-                        log.info("    {} L2A products remain:".format(l2a_products.shape[0]))
-                        for product in l2a_products['title']:
-                            log.info("       {}".format(product))
-
-                if l1c_products.shape[0]>0 and l2a_products.shape[0]>0:
-                    log.info("Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product.")
-                    l1c_products, l2a_products = pyeo_1.queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
-                    log.info("--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(l1c_products.shape[0]+l2a_products.shape[0]))
+                    l1c_products = df[df.processinglevel == 'Level-1C']
+                    l2a_products = df[df.processinglevel == 'Level-2A']
                     log.info("    {} L1C products".format(l1c_products.shape[0]))
                     log.info("    {} L2A products".format(l2a_products.shape[0]))
-                df = None
 
-                # Before the next step, search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
-                if l1c_products.shape[0] > 0:
-                    log.info("Checking for already downloaded and zipped L1C or L2A products and")
-                    log.info("  availability of matching L2A products for download.")
-                    n = len(l1c_products)
-                    drop=[]
-                    add=[]
-                    for r in range(n):
-                        id = l1c_products.iloc[r,:]['title']
-                        search_term = id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]
-                        log.info("Searching locally for file names containing: {}.".format(search_term))
-                        file_list = [os.path.join(composite_l1_image_dir, f) for f in os.listdir(composite_l1_image_dir)] + \
-                            [os.path.join(composite_l2_image_dir, f) for f in os.listdir(composite_l2_image_dir)] + \
-                            [os.path.join(composite_l2_masked_image_dir, f) for f in os.listdir(composite_l2_masked_image_dir)]
-                        for f in file_list:
-                            if search_term in f:
-                                log.info("  Product already downloaded: {}".format(f))
-                                drop.append(l1c_products.index[r])
-                        search_term = "*"+id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]+"*"
-                        log.info("Searching on the data hub for files containing: {}.".format(search_term))
-                        matching_l2a_products = pyeo_1.queries_and_downloads._file_api_query(user=sen_user,
-                                                                                           passwd=sen_pass,
-                                                                                           start_date=composite_start_date,
-                                                                                           end_date=composite_end_date,
-                                                                                           filename=search_term,
-                                                                                           cloud=cloud_cover,
-                                                                                           producttype="S2MSI2A"
-                                                                                           )
+                    # during compositing stage, limit the number of images to download
+                    # to avoid only downloading partially covered granules with low cloud cover (which is calculated over the whole granule,
+                    # incl. missing values), we need to stratify our search for low cloud cover by relative orbit number
 
-                        matching_l2a_products_df = pd.DataFrame.from_dict(matching_l2a_products, orient='index')
-                        # 07/03/2023: Applied Ali's fix for converting product size to MB to compare against faulty_grandule_threshold
-                        if len(matching_l2a_products_df) == 1 and [float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]] for x in [matching_l2a_products_df['size'][0].split(' ')]][0] > faulty_granule_threshold:
-                            log.info("Replacing L1C {} with L2A product:".format(id))
-                            log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
-                            drop.append(l1c_products.index[r])
-                            add.append(matching_l2a_products_df.iloc[0,:])
-                        if len(matching_l2a_products_df) == 0:
-                            #log.info("Found no match for L1C: {}.".format(id))
-                            pass
-                        # I.R. Bug Fixed 20230311: Was not handling case where multiple L2A products were returned - now filters by 'size' and sorts df so that largest alternative is downloaded
-                        if len(matching_l2a_products_df) > 1:
-                            # check granule sizes on the server
-                            # print(f"1) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
-                            matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
-                            # print(f"2) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
-                            matching_l2a_products_df = matching_l2a_products_df.query('size >= '+str(faulty_granule_threshold))
-                            # matching_l2a_products_df.sort_values(by='size', ascending=False)
-                            # print(f"3) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
-                            # if matching_l2a_products_df.iloc[0,:]['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]]) > faulty_granule_threshold:
-                            if len(matching_l2a_products_df) > 0:
-                                matching_l2a_products_df.sort_values(by='size', ascending=False)
+                    rel_orbits = np.unique(l1c_products['relativeorbitnumber'])
+                    if len(rel_orbits) > 0:
+                        if l1c_products.shape[0] > max_image_number / len(rel_orbits):
+                            log.info("Capping the number of L1C products to {}".format(max_image_number))
+                            log.info("Relative orbits found covering tile: {}".format(rel_orbits))
+                            uuids = []
+                            for orb in rel_orbits:
+                                uuids = uuids + list(l1c_products.loc[l1c_products['relativeorbitnumber'] == orb].sort_values(by=['cloudcoverpercentage'], ascending=True)['uuid'][:int(max_image_number/len(rel_orbits))])
+                            l1c_products = l1c_products[l1c_products['uuid'].isin(uuids)]
+                            log.info("    {} L1C products remain:".format(l1c_products.shape[0]))
+                            for product in l1c_products['title']:
+                                log.info("       {}".format(product))
+
+                    rel_orbits = np.unique(l2a_products['relativeorbitnumber'])
+                    if len(rel_orbits) > 0:
+                        if l2a_products.shape[0] > max_image_number/len(rel_orbits):
+                            log.info("Capping the number of L2A products to {}".format(max_image_number))
+                            log.info("Relative orbits found covering tile: {}".format(rel_orbits))
+                            uuids = []
+                            for orb in rel_orbits:
+                                uuids = uuids + list(l2a_products.loc[l2a_products['relativeorbitnumber'] == orb].sort_values(by=['cloudcoverpercentage'], ascending=True)['uuid'][:int(max_image_number/len(rel_orbits))])
+                            l2a_products = l2a_products[l2a_products['uuid'].isin(uuids)]
+                            log.info("    {} L2A products remain:".format(l2a_products.shape[0]))
+                            for product in l2a_products['title']:
+                                log.info("       {}".format(product))
+
+                    if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
+                        log.info("Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product.")
+                        l1c_products, l2a_products = pyeo_1.queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
+                        log.info("--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(l1c_products.shape[0]+l2a_products.shape[0]))
+                        log.info("    {} L1C products".format(l1c_products.shape[0]))
+                        log.info("    {} L2A products".format(l2a_products.shape[0]))
+                    df = None
+
+                    # Before the next step, search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
+                    if l1c_products.shape[0] > 0:
+                        log.info("Checking for already downloaded and zipped L1C or L2A products and")
+                        log.info("  availability of matching L2A products for download.")
+                        n = len(l1c_products)
+                        drop=[]
+                        add=[]
+                        for r in range(n):
+                            id = l1c_products.iloc[r,:]['title']
+                            search_term = id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]
+                            log.info("Searching locally for file names containing: {}.".format(search_term))
+                            file_list = [os.path.join(composite_l1_image_dir, f) for f in os.listdir(composite_l1_image_dir)] + \
+                                [os.path.join(composite_l2_image_dir, f) for f in os.listdir(composite_l2_image_dir)] + \
+                                [os.path.join(composite_l2_masked_image_dir, f) for f in os.listdir(composite_l2_masked_image_dir)]
+                            for f in file_list:
+                                if search_term in f:
+                                    log.info("  Product already downloaded: {}".format(f))
+                                    drop.append(l1c_products.index[r])
+                            search_term = "*"+id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]+"*"
+                            log.info("Searching on the data hub for files containing: {}.".format(search_term))
+                            matching_l2a_products = pyeo_1.queries_and_downloads._file_api_query(user=sen_user,
+                                                                                               passwd=sen_pass,
+                                                                                               start_date=composite_start_date,
+                                                                                               end_date=composite_end_date,
+                                                                                               filename=search_term,
+                                                                                               cloud=cloud_cover,
+                                                                                               producttype="S2MSI2A"
+                                                                                               )
+
+                            matching_l2a_products_df = pd.DataFrame.from_dict(matching_l2a_products, orient='index')
+                            # 07/03/2023: Applied Ali's fix for converting product size to MB to compare against faulty_grandule_threshold
+                            if len(matching_l2a_products_df) == 1 and [float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]] for x in [matching_l2a_products_df['size'][0].split(' ')]][0] > faulty_granule_threshold:
                                 log.info("Replacing L1C {} with L2A product:".format(id))
                                 log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
                                 drop.append(l1c_products.index[r])
                                 add.append(matching_l2a_products_df.iloc[0,:])
-                    if len(drop) > 0:
-                        l1c_products = l1c_products.drop(index=drop)
-                    if len(add) > 0:
-                        l2a_products = l2a_products.append(add)
-                    l2a_products = l2a_products.drop_duplicates(subset='title')
-                    log.info("    {} L1C products remaining for download".format(l1c_products.shape[0]))
-                    #I.R.
-                    log.info("    {} L2A products remaining for download".format(l2a_products.shape[0]))
-                    #TODO: Need to collect the response from download_from_scihub function and check whether the download succeeded
-                    if l1c_products.shape[0] > 0:
-                        log.info("Downloading Sentinel-2 L1C products.")
-                        pyeo_1.queries_and_downloads.download_s2_data_from_df(l1c_products,
-                                                                            composite_l1_image_dir,
-                                                                            composite_l2_image_dir,
-                                                                            download_source,
-                                                                            user=sen_user,
-                                                                            passwd=sen_pass,
-                                                                            try_scihub_on_fail=True)
-                    log.info("Atmospheric correction with sen2cor.")
-                    pyeo_1.raster_manipulation.atmospheric_correction(composite_l1_image_dir,
+                            if len(matching_l2a_products_df) == 0:
+                                #log.info("Found no match for L1C: {}.".format(id))
+                                pass
+                            # I.R. Bug Fixed 20230311: Was not handling case where multiple L2A products were returned - now filters by 'size' and sorts df so that largest alternative is downloaded
+                            if len(matching_l2a_products_df) > 1:
+                                # check granule sizes on the server
+                                # print(f"1) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
+                                matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                                # print(f"2) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
+                                matching_l2a_products_df = matching_l2a_products_df.query('size >= '+str(faulty_granule_threshold))
+                                # matching_l2a_products_df.sort_values(by='size', ascending=False)
+                                # print(f"3) matching_l2a_products_df {matching_l2a_products_df[['title', 'size']]}")
+                                # if matching_l2a_products_df.iloc[0,:]['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]]) > faulty_granule_threshold:
+                                if len(matching_l2a_products_df) > 0:
+                                    matching_l2a_products_df.sort_values(by='size', ascending=False)
+                                    log.info("Replacing L1C {} with L2A product:".format(id))
+                                    log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
+                                    drop.append(l1c_products.index[r])
+                                    add.append(matching_l2a_products_df.iloc[0,:])
+                        if len(drop) > 0:
+                            l1c_products = l1c_products.drop(index=drop)
+                        if len(add) > 0:
+                            l2a_products = l2a_products.append(add)
+                        l2a_products = l2a_products.drop_duplicates(subset='title')
+                        log.info("    {} L1C products remaining for download".format(l1c_products.shape[0]))
+                        #I.R.
+                        log.info("    {} L2A products remaining for download".format(l2a_products.shape[0]))
+                        #TODO: Need to collect the response from download_from_scihub function and check whether the download succeeded
+                        if l1c_products.shape[0] > 0:
+                            log.info("Downloading Sentinel-2 L1C products.")
+                            pyeo_1.queries_and_downloads.download_s2_data_from_df(l1c_products,
+                                                                                composite_l1_image_dir,
+                                                                                composite_l2_image_dir,
+                                                                                download_source,
+                                                                                user=sen_user,
+                                                                                passwd=sen_pass,
+                                                                                try_scihub_on_fail=True)
+                        log.info("Atmospheric correction with sen2cor.")
+                        pyeo_1.raster_manipulation.atmospheric_correction(composite_l1_image_dir,
+                                                                        composite_l2_image_dir,
+                                                                        sen2cor_path,
+                                                                        delete_unprocessed_image=False)
+                    if l2a_products.shape[0] > 0:
+                        log.info("Downloading Sentinel-2 L2A products.")
+                        pyeo_1.queries_and_downloads.download_s2_data(l2a_products.to_dict('index'),
+                                                                    composite_l1_image_dir,
                                                                     composite_l2_image_dir,
-                                                                    sen2cor_path,
-                                                                    delete_unprocessed_image=False)
-                if l2a_products.shape[0] > 0:
-                    log.info("Downloading Sentinel-2 L2A products.")
-                    pyeo_1.queries_and_downloads.download_s2_data(l2a_products.to_dict('index'),
-                                                                composite_l1_image_dir,
-                                                                composite_l2_image_dir,
-                                                                download_source,
-                                                                user=sen_user,
-                                                                passwd=sen_pass,
-                                                                try_scihub_on_fail=True)
+                                                                    download_source,
+                                                                    user=sen_user,
+                                                                    passwd=sen_pass,
+                                                                    try_scihub_on_fail=True)
 
-                # check for incomplete L2A downloads
-                incomplete_downloads, sizes = pyeo_1.raster_manipulation.find_small_safe_dirs(composite_l2_image_dir, threshold=faulty_granule_threshold*1024*1024)
-                if len(incomplete_downloads) > 0:
-                    for index, safe_dir in enumerate(incomplete_downloads):
-                        if sizes[index]/1024/1024 < faulty_granule_threshold and os.path.exists(safe_dir):
-                            log.warning("Found likely incomplete download of size {} MB: {}".format(str(round(sizes[index]/1024/1024)), safe_dir))
-                            #shutil.rmtree(safe_dir)
+                    # check for incomplete L2A downloads
+                    incomplete_downloads, sizes = pyeo_1.raster_manipulation.find_small_safe_dirs(composite_l2_image_dir, threshold=faulty_granule_threshold*1024*1024)
+                    if len(incomplete_downloads) > 0:
+                        for index, safe_dir in enumerate(incomplete_downloads):
+                            if sizes[index]/1024/1024 < faulty_granule_threshold and os.path.exists(safe_dir):
+                                log.warning("Found likely incomplete download of size {} MB: {}".format(str(round(sizes[index]/1024/1024)), safe_dir))
+                                shutil.rmtree(safe_dir)
 
-                log.info("---------------------------------------------------------------")
-                log.info("Image download and atmospheric correction for composite is complete.")
-                log.info("---------------------------------------------------------------")
+                    log.info("---------------------------------------------------------------")
+                    log.info("Image download and atmospheric correction for composite is complete.")
+                    log.info("---------------------------------------------------------------")
 
-                if do_delete:
-                    log.info("---------------------------------------------------------------")
-                    log.info("Deleting downloaded L1C images for composite, keeping only derived L2A products")
-                    log.info("---------------------------------------------------------------")
-                    directory = composite_l1_image_dir
-                    log.info('Deleting {}'.format(directory))
-                    shutil.rmtree(directory)
-                    log.info("---------------------------------------------------------------")
-                    log.info("Deletion of L1C images complete. Keeping only L2A images.")
-                    log.info("---------------------------------------------------------------")
-                else:
-                    if do_zip:
+                    if do_delete:
                         log.info("---------------------------------------------------------------")
-                        log.info("Zipping downloaded L1C images for composite after atmospheric correction")
+                        log.info("Deleting downloaded L1C images for composite, keeping only derived L2A products")
                         log.info("---------------------------------------------------------------")
-                        zip_contents(composite_l1_image_dir)
+                        directory = composite_l1_image_dir
+                        log.info('Deleting {}'.format(directory))
+                        shutil.rmtree(directory)
                         log.info("---------------------------------------------------------------")
-                        log.info("Zipping complete")
+                        log.info("Deletion of L1C images complete. Keeping only L2A images.")
                         log.info("---------------------------------------------------------------")
+                    else:
+                        if do_zip:
+                            log.info("---------------------------------------------------------------")
+                            log.info("Zipping downloaded L1C images for composite after atmospheric correction")
+                            log.info("---------------------------------------------------------------")
+                            zip_contents(composite_l1_image_dir)
+                            log.info("---------------------------------------------------------------")
+                            log.info("Zipping complete")
+                            log.info("---------------------------------------------------------------")
 
                 log.info("---------------------------------------------------------------")
                 log.info("Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files.")
                 log.info("---------------------------------------------------------------")
 
-            # Compare the time stamps of all .tif files in the composite_l2_masked_dir
-            #   with the .SAFE directory time stamps in the composite_l2_dir, and
-            #   the .zip files in the same directory
-            #   Unzip files that have not been processed to cloud-masked yet
+                # Compare the time stamps of all .tif files in the composite_l2_masked_dir
+                #   with the .SAFE directory time stamps in the composite_l2_dir, and
+                #   the .zip files in the same directory
+                #   Unzip files that have not been processed to cloud-masked yet
 
-            directory = composite_l2_masked_image_dir
-            masked_file_paths = [f for f in os.listdir(directory) if f.endswith(".tif") \
-                                 and os.path.isfile(os.path.join(directory, f))]
+                directory = composite_l2_masked_image_dir
+                masked_file_paths = [f for f in os.listdir(directory) if f.endswith(".tif") \
+                                     and os.path.isfile(os.path.join(directory, f))]
 
-            directory = composite_l2_image_dir
-            l2a_zip_file_paths = [f for f in os.listdir(directory) if f.endswith(".zip")]
+                directory = composite_l2_image_dir
+                l2a_zip_file_paths = [f for f in os.listdir(directory) if f.endswith(".zip")]
 
-            if len(l2a_zip_file_paths) > 0:
-                for f in l2a_zip_file_paths:
-                    # check whether the zipped file has already been cloud masked
-                    zip_timestamp  = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(f)).strftime("%Y%m%dT%H%M%S")
-                    if any(zip_timestamp in f for f in masked_file_paths):
-                        continue
-                    else:
-                        # extract it if not
-                        unzip_contents(os.path.join(composite_l2_image_dir, f),
-                                       ifstartswith="S2", ending=".SAFE")
+                if len(l2a_zip_file_paths) > 0:
+                    for f in l2a_zip_file_paths:
+                        # check whether the zipped file has already been cloud masked
+                        zip_timestamp = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(f)).strftime("%Y%m%dT%H%M%S")
+                        if any(zip_timestamp in f for f in masked_file_paths):
+                            continue
+                        else:
+                            # extract it if not
+                            unzip_contents(os.path.join(composite_l2_image_dir, f),
+                                           ifstartswith="S2", ending=".SAFE")
 
-            directory = composite_l2_image_dir
-            l2a_safe_file_paths = [f for f in os.listdir(directory) if f.endswith(".SAFE") \
-                                   and os.path.isdir(os.path.join(directory, f))]
+                directory = composite_l2_image_dir
+                l2a_safe_file_paths = [f for f in os.listdir(directory) if f.endswith(".SAFE") \
+                                       and os.path.isdir(os.path.join(directory, f))]
 
-            files_for_cloud_masking = []
-            if len(l2a_safe_file_paths) > 0:
-                for f in l2a_safe_file_paths:
-                    # check whether the L2A SAFE file has already been cloud masked
-                    safe_timestamp  = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(f)).strftime("%Y%m%dT%H%M%S")
-                    if any(safe_timestamp in f for f in masked_file_paths):
-                        continue
-                    else:
-                        # add it to the list of files to do if it has not been cloud masked yet
-                        files_for_cloud_masking = files_for_cloud_masking + [f]
+                files_for_cloud_masking = []
+                if len(l2a_safe_file_paths) > 0:
+                    for f in l2a_safe_file_paths:
+                        # check whether the L2A SAFE file has already been cloud masked
+                        safe_timestamp  = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(f)).strftime("%Y%m%dT%H%M%S")
+                        if any(safe_timestamp in f for f in masked_file_paths):
+                            continue
+                        else:
+                            # add it to the list of files to do if it has not been cloud masked yet
+                            files_for_cloud_masking = files_for_cloud_masking + [f]
 
-            if len(files_for_cloud_masking) == 0:
-                log.info("No L2A images found for cloud masking. They may already have been done.")
-            else:
-                pyeo_1.raster_manipulation.apply_scl_cloud_mask(composite_l2_image_dir,
-                                                              composite_l2_masked_image_dir,
-                                                              scl_classes=[0,1,2,3,8,9,10,11],
-                                                              buffer_size=buffer_size_composite,
-                                                              bands=bands,
-                                                              out_resolution=out_resolution,
-                                                              haze=None,
-                                                              epsg=epsg,
-                                                              skip_existing=skip_existing)
-                # I.R. 20220607 START
-                # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
-                log.info("---------------------------------------------------------------")
-                log.info("Offsetting cloud masked L2A images for composite.")
-                log.info("---------------------------------------------------------------")
-
-                pyeo_1.raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(composite_l2_masked_image_dir, composite_l2_masked_image_dir)
-
-                log.info("---------------------------------------------------------------")
-                log.info("Offsetting of cloud masked L2A images for composite complete.")
-                log.info("---------------------------------------------------------------")
-                # I.R. 20220607 END
-
-                if do_quicklooks or do_all:
+                if len(files_for_cloud_masking) == 0:
+                    log.info("No L2A images found for cloud masking. They may already have been done.")
+                else:
+                    pyeo_1.raster_manipulation.apply_scl_cloud_mask(composite_l2_image_dir,
+                                                                  composite_l2_masked_image_dir,
+                                                                  scl_classes=[0,1,2,3,8,9,10,11],
+                                                                  buffer_size=buffer_size_composite,
+                                                                  bands=bands,
+                                                                  out_resolution=out_resolution,
+                                                                  haze=None,
+                                                                  epsg=epsg,
+                                                                  skip_existing=skip_existing)
+                    # I.R. 20220607 START
+                    # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
                     log.info("---------------------------------------------------------------")
-                    log.info("Producing quicklooks.")
+                    log.info("Offsetting cloud masked L2A images for composite.")
                     log.info("---------------------------------------------------------------")
-                dirs_for_quicklooks = [composite_l2_masked_image_dir]
-                for main_dir in dirs_for_quicklooks:
-                    files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") ]
-                    #files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") and "class" in os.path.basename(f) ] # do classification images only
-                    if len(files) == 0:
-                        log.warning("No images found in {}.".format(main_dir))
-                    else:
-                        for f in files:
-                            quicklook_path = os.path.join(quicklook_dir, os.path.basename(f).split(".")[0]+".png")
-                            log.info("Creating quicklook: {}".format(quicklook_path))
-                            pyeo_1.raster_manipulation.create_quicklook(f,
-                                                                      quicklook_path,
-                                                                      width=512,
-                                                                      height=512,
-                                                                  format="PNG",
-                                                                      bands=[3,2,1],
-                                                                      scale_factors=[[0,2000,0,255]]
-                                                                      )
-            log.info("Quicklooks complete.")
 
-            if do_zip:
-                log.info("---------------------------------------------------------------")
-                log.info("Zipping downloaded L2A images for composite after cloud masking and band stacking")
-                log.info("---------------------------------------------------------------")
-                zip_contents(composite_l2_image_dir)
-                log.info("---------------------------------------------------------------")
-                log.info("Zipping complete")
-                log.info("---------------------------------------------------------------")
+                    pyeo_1.raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(composite_l2_masked_image_dir, composite_l2_masked_image_dir)
+
+                    log.info("---------------------------------------------------------------")
+                    log.info("Offsetting of cloud masked L2A images for composite complete.")
+                    log.info("---------------------------------------------------------------")
+                    # I.R. 20220607 END
+
+                    if do_quicklooks or do_all:
+                        log.info("---------------------------------------------------------------")
+                        log.info("Producing quicklooks.")
+                        log.info("---------------------------------------------------------------")
+                    dirs_for_quicklooks = [composite_l2_masked_image_dir]
+                    for main_dir in dirs_for_quicklooks:
+                        files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") ]
+                        #files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") and "class" in os.path.basename(f) ] # do classification images only
+                        if len(files) == 0:
+                            log.warning("No images found in {}.".format(main_dir))
+                        else:
+                            for f in files:
+                                quicklook_path = os.path.join(quicklook_dir, os.path.basename(f).split(".")[0]+".png")
+                                log.info("Creating quicklook: {}".format(quicklook_path))
+                                pyeo_1.raster_manipulation.create_quicklook(f,
+                                                                          quicklook_path,
+                                                                          width=512,
+                                                                          height=512,
+                                                                          format="PNG",
+                                                                          bands=[3,2,1],
+                                                                          scale_factors=[[0,2000,0,255]]
+                                                                          )
+                    log.info("Quicklooks complete.")
+
+                if do_zip:
+                    log.info("---------------------------------------------------------------")
+                    log.info("Zipping downloaded L2A images for composite after cloud masking and band stacking")
+                    log.info("---------------------------------------------------------------")
+                    zip_contents(composite_l2_image_dir)
+                    log.info("---------------------------------------------------------------")
+                    log.info("Zipping complete")
+                    log.info("---------------------------------------------------------------")
 
             log.info("---------------------------------------------------------------")
             log.info("Building initial cloud-free median composite from directory {}".format(composite_l2_masked_image_dir))
@@ -647,157 +654,166 @@ def rolling_detection(config_path,
         # Step 2: Download change detection images for the specific time window (L2A where available plus additional L1C)
         # ------------------------------------------------------------------------
         if do_all or do_download:
-            log.info("---------------------------------------------------------------")
-            log.info("Downloading change detection images between {} and {} with cloud cover <= {}".format(
-                     start_date, end_date, cloud_cover))
-            log.info("---------------------------------------------------------------")
+            if use_new_api:
+                image_acquisition_pipeline.download(geom_path=tiles_to_process,
+                                                    max_cloud_cover=cloud_cover,
+                                                    start_date=start_date,
+                                                    end_date=end_date,
+                                                    safe_download_path=l2_image_dir,
+                                                    username=dataspace_username,
+                                                    password=dataspace_password)
+            else:
+                log.info("---------------------------------------------------------------")
+                log.info("Downloading change detection images between {} and {} with cloud cover <= {}".format(
+                         start_date, end_date, cloud_cover))
+                log.info("---------------------------------------------------------------")
 
-            products_all = pyeo_1.queries_and_downloads.check_for_s2_data_by_date(root_dir,
-                                                                               start_date,
-                                                                               end_date,
-                                                                               conf,
-                                                                               cloud_cover=cloud_cover,
-                                                                               tile_id=tile_id,
-                                                                               producttype=None #"S2MSI2A" or "S2MSI1C"
-                                                                               )
-            log.info("--> Found {} L1C and L2A products for change detection:".format(len(products_all)))
-            df_all = pd.DataFrame.from_dict(products_all, orient='index')
+                products_all = pyeo_1.queries_and_downloads.check_for_s2_data_by_date(root_dir,
+                                                                                   start_date,
+                                                                                   end_date,
+                                                                                   conf,
+                                                                                   cloud_cover=cloud_cover,
+                                                                                   tile_id=tile_id,
+                                                                                   producttype=None #"S2MSI2A" or "S2MSI1C"
+                                                                                   )
+                log.info("--> Found {} L1C and L2A products for change detection:".format(len(products_all)))
+                df_all = pd.DataFrame.from_dict(products_all, orient='index')
 
-            # check granule sizes on the server
-            df_all['size'] = df_all['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
-            df = df_all.query('size >= '+str(faulty_granule_threshold))
-            log.info("Removed {} faulty scenes <{}MB in size from the list:".format(len(df_all)-len(df), faulty_granule_threshold))
-            df_faulty = df_all.query('size < '+str(faulty_granule_threshold))
-            for r in range(len(df_faulty)):
-                log.info("   {} MB: {}".format(df_faulty.iloc[r,:]['size'], df_faulty.iloc[r,:]['title']))
+                # check granule sizes on the server
+                df_all['size'] = df_all['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                df = df_all.query('size >= '+str(faulty_granule_threshold))
+                log.info("Removed {} faulty scenes <{}MB in size from the list:".format(len(df_all)-len(df), faulty_granule_threshold))
+                df_faulty = df_all.query('size < '+str(faulty_granule_threshold))
+                for r in range(len(df_faulty)):
+                    log.info("   {} MB: {}".format(df_faulty.iloc[r,:]['size'], df_faulty.iloc[r,:]['title']))
 
-            l1c_products = df[df.processinglevel == 'Level-1C']
-            l2a_products = df[df.processinglevel == 'Level-2A']
-            log.info("    {} L1C products".format(l1c_products.shape[0]))
-            log.info("    {} L2A products".format(l2a_products.shape[0]))
-
-            if l1c_products.shape[0]>0 and l2a_products.shape[0]>0:
-                log.info("Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product.")
-                l1c_products, l2a_products = pyeo_1.queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
-                log.info("--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(l1c_products.shape[0]+l2a_products.shape[0]))
+                l1c_products = df[df.processinglevel == 'Level-1C']
+                l2a_products = df[df.processinglevel == 'Level-2A']
                 log.info("    {} L1C products".format(l1c_products.shape[0]))
                 log.info("    {} L2A products".format(l2a_products.shape[0]))
-            df = None
 
-            #TODO: Before the next step, search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
-            # Remove those already obtained from the list
+                if l1c_products.shape[0]>0 and l2a_products.shape[0]>0:
+                    log.info("Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product.")
+                    l1c_products, l2a_products = pyeo_1.queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
+                    log.info("--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(l1c_products.shape[0]+l2a_products.shape[0]))
+                    log.info("    {} L1C products".format(l1c_products.shape[0]))
+                    log.info("    {} L2A products".format(l2a_products.shape[0]))
+                df = None
 
-            if l1c_products.shape[0] > 0:
-                log.info("Checking for availability of L2A products to minimise download and atmospheric correction of L1C products.")
-                n = len(l1c_products)
-                drop=[]
-                add=[]
-                for r in range(n):
-                    id = l1c_products.iloc[r,:]['title']
-                    search_term = "*"+id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]+"*"
-                    log.info("Search term: {}.".format(search_term))
-                    matching_l2a_products = pyeo_1.queries_and_downloads._file_api_query(user=sen_user,
-                                                                                       passwd=sen_pass,
-                                                                                       start_date=start_date,
-                                                                                       end_date=end_date,
-                                                                                       filename=search_term,
-                                                                                       cloud=cloud_cover,
-                                                                                       producttype="S2MSI2A"
-                                                                                       )
+                #TODO: Before the next step, search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
+                # Remove those already obtained from the list
 
-                    matching_l2a_products_df = pd.DataFrame.from_dict(matching_l2a_products, orient='index')
-                    if len(matching_l2a_products_df) == 1:
-                        log.info(matching_l2a_products_df.iloc[0,:]['size'])
-                        matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
-                        if matching_l2a_products_df.iloc[0,:]['size'] > faulty_granule_threshold:
-                            log.info("Replacing L1C {} with L2A product:".format(id))
-                            log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
-                            drop.append(l1c_products.index[r])
-                            add.append(matching_l2a_products_df.iloc[0,:])
-                    if len(matching_l2a_products_df) == 0:
-                        log.info("Found no match for L1C: {}.".format(id))
-                    if len(matching_l2a_products_df) > 1:
-                        # check granule sizes on the server
-                        matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
-                        if matching_l2a_products_df.iloc[0,:]['size'] > faulty_granule_threshold:
-                            log.info("Replacing L1C {} with L2A product:".format(id))
-                            log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
-                            drop.append(l1c_products.index[r])
-                            add.append(matching_l2a_products_df.iloc[0,:])
+                if l1c_products.shape[0] > 0:
+                    log.info("Checking for availability of L2A products to minimise download and atmospheric correction of L1C products.")
+                    n = len(l1c_products)
+                    drop=[]
+                    add=[]
+                    for r in range(n):
+                        id = l1c_products.iloc[r,:]['title']
+                        search_term = "*"+id.split("_")[2]+"_"+id.split("_")[3]+"_"+id.split("_")[4]+"_"+id.split("_")[5]+"*"
+                        log.info("Search term: {}.".format(search_term))
+                        matching_l2a_products = pyeo_1.queries_and_downloads._file_api_query(user=sen_user,
+                                                                                           passwd=sen_pass,
+                                                                                           start_date=start_date,
+                                                                                           end_date=end_date,
+                                                                                           filename=search_term,
+                                                                                           cloud=cloud_cover,
+                                                                                           producttype="S2MSI2A"
+                                                                                           )
 
-                if len(drop) > 0:
-                    l1c_products = l1c_products.drop(index=drop)
-                if len(add) > 0:
-                    if do_dev:
-                        add = pd.DataFrame(add)
-                        log.info("Types for concatenation: {}, {}".format(type(l2a_products), type(add)))
-                        l2a_products = pd.concat([l2a_products, add])
-                        #TODO: test the above fix for:
-                        # pyeo_1/pyeo_1/apps/change_detection/tile_based_change_detection_from_cover_maps.py:456: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-                    else:
-                        l2a_products = l2a_products.append(add)
+                        matching_l2a_products_df = pd.DataFrame.from_dict(matching_l2a_products, orient='index')
+                        if len(matching_l2a_products_df) == 1:
+                            log.info(matching_l2a_products_df.iloc[0,:]['size'])
+                            matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                            if matching_l2a_products_df.iloc[0,:]['size'] > faulty_granule_threshold:
+                                log.info("Replacing L1C {} with L2A product:".format(id))
+                                log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
+                                drop.append(l1c_products.index[r])
+                                add.append(matching_l2a_products_df.iloc[0,:])
+                        if len(matching_l2a_products_df) == 0:
+                            log.info("Found no match for L1C: {}.".format(id))
+                        if len(matching_l2a_products_df) > 1:
+                            # check granule sizes on the server
+                            matching_l2a_products_df['size'] = matching_l2a_products_df['size'].str.split(' ').apply(lambda x: float(x[0]) * {'GB': 1e3, 'MB': 1, 'KB': 1e-3}[x[1]])
+                            if matching_l2a_products_df.iloc[0,:]['size'] > faulty_granule_threshold:
+                                log.info("Replacing L1C {} with L2A product:".format(id))
+                                log.info("              {}".format(matching_l2a_products_df.iloc[0,:]['title']))
+                                drop.append(l1c_products.index[r])
+                                add.append(matching_l2a_products_df.iloc[0,:])
 
-                log.info("    {} L1C products remaining for download".format(l1c_products.shape[0]))
-                l2a_products = l2a_products.drop_duplicates(subset='title')
-                #I.R.
-                log.info("    {} L2A products remaining for download".format(l2a_products.shape[0]))
-                if (l1c_products.shape[0] >0):
-                    log.info("Downloading Sentinel-2 L1C products.")
-                    pyeo_1.queries_and_downloads.download_s2_data_from_df(l1c_products,
+                    if len(drop) > 0:
+                        l1c_products = l1c_products.drop(index=drop)
+                    if len(add) > 0:
+                        if do_dev:
+                            add = pd.DataFrame(add)
+                            log.info("Types for concatenation: {}, {}".format(type(l2a_products), type(add)))
+                            l2a_products = pd.concat([l2a_products, add])
+                            #TODO: test the above fix for:
+                            # pyeo_1/pyeo_1/apps/change_detection/tile_based_change_detection_from_cover_maps.py:456: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+                        else:
+                            l2a_products = l2a_products.append(add)
+
+                    log.info("    {} L1C products remaining for download".format(l1c_products.shape[0]))
+                    l2a_products = l2a_products.drop_duplicates(subset='title')
+                    #I.R.
+                    log.info("    {} L2A products remaining for download".format(l2a_products.shape[0]))
+                    if (l1c_products.shape[0] >0):
+                        log.info("Downloading Sentinel-2 L1C products.")
+                        pyeo_1.queries_and_downloads.download_s2_data_from_df(l1c_products,
+                                                                    l1_image_dir,
+                                                                    l2_image_dir,
+                                                                    download_source,
+                                                                    user=sen_user,
+                                                                    passwd=sen_pass,
+                                                                    try_scihub_on_fail=True)
+                        log.info("Atmospheric correction with sen2cor.")
+                        pyeo_1.raster_manipulation.atmospheric_correction(l1_image_dir,
+                                                                        l2_image_dir,
+                                                                        sen2cor_path,
+                                                                        delete_unprocessed_image=False)
+                if l2a_products.shape[0] > 0:
+                    log.info("Downloading Sentinel-2 L2A products.")
+                    pyeo_1.queries_and_downloads.download_s2_data(l2a_products.to_dict('index'),
                                                                 l1_image_dir,
                                                                 l2_image_dir,
                                                                 download_source,
                                                                 user=sen_user,
                                                                 passwd=sen_pass,
                                                                 try_scihub_on_fail=True)
-                    log.info("Atmospheric correction with sen2cor.")
-                    pyeo_1.raster_manipulation.atmospheric_correction(l1_image_dir,
-                                                                    l2_image_dir,
-                                                                    sen2cor_path,
-                                                                    delete_unprocessed_image=False)
-            if l2a_products.shape[0] > 0:
-                log.info("Downloading Sentinel-2 L2A products.")
-                pyeo_1.queries_and_downloads.download_s2_data(l2a_products.to_dict('index'),
-                                                            l1_image_dir,
-                                                            l2_image_dir,
-                                                            download_source,
-                                                            user=sen_user,
-                                                            passwd=sen_pass,
-                                                            try_scihub_on_fail=True)
 
-            # check for incomplete L2A downloads and remove them
-            incomplete_downloads, sizes = pyeo_1.raster_manipulation.find_small_safe_dirs(l2_image_dir, threshold=faulty_granule_threshold*1024*1024)
-            if len(incomplete_downloads) > 0:
-                for index, safe_dir in enumerate(incomplete_downloads):
-                    if sizes[index]/1024/1024 < faulty_granule_threshold and os.path.exists(safe_dir):
-                        log.warning("Found likely incomplete download of size {} MB: {}".format(str(round(sizes[index]/1024/1024)), safe_dir))
-                        #shutil.rmtree(safe_dir)
+                # check for incomplete L2A downloads and remove them
+                incomplete_downloads, sizes = pyeo_1.raster_manipulation.find_small_safe_dirs(l2_image_dir, threshold=faulty_granule_threshold*1024*1024)
+                if len(incomplete_downloads) > 0:
+                    for index, safe_dir in enumerate(incomplete_downloads):
+                        if sizes[index]/1024/1024 < faulty_granule_threshold and os.path.exists(safe_dir):
+                            log.warning("Found likely incomplete download of size {} MB: {}".format(str(round(sizes[index]/1024/1024)), safe_dir))
+                            #shutil.rmtree(safe_dir)
 
-            log.info("---------------------------------------------------------------")
-            log.info("Image download and atmospheric correction for change detection images is complete.")
-            log.info("---------------------------------------------------------------")
+                log.info("---------------------------------------------------------------")
+                log.info("Image download and atmospheric correction for change detection images is complete.")
+                log.info("---------------------------------------------------------------")
 
-            #TODO: delete L1C images if do_delete is True
-            if do_delete:
-                log.info("---------------------------------------------------------------")
-                log.info("Deleting L1C images downloaded for change detection.")
-                log.info("Keeping only the derived L2A images after atmospheric correction.")
-                log.info("---------------------------------------------------------------")
-                directory = l1_image_dir
-                log.info('Deleting {}'.format(directory))
-                shutil.rmtree(directory)
-                log.info("---------------------------------------------------------------")
-                log.info("Deletion complete")
-                log.info("---------------------------------------------------------------")
-            else:
-                if do_zip:
+                #TODO: delete L1C images if do_delete is True
+                if do_delete:
                     log.info("---------------------------------------------------------------")
-                    log.info("Zipping L1C images downloaded for change detection")
+                    log.info("Deleting L1C images downloaded for change detection.")
+                    log.info("Keeping only the derived L2A images after atmospheric correction.")
                     log.info("---------------------------------------------------------------")
-                    zip_contents(l1_image_dir)
+                    directory = l1_image_dir
+                    log.info('Deleting {}'.format(directory))
+                    shutil.rmtree(directory)
                     log.info("---------------------------------------------------------------")
-                    log.info("Zipping complete")
+                    log.info("Deletion complete")
                     log.info("---------------------------------------------------------------")
+                else:
+                    if do_zip:
+                        log.info("---------------------------------------------------------------")
+                        log.info("Zipping L1C images downloaded for change detection")
+                        log.info("---------------------------------------------------------------")
+                        zip_contents(l1_image_dir)
+                        log.info("---------------------------------------------------------------")
+                        log.info("Zipping complete")
+                        log.info("---------------------------------------------------------------")
 
             log.info("---------------------------------------------------------------")
             log.info("Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files.")

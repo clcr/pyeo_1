@@ -38,16 +38,14 @@ API_ROOT = "http://catalogue.dataspace.copernicus.eu/resto/api/collections/Senti
 DOWNLOAD_URL = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
 REFRESH_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
 
-USERNAME = CONFIG["authentication"]["username"]
-PASSWORD = CONFIG["authentication"]["password"]
 
-SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
-
-
-async def download(geom_path,
-                   max_cloud_cover,
-                   start_date,
-                   end_date
+async def download(geom_path: str,
+                   max_cloud_cover: str,
+                   start_date: str,
+                   end_date: str,
+                   safe_download_path: str,
+                   username: str,
+                   password: str
                    ) -> None:
     s2_geometry_path = geom_path
     max_cloud_cover = max_cloud_cover
@@ -55,7 +53,7 @@ async def download(geom_path,
     end_date = end_date
     max_records = 100
 
-    auth_token = get_access_token(refresh=False)
+    auth_token = get_access_token(username=username, password=password, refresh=False)
 
     centroids = get_s2_tile_centroids(s2_geometry_path=s2_geometry_path)
     for centroid in centroids.itertuples(index=False):
@@ -79,8 +77,13 @@ async def download(geom_path,
             product_name = product[5]
             product_uuid = product[-1]
 
+            if "L1C" in product_name:
+                # ToDo: Handle L1C processing
+                LOGGER.info(f"Found {product_name} in product list. Skipping as not currently handling L1C.")
+                continue
+
             if check_product_exists(
-                write_directory=SAFE_DOWNLOAD_PATH, product_name=product_name
+                write_directory=safe_download_path, product_name=product_name
             ):
                 continue  # Product already downloaded, skipping to next product
             else:
@@ -97,16 +100,20 @@ async def download(geom_path,
                         LOGGER.info(
                             f"Finished downloading product: {product_name} with UUID: {product_uuid}."
                         )
-                        unzip_downloaded_product(
-                            write_directory=SAFE_DOWNLOAD_PATH,
-                            product_name=product_name,
-                        )
+                        try:
+                            unzip_downloaded_product(
+                                write_directory=safe_download_path,
+                                product_name=product_name,
+                            )
+                        except UnboundLocalError:
+                            shutil.rmtree(f"{safe_download_path}/{product_name}")
+                            LOGGER.info(f"Removed likely incomplete download of product: {product_name}")
                     except:
                         LOGGER.info(
                             f"Download for product: {product_name} with UUID: {product_uuid} failed!"
                         )
                         try:
-                            shutil.rmtree(f"{SAFE_DOWNLOAD_PATH}/{product_name}")
+                            shutil.rmtree(f"{safe_download_path}/{product_name}")
                             LOGGER.info(
                                 f"Incomplete or otherwise faulty product: {product_name} removed. This product will have to be redownloaded."
                             )

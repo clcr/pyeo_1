@@ -34,7 +34,6 @@ USERNAME = CONFIG["authentication"]["username"]
 PASSWORD = CONFIG["authentication"]["password"]
 REFRESH_TOKEN = CONFIG["authentication"]["refresh_token"]
 
-SAFE_DOWNLOAD_PATH = CONFIG["directories"]["l2a_safes"]
 MIN_IMAGE_SIZE = CONFIG["sentinel2_properties"]["min_image_size"]
 
 
@@ -80,7 +79,7 @@ def get_s2_tile_centroids(s2_geometry_path: str) -> gpd.GeoDataFrame:
 
 
 def query_by_polygon(
-    max_cloud_cover: int,
+    max_cloud_cover: str,
     start_date: str,
     end_date: str,
     area_of_interest: str,
@@ -188,13 +187,15 @@ def stratify_products_by_orbit_number(response_dataframe: pd.DataFrame) -> pd.Da
     return stratified_products
 
 
-def get_access_token(refresh: bool = False) -> str:
+def get_access_token(username: str, password: str, refresh: bool = False) -> str:
     """
     This function creates an access token to use during download for verification purposes.
 
     Parameters
     ----------
     refresh: Refreshes an old access token, Default false - returns new access token
+    username: Dataspace Username
+    password: Dataspace Password
 
     Returns
     -------
@@ -213,8 +214,8 @@ def get_access_token(refresh: bool = False) -> str:
     else:
         payload = {
             "grant_type": "password",
-            "username": USERNAME,
-            "password": PASSWORD,
+            "username": username,
+            "password": password,
             "client_id": "cdse-public",
         }
 
@@ -227,7 +228,7 @@ def get_access_token(refresh: bool = False) -> str:
     return response["access_token"]
 
 
-def download_product(product_uuid: str, auth_token: str, product_name: str) -> None:
+def download_product(product_uuid: str, auth_token: str, product_name: str, safe_download_path: str) -> None:
     """
     This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
 
@@ -236,6 +237,7 @@ def download_product(product_uuid: str, auth_token: str, product_name: str) -> N
     product_uuid: UUID of the product to download
     auth_token: Authentication bearer token
     product_name: Name of the product
+    safe_download_path: Directory to download the SAFEs to
 
     Returns
     -------
@@ -252,7 +254,7 @@ def download_product(product_uuid: str, auth_token: str, product_name: str) -> N
     block_size = 1024
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
+    with open(f"{safe_download_path}/{product_name}.zip", "wb") as download:
         for data in response.iter_content(block_size):
             download.write(data)
             progress_bar.update(len(data))
