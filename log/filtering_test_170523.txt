@@ -1146,3 +1146,224 @@
 2023-05-17 16:06:37,038: INFO: ---------------------------------------------------------------
 2023-05-17 16:06:37,038: INFO: ---                  INTEGRATED PROCESSING END              ---
 2023-05-17 16:06:37,038: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,468: INFO: ****PROCESSING START****
+2023-05-18 08:26:09,470: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,470: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-18 08:26:09,470: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,470: INFO: Reading in parameters defined in the Config
+2023-05-18 08:26:09,470: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,471: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,471: INFO: Starting acd_to_config_to_log()
+2023-05-18 08:26:09,471: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,471: INFO: Options:
+2023-05-18 08:26:09,471: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-18 08:26:09,471: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-18 08:26:09,471: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-18 08:26:09,471: INFO:   --do_vectorise
+2023-05-18 08:26:09,471: INFO:       raster change reports will be vectorised
+2023-05-18 08:26:09,471: INFO:   --do_integrate
+2023-05-18 08:26:09,471: INFO:       vectorised reports will be merged together
+2023-05-18 08:26:09,471: INFO:   --counties_of_interest
+2023-05-18 08:26:09,471: INFO:         Counties to filter the national geodataframe:
+2023-05-18 08:26:09,471: INFO:         0  :  Kwale
+2023-05-18 08:26:09,472: INFO:         1  :  TransNzoia
+2023-05-18 08:26:09,472: INFO:   --minimum_area_to_report_m2
+2023-05-18 08:26:09,472: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-18 08:26:09,472: INFO: EPSG used is: 21097
+2023-05-18 08:26:09,472: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-18 08:26:09,472: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-18 08:26:09,472: INFO: 
+2023-05-18 08:26:09,472: INFO: List of class labels:
+2023-05-18 08:26:09,472: INFO:   1 : primary forest
+2023-05-18 08:26:09,472: INFO:   2 : plantation forest
+2023-05-18 08:26:09,472: INFO:   3 : bare soil
+2023-05-18 08:26:09,472: INFO:   4 : crops
+2023-05-18 08:26:09,472: INFO:   5 : grassland
+2023-05-18 08:26:09,472: INFO:   6 : open water
+2023-05-18 08:26:09,472: INFO:   7 : burn scar
+2023-05-18 08:26:09,472: INFO:   8 : cloud
+2023-05-18 08:26:09,473: INFO:   9 : cloud shadow
+2023-05-18 08:26:09,473: INFO:   10 : haze
+2023-05-18 08:26:09,473: INFO:   11 : sparse woodland
+2023-05-18 08:26:09,473: INFO:   12 : dense woodland
+2023-05-18 08:26:09,473: INFO:   13 : artificial
+2023-05-18 08:26:09,473: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-18 08:26:09,473: INFO:                     to any of the classes: [3]
+2023-05-18 08:26:09,473: INFO: ------------------------------------------------------------
+2023-05-18 08:26:09,473: INFO: Reporting Directories and Filepaths
+2023-05-18 08:26:09,473: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-18 08:26:09,473: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-18 08:26:09,473: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-18 08:26:09,473: INFO: Integrated Directory is   : ./integrated
+2023-05-18 08:26:09,473: INFO: ROI Directory is   : ./roi
+2023-05-18 08:26:09,473: INFO: Geometry Directory is   : ./geometry
+2023-05-18 08:26:09,473: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-18 08:26:09,474: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-18 08:26:09,474: INFO: The Conda Environment which was provided in .ini file is :  pyeo_prod_0_8_0_env
+2023-05-18 08:26:09,474: INFO: -------------------------------------------
+2023-05-18 08:26:09,474: INFO: Streaming config parameters to log file for reference
+2023-05-18 08:26:09,474: INFO: planet
+2023-05-18 08:26:09,474: INFO:      api_key :  
+2023-05-18 08:26:09,474: INFO: forest_sentinel
+2023-05-18 08:26:09,474: INFO:      start_date :  20230101
+2023-05-18 08:26:09,474: INFO:      end_date :  20231231
+2023-05-18 08:26:09,474: INFO:      composite_start :  20220601
+2023-05-18 08:26:09,474: INFO:      composite_end :  20221231
+2023-05-18 08:26:09,474: INFO:      epsg :  21097
+2023-05-18 08:26:09,474: INFO:      cloud_cover :  25
+2023-05-18 08:26:09,474: INFO:      cloud_certainty_threshold :  0
+2023-05-18 08:26:09,474: INFO:      model :  /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-18 08:26:09,475: INFO: environment
+2023-05-18 08:26:09,475: INFO:      pyeo_dir :  /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-18 08:26:09,475: INFO:      tile_dir :  /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-18 08:26:09,475: INFO:      integrated_dir :  ./integrated
+2023-05-18 08:26:09,475: INFO:      roi_dir :  ./roi
+2023-05-18 08:26:09,475: INFO:      roi_filename :  kfs_roi_subset_c.shp
+2023-05-18 08:26:09,475: INFO:      geometry_dir :  ./geometry
+2023-05-18 08:26:09,475: INFO:      log_dir :  ./log
+2023-05-18 08:26:09,475: INFO:      log_filename :  filtering_test_170523.txt
+2023-05-18 08:26:09,475: INFO:      credentials_path :  ./credentials/credentials.ini
+2023-05-18 08:26:09,475: INFO:      conda_env_name :  pyeo_prod_0_8_0_env
+2023-05-18 08:26:09,475: INFO:      sen2cor_path :  /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-18 08:26:09,475: INFO: raster_processing_parameters
+2023-05-18 08:26:09,476: INFO:      band_names :  ["B02", "B03", "B04", "B08"]
+2023-05-18 08:26:09,476: INFO:      resolution_string :  "10m"
+2023-05-18 08:26:09,476: INFO:      output_resolution :  10
+2023-05-18 08:26:09,476: INFO:      buffer_size_cloud_masking :  20
+2023-05-18 08:26:09,476: INFO:      buffer_size_cloud_masking_composite :  10
+2023-05-18 08:26:09,476: INFO:      download_limit :  10
+2023-05-18 08:26:09,476: INFO:      faulty_granule_threshold :  200
+2023-05-18 08:26:09,476: INFO:      class_labels :  ["primary forest", "plantation forest", "bare soil", "crops", "grassland", "open water", "burn scar", "cloud", "cloud shadow", "haze", "sparse woodland", "dense woodland", "artificial"]
+2023-05-18 08:26:09,476: INFO:      change_from_classes :  [1, 2]
+2023-05-18 08:26:09,476: INFO:      change_to_classes :  [3]
+2023-05-18 08:26:09,476: INFO:      sieve :  0
+2023-05-18 08:26:09,476: INFO:      chunks :  10
+2023-05-18 08:26:09,476: INFO:      download_source :  "scihub"
+2023-05-18 08:26:09,476: INFO:      do_raster :  False
+2023-05-18 08:26:09,476: INFO:      do_build_composite :  False
+2023-05-18 08:26:09,476: INFO:      do_all :  False
+2023-05-18 08:26:09,477: INFO:      do_download :  False
+2023-05-18 08:26:09,477: INFO:      do_build_prob_image :  False
+2023-05-18 08:26:09,477: INFO:      do_classify :  False
+2023-05-18 08:26:09,477: INFO:      do_change :  False
+2023-05-18 08:26:09,477: INFO:      do_dev :  False
+2023-05-18 08:26:09,477: INFO:      do_update :  False
+2023-05-18 08:26:09,477: INFO:      do_quicklooks :  False
+2023-05-18 08:26:09,477: INFO:      do_delete :  False
+2023-05-18 08:26:09,477: INFO:      do_zip :  False
+2023-05-18 08:26:09,477: INFO:      do_skip_existing :  False
+2023-05-18 08:26:09,477: INFO: vector_processing_parameters
+2023-05-18 08:26:09,477: INFO:      level_1_filename :  gadm41_KEN_1.json
+2023-05-18 08:26:09,477: INFO:      level_2_filename :  gadm41_KEN_2.json
+2023-05-18 08:26:09,477: INFO:      level_3_filename :  gadm41_KEN_3.json
+2023-05-18 08:26:09,477: INFO:      do_delete_existing_vector :  True
+2023-05-18 08:26:09,477: INFO:      do_vectorise :  True
+2023-05-18 08:26:09,478: INFO:      do_integrate :  True
+2023-05-18 08:26:09,478: INFO:      counties_of_interest :  ["Kwale", "TransNzoia"]
+2023-05-18 08:26:09,478: INFO:      minimum_area_to_report_m2 :  120
+2023-05-18 08:26:09,478: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,478: INFO: Starting acd_roi_tile_intersection()
+2023-05-18 08:26:09,478: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:09,956: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-18 08:26:09,956: INFO: These tiles are  :
+2023-05-18 08:26:09,956: INFO:   1 : 36NXG
+2023-05-18 08:26:09,956: INFO:   2 : 36NYG
+2023-05-18 08:26:09,956: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-18 08:26:10,040: INFO: Finished ROI tile intersection
+2023-05-18 08:26:10,041: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:10,041: INFO: Starting acd_by_tile_vectorisation()
+2023-05-18 08:26:10,041: INFO:   vectorising each change report raster, by tile
+2023-05-18 08:26:10,041: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:10,047: INFO: There are 2 Change Report Rasters to vectorise, these are:
+2023-05-18 08:26:10,048: INFO: 1  :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.tif
+2023-05-18 08:26:10,048: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:10,048: INFO: 2  :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.tif
+2023-05-18 08:26:10,048: INFO: ---------------------------------------------------------------
+2023-05-18 08:26:10,048: INFO: delete_existing flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs
+2023-05-18 08:26:10,052: INFO: ----------------------------------------
+2023-05-18 08:26:10,052: INFO: Starting Vectorisation of the Change Report Raster of Tile: 36NXG
+2023-05-18 08:26:10,052: INFO: ----------------------------------------
+2023-05-18 08:26:10,094: INFO: Opening /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.tif
+2023-05-18 08:26:10,094: INFO: Successfully opened /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.tif
+2023-05-18 08:26:10,223: INFO: Now vectorising the raster band
+2023-05-18 08:46:45,451: INFO: Band 15 of /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.tif was successfully vectorised
+2023-05-18 08:46:45,455: INFO: Band 15 was written to /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611_band15.shp
+2023-05-18 08:46:45,526: INFO: filtering out zeroes and nodata from: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611_band15.shp
+2023-05-18 08:48:14,683: INFO: filtering complete and saved at  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611_band15_filtered.shp
+2023-05-18 09:08:40,718: INFO: Merging Complete
+2023-05-18 09:09:03,773: INFO: reading in administrative boundary information from ./geometry/gadm41_KEN_1.json
+2023-05-18 09:09:03,924: INFO: boundary epsg is epsg:4326, but merged dataframe has epsg:21097
+2023-05-18 09:09:03,925: INFO: reprojecting
+2023-05-18 09:09:03,998: INFO: boundaries reprojected to epsg:21097
+2023-05-18 09:11:22,799: INFO: Shapefile written as ESRI Shapefile, to:  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-18 09:11:27,707: INFO: GeoDataFrame written as pickle, to:  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.pkl
+2023-05-18 09:11:27,707: INFO: Deleting intermediate change report vectorisation files
+2023-05-18 09:11:27,779: INFO: Could not delete intermediate files
+2023-05-18 09:11:28,253: INFO: ---------------------------------------------------------------
+2023-05-18 09:11:28,254: INFO: Vectorisation of the Change Report Raster complete
+2023-05-18 09:11:28,254: INFO: ---------------------------------------------------------------
+2023-05-18 09:11:28,312: INFO: delete_existing flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs
+2023-05-18 09:11:28,319: INFO: ----------------------------------------
+2023-05-18 09:11:28,319: INFO: Starting Vectorisation of the Change Report Raster of Tile: 36NYG
+2023-05-18 09:11:28,319: INFO: ----------------------------------------
+2023-05-18 09:11:28,410: INFO: Opening /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.tif
+2023-05-18 09:11:28,410: INFO: Successfully opened /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.tif
+2023-05-18 09:11:28,844: INFO: Now vectorising the raster band
+2023-05-18 09:27:34,757: INFO: Band 15 of /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.tif was successfully vectorised
+2023-05-18 09:27:34,758: INFO: Band 15 was written to /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611_band15.shp
+2023-05-18 09:27:34,952: INFO: filtering out zeroes and nodata from: /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611_band15.shp
+2023-05-18 09:28:56,052: INFO: filtering complete and saved at  : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611_band15_filtered.shp
+2023-05-18 09:48:05,438: INFO: Merging Complete
+2023-05-18 09:48:26,222: INFO: reading in administrative boundary information from ./geometry/gadm41_KEN_1.json
+2023-05-18 09:48:26,307: INFO: boundary epsg is epsg:4326, but merged dataframe has epsg:21097
+2023-05-18 09:48:26,308: INFO: reprojecting
+2023-05-18 09:48:26,381: INFO: boundaries reprojected to epsg:21097
+2023-05-18 09:50:41,093: INFO: Shapefile written as ESRI Shapefile, to:  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-18 09:50:45,515: INFO: GeoDataFrame written as pickle, to:  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.pkl
+2023-05-18 09:50:45,515: INFO: Deleting intermediate change report vectorisation files
+2023-05-18 09:50:45,586: INFO: Could not delete intermediate files
+2023-05-18 09:50:46,017: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,017: INFO: Vectorisation of the Change Report Raster complete
+2023-05-18 09:50:46,017: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,055: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,055: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,056: INFO: National Vectorisation of the Change Reports Complete
+2023-05-18 09:50:46,056: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,056: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,056: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,056: INFO: Starting acd_national_integration
+2023-05-18 09:50:46,056: INFO: ---------------------------------------------------------------
+2023-05-18 09:50:46,062: INFO: Number of change Report Shapefiles to integrate  :  2
+2023-05-18 09:50:46,062: INFO: Paths of shapefiles to integrate are:
+2023-05-18 09:50:46,062: INFO: 0 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-18 09:50:46,062: INFO: 1 : /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-18 09:50:46,063: INFO: Reading in ROI
+2023-05-18 09:50:46,100: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp
+2023-05-18 09:52:53,701: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG/output/probabilities/report_20230220T074941_36NYG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-18 09:53:32,098: INFO: Intersection: Success
+2023-05-18 09:53:32,164: INFO: Integrated geodataframe length is currently  :  3874
+2023-05-18 09:53:32,164: INFO: Reading in change report shapefile   :  /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp
+2023-05-18 09:56:06,945: INFO: Intersecting /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG/output/probabilities/report_20230305T075811_36NXG_20230511T074611.shp with ./roi/kfs_roi_subset_c.shp
+2023-05-18 09:56:49,467: INFO: Intersection: Success
+2023-05-18 09:56:49,603: INFO: Integrated geodataframe length is currently  :  8174
+2023-05-18 09:56:49,611: INFO: Merging loop complete, now writing integrated shapefile to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-18 09:56:53,558: INFO: Integrated GeoDataFrame written to /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe.shp
+2023-05-18 09:56:53,558: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:53,558: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:53,558: INFO: National Integration of the Vectorised Change Reports Complete
+2023-05-18 09:56:53,558: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:53,558: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:54,357: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:54,358: INFO: Starting acd_national_filtering
+2023-05-18 09:56:54,359: INFO: ---------------------------------------------------------------
+2023-05-18 09:56:59,016: INFO: Filtering complete, now writing filtered national shapefile to :
+2023-05-18 09:56:59,017: INFO:         /data/clcr/shared/IMPRESS/matt/testing_tiles/national_geodataframe_filtered.shp
+2023-05-18 09:57:00,227: INFO: ---------------------------------------------------------------
+2023-05-18 09:57:00,228: INFO: Starting acd_national_manual_validation()
+2023-05-18 09:57:00,228: INFO: ---------------------------------------------------------------
+2023-05-18 09:57:00,228: INFO: ---------------------------------------------------------------
+2023-05-18 09:57:00,228: INFO: Starting acd_national_distribution()
+2023-05-18 09:57:00,228: INFO: ---------------------------------------------------------------
+2023-05-18 09:57:00,228: INFO: ---------------------------------------------------------------
+2023-05-18 09:57:00,228: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-18 09:57:00,228: INFO: ---------------------------------------------------------------
