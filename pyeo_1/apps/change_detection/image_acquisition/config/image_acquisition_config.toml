@@ -14,4 +14,4 @@ min_image_size = 500
 max_records = 100 # Maximum amount of records to return from a single query
 
 [directories]
-l2a_safes = "" # Root path to download the imagery to
+l2a_safes = "." # Root path to download the imagery to
