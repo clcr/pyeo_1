@@ -26,6 +26,8 @@ import os
 import pandas as pd
 import re
 import shutil
+import configparser
+import json
 
 from pyeo_1.exceptions import CreateNewStacksException
 
@@ -99,8 +101,145 @@ def init_log_acd(log_path, logger_name):
 
     return logger
 
+def config_path_to_config_dict(config_path: str):
 
-def create_file_structure(root):
+    """
+    
+    This function takes the path to the config (pyeo_1.ini) and simplifies the keys
+
+    Parameters
+    ----------
+
+    config_path : str
+        path to pyeo_1.ini
+
+    Returns
+    --------
+
+    config_dict : dict
+        a config dictionary
+
+    """
+
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read(config_path)
+
+    config_dict = {}
+
+    config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
+    config_dict["do_raster"] = config.getboolean("raster_processing_parameters", "do_raster")
+    config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
+    config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
+    config_dict["do_classify"] = config.getboolean(
+        "raster_processing_parameters", "do_classify"
+    )
+    config_dict["do_change"] = config.getboolean(
+        "raster_processing_parameters", "do_change"
+    )
+    config_dict["do_download"] = config.getboolean(
+        "raster_processing_parameters", "do_download"
+    )
+    config_dict["do_update"] = config.getboolean(
+        "raster_processing_parameters", "do_update"
+    )
+    config_dict["do_quicklooks"] = config.getboolean(
+        "raster_processing_parameters", "do_quicklooks"
+    )
+    config_dict["do_delete"] = config.getboolean(
+        "raster_processing_parameters", "do_delete"
+    )
+
+    config_dict["do_zip"] = config.getboolean("raster_processing_parameters", "do_zip")
+    config_dict["build_composite"] = config.getboolean(
+        "raster_processing_parameters", "do_build_composite"
+    )
+    config_dict["build_prob_image"] = config.getboolean(
+        "raster_processing_parameters", "do_build_prob_image"
+    )
+    config_dict["do_skip_existing"] = config.getboolean(
+        "raster_processing_parameters", "do_skip_existing"
+    )
+
+    config_dict["start_date"] = config["forest_sentinel"]["start_date"]
+    config_dict["end_date"] = config["forest_sentinel"]["end_date"]
+    config_dict["composite_start"] = config["forest_sentinel"]["composite_start"]
+    config_dict["composite_end"] = config["forest_sentinel"]["composite_end"]
+    config_dict["epsg"] = int(config["forest_sentinel"]["epsg"])
+    config_dict["cloud_cover"] = int(config["forest_sentinel"]["cloud_cover"])
+    config_dict["cloud_certainty_threshold"] = int(
+        config["forest_sentinel"]["cloud_certainty_threshold"]
+    )
+    config_dict["model_path"] = config["forest_sentinel"]["model"]
+    config_dict["download_source"] = config["raster_processing_parameters"][
+        "download_source"
+    ]
+
+    config_dict["bands"] = json.loads(
+        config["raster_processing_parameters"]["band_names"]
+    )
+
+    config_dict["resolution_string"] = config["raster_processing_parameters"][
+        "resolution_string"
+    ]
+    config_dict["output_resolution"] = int(
+        config["raster_processing_parameters"]["output_resolution"]
+    )
+    config_dict["buffer_size_cloud_masking"] = int(
+        config["raster_processing_parameters"]["buffer_size_cloud_masking"]
+    )
+    config_dict["buffer_size_cloud_masking_composite"] = int(
+        config["raster_processing_parameters"]["buffer_size_cloud_masking_composite"]
+    )
+    config_dict["download_limit"] = int(
+        config["raster_processing_parameters"]["download_limit"]
+    )
+    config_dict["faulty_granule_threshold"] = int(
+        config["raster_processing_parameters"]["faulty_granule_threshold"]
+    )
+    config_dict["sieve"] = int(config["raster_processing_parameters"]["sieve"])
+    config_dict["chunks"] = int(config["raster_processing_parameters"]["chunks"])
+    config_dict["class_labels"] = json.loads(
+        config["raster_processing_parameters"]["class_labels"]
+    )
+    config_dict["from_classes"] = json.loads(
+        config["raster_processing_parameters"]["change_from_classes"]
+    )
+    config_dict["to_classes"] = json.loads(
+        config["raster_processing_parameters"]["change_to_classes"]
+    )
+
+    config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
+    config_dict["pyeo_dir"] = config["environment"]["pyeo_dir"]
+    config_dict["tile_dir"] = config["environment"]["tile_dir"]
+    config_dict["integrated_dir"] = config["environment"]["integrated_dir"]
+    config_dict["roi_dir"] = config["environment"]["roi_dir"]
+    config_dict["roi_filename"] = config["environment"]["roi_filename"]
+    config_dict["geometry_dir"] = config["environment"]["geometry_dir"]
+    config_dict["log_dir"] = config["environment"]["log_dir"]
+    config_dict["log_filename"] = config["environment"]["log_filename"]
+    config_dict["sen2cor_path"] = config["environment"]["sen2cor_path"]
+
+    config_dict["level_1_filename"] = config["vector_processing_parameters"][
+        "level_1_filename"
+    ]
+    config_dict["level_1_boundaries_path"] = os.path.join(
+        config_dict["geometry_dir"], config_dict["level_1_filename"]
+    )
+    config_dict["do_delete_existing_vector"] = config.getboolean(
+        "vector_processing_parameters", "do_delete_existing_vector"
+    )
+
+    config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
+    config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
+    config_dict["counties_of_interest"] = json.loads(
+        config["vector_processing_parameters"]["counties_of_interest"]
+    )
+    config_dict["minimum_area_to_report_m2"] = int(config["vector_processing_parameters"]["minimum_area_to_report_m2"])
+    config_dict["credentials_path"] = config["environment"]["credentials_path"]
+
+    return config_dict
+
+def create_file_structure(root: str):
     """
     Creates the folder structure used in rolling_s2_composite and some other functions: ::
         root
