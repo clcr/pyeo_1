@@ -11,6 +11,7 @@ from pyeo_1.apps.acd_national import acd_by_tile_vectorisation
 import geopandas as gpd
 import pandas as pd
 from tempfile import TemporaryDirectory
+import time
 
 # acd_national is the top-level function which controls the raster and vector processes for pyeo_1
 def automatic_change_detection_national(config_path):
@@ -455,23 +456,131 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
 
         if not config_dict["do_parallel"]:
             acd_by_tile_raster.acd_by_tile_raster(config_path, tile[0])
+            log.info(f"Finished ACD Raster Processes for Tile :  {tile[0]}")
 
         if config_dict["do_parallel"]:
-            # parallel branch
-            # call subprocess to call parallel shell script
-            # shell_script = config_dict["parallel_shell_script"]
-            subprocess.run(shell_script)
-        # acd_by_tile_raster(
-        #     config_dict=config_dict,
-        #     log=log,
-        #     tile_directory_path=tile_directory,
-        #     tile_to_process=tile[0],
-        #     credentials_dict=credentials_dict,
-        #     config=config
-        # )
-        log.info(f"Finished ACD Raster Processes for Tile :  {tile[0]}")
+            # Launch an instance for this tile using qsub for parallelism
+
+            # Setup required paths 
+            ## TODO Update to obtain these from config file on config_path and match variable names to standardise on those in pyeo_1.ini)
+            ## TODO Change print statments to log.info
+            ## (Temporary test paths point to a test function 'apps/automation/_random_duration_test_program.py' that returns after a short random time delay)
+            data_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation' # config_dict["tile_dir"]
+            sen2cor_path = '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  # config_dict["sen2cor_path"]
+            conda_environment_directory = '/home/i/ir81/miniconda3/envs'  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
+            conda_environment_name = 'pyeo_env'  # config_dict["conda_env_name"]
+            conda_environment_path = os.path.join(conda_environment_directory, conda_environment_name)  
+            code_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # config_dict["pyeo_dir"]
+            python_executable = 'apps/automation/_random_duration_test_program.py'  # 'apps/acd_national/acd_by_tile_raster.py'
+            qsub_options = 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb' # 'walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb'
+            config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
+            config_filename = 'pyeo_1.ini'
+            automation_script_path = os.path.join(code_directory, 'apps/automation/automate_launch.sh')
+
+            tile_name = tile[0]
+
+            log.info(f'automation_test.py: Checking if tile {tile_name} is already being processed and, if so, deleting current process to avoid possible conflicts')
+            df = qstat_to_dataframe()
+            if (not df.empty):
+                current_tile_processes_df = df[df['Name']==tile_name]
+                # log.info('current_tile_processes_df')
+                # log.info(current_tile_processes_df)
+                for index, p in current_tile_processes_df.iterrows():
+                    print(p)
+                    if (p['Status'] in ['Q', 'R']):
+                        job_id = p['JobID'].split('.')[0]
+                        print(f'{new_line}Deleting job: {job_id} {new_line}')
+                        os.system(f'qdel {job_id}')
+
+
+            log.info('automation_test.py: Preparing to launch tile processing of tile {tile_name}')
+
+            python_launch_string = f"cd {data_directory}; module load python; source activate {conda_environment_path}; SEN2COR_HOME={sen2cor_path}; export SEN2COR_HOME; python {os.path.join(code_directory, python_executable)} {os.path.join(config_directory, config_filename)} {tile_name}"
+            qsub_launch_string = f'qsub -N {tile_name} -o {os.path.join(data_directory, tile_name + "_o.txt")} -e {os.path.join(data_directory, tile_name + "_e.txt")} -l {qsub_options}'
+            shell_command_string = f"{automation_script_path} '{python_launch_string}' '{qsub_launch_string}'"
+
+            new_line = '\n'
+            log.info(f'{python_launch_string=}{new_line}')
+            log.info(f'{qsub_launch_string=}{new_line}')
+            log.info(f'{shell_command_string=}{new_line}')
+
+            result = subprocess.run(shell_command_string, capture_output=True, text=True, shell=True)
+            log.info(f' Subprocess launched for tile {tile_name}, return value: {result.stdout}')
         # except:
-        #     log.error(f"Could not complete ACD Raster Processes for Tile: {tile[0]}")
+            # log.error(f"Could not complete ACD Raster Processes for Tile: {tile[0]}")
+
+
+    if config_dict["do_parallel"]:
+        log.info('automation_test.py: subprocess launching completed')
+        log.info('automation_test.py: subprocess monitoring started')
+
+        # TODO Move these parameters into the config file and change monitoring loop to a while loop
+        # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
+        monitoring_cycles = 60
+        monitoring_period_seconds = 10
+
+        end_monitoring = False
+        for i in range(monitoring_cycles):
+            time.sleep(monitoring_period_seconds)
+            log.info(f'automation_test.py: Checking which tiles are still being processed after {i * monitoring_period_seconds} seconds')
+
+            df = qstat_to_dataframe()
+            if (not df.empty and end_monitoring == False):
+                active_process_count = 0
+                for _, tile in tilelist_df.iterrows():
+                    current_tile_processes_df = df[df['Name']==tile[0]]
+                    # log.info('current_tile_processes_df')
+                    # log.info(current_tile_processes_df)
+                    for index, p in current_tile_processes_df.iterrows():
+                        if (p['Status'] in ['Q', 'R']): # ['Q', 'R', 'C']):
+                            job_id = p['JobID'].split('.')[0]
+                            print(f'Tile {tile[0]} still running pid: {job_id}, status; {p["Status"]} ')
+                            active_process_count += 1
+                if (active_process_count == 0):
+                    end_monitoring = True
+            else:
+                log.info('All tiles have been processed.. continuing to next pipeline stage')
+                break
+
+        log.info('automation_test.py subprocesses completed')
+
+
+
+def qstat_to_dataframe():
+    """
+
+    This function:
+        - Runs the pbs qstat command as a subprocess, 
+        - Captures the stdout
+        - Parses the output into a dataframe summarising all active processes to allow monitoring of parallel processes launched when in do_parallel mode.
+        
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    Pandas dataframe with one row for each active process and columns for 'JobID', 'Name', 'User', 'TimeUsed', 'Status', 'Queue'
+    """
+
+    # Run qstat command and capture the stdout
+    result = subprocess.run(['qstat'], capture_output=True)
+    # Decode the byte string into a regular string
+    output = result.stdout.decode('utf-8')
+    # Split the output into lines and remove any empty lines
+    lines = output.split('\n')
+    lines = [line.strip() for line in lines if line.strip()]
+
+    if (len(output) > 0):
+        # Extract the header and data rows
+        header = lines[0].split()
+        data_rows = [line.split() for line in lines[2:]]
+        # Create the pandas DataFrame setting colum names manually to match qstat output
+        df = pd.DataFrame(data_rows, columns=['JobID', 'Name', 'User', 'TimeUsed', 'Status', 'Queue'])
+        return df
+    else:
+        return pd.DataFrame()  # Return an empty dataframe is no output from qstat
+
 
 
 def acd_integrated_vectorisation(
