@@ -86,24 +86,31 @@ def automatic_change_detection_national(config_path):
             config_dict=config_dict,
         )
 
-    acd_log.info("---------------------------------------------------------------")
-    acd_log.info("Starting acd_national_filtering")
-    acd_log.info("---------------------------------------------------------------")
-    if config_dict["counties_of_interest"]:
-        acd_national_filtering(log=acd_log,
-                               config_dict=config_dict)
+    if config_dict["do_filter"]:
 
-    # acd_log.info("---------------------------------------------------------------")
-    # acd_log.info("Starting acd_national_distribution()")
-    # acd_log.info("---------------------------------------------------------------")
-    # acd_national_distribution()
-    # messaging services to Park Rangers (e.g. WhatsApp, Maps2Me)
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting acd_national_filtering")
+        acd_log.info("---------------------------------------------------------------")
+        if config_dict["counties_of_interest"]:
+            acd_national_filtering(log=acd_log,
+                                config_dict=config_dict)
+
+
+    if config_dict["do_distribution"]:
+
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting acd_national_distribution()")
+        acd_log.info("---------------------------------------------------------------")
+        # acd_national_distribution()
+        # messaging services to Park Rangers (e.g. WhatsApp, Maps2Me)
+
 
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("---                  INTEGRATED PROCESSING END              ---")
     acd_log.info("---------------------------------------------------------------")
 
-    # this is the end of the function
+    # This is the end of the function
+
 
 def acd_composite_update():
     """
