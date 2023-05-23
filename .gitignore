@@ -1,4 +1,4 @@
-pyeo_1/tests/plot_tests/.ipynb_checkpoints/
+**/.ipynb_checkpoints/
 .pyeo_1.egg-info/
 ./pyeo_1/__pycache__/
 *.pyc
@@ -85,7 +85,7 @@ docs/_build/
 target/
 
 # Jupyter Notebook
-.ipynb_checkpoints
+#.ipynb_checkpoints
 
 # IPython
 profile_default/
