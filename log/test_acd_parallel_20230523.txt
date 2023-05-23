@@ -1,0 +1,66 @@
+2023-05-23 16:20:18,772: INFO: ****PROCESSING START****
+2023-05-23 16:20:18,773: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,773: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-23 16:20:18,773: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,773: INFO: Reading in parameters defined in the Config
+2023-05-23 16:20:18,773: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,773: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,773: INFO: Starting acd_to_config_to_log()
+2023-05-23 16:20:18,773: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,773: INFO: Options:
+2023-05-23 16:20:18,774: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-23 16:20:18,774: INFO:   --do_raster
+2023-05-23 16:20:18,774: INFO:       raster pipeline enabled
+2023-05-23 16:20:18,774: INFO:   --build_composite for baseline composite
+2023-05-23 16:20:18,774: INFO:   --download_source = "scihub"
+2023-05-23 16:20:18,774: INFO:          composite start date  : 20230101
+2023-05-23 16:20:18,774: INFO:          composite end date  : 20230414
+2023-05-23 16:20:18,774: INFO:   --quicklooks to create image quicklooks
+2023-05-23 16:20:18,774: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-23 16:20:18,774: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-23 16:20:18,774: INFO: EPSG used is: 21097
+2023-05-23 16:20:18,774: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-23 16:20:18,774: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-23 16:20:18,774: INFO: 
+2023-05-23 16:20:18,774: INFO: List of class labels:
+2023-05-23 16:20:18,774: INFO:   1 : primary forest
+2023-05-23 16:20:18,774: INFO:   2 : plantation forest
+2023-05-23 16:20:18,775: INFO:   3 : bare soil
+2023-05-23 16:20:18,775: INFO:   4 : crops
+2023-05-23 16:20:18,775: INFO:   5 : grassland
+2023-05-23 16:20:18,775: INFO:   6 : open water
+2023-05-23 16:20:18,775: INFO:   7 : burn scar
+2023-05-23 16:20:18,775: INFO:   8 : cloud
+2023-05-23 16:20:18,775: INFO:   9 : cloud shadow
+2023-05-23 16:20:18,775: INFO:   10 : haze
+2023-05-23 16:20:18,775: INFO:   11 : sparse woodland
+2023-05-23 16:20:18,775: INFO:   12 : dense woodland
+2023-05-23 16:20:18,775: INFO:   13 : artificial
+2023-05-23 16:20:18,775: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-23 16:20:18,775: INFO:                     to any of the classes: [3]
+2023-05-23 16:20:18,775: INFO: ------------------------------------------------------------
+2023-05-23 16:20:18,775: INFO: Reporting Directories and Filepaths
+2023-05-23 16:20:18,775: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-23 16:20:18,775: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-23 16:20:18,776: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-23 16:20:18,776: INFO: Integrated Directory is   : ./integrated
+2023-05-23 16:20:18,776: INFO: ROI Directory is   : ./roi
+2023-05-23 16:20:18,776: INFO: Geometry Directory is   : ./geometry
+2023-05-23 16:20:18,776: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-23 16:20:18,776: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-23 16:20:18,776: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-23 16:20:18,776: INFO: -------------------------------------------
+2023-05-23 16:20:18,776: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:18,776: INFO: Starting acd_roi_tile_intersection()
+2023-05-23 16:20:18,776: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:19,244: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-23 16:20:19,244: INFO: These tiles are  :
+2023-05-23 16:20:19,244: INFO:   1 : 36NXG
+2023-05-23 16:20:19,244: INFO:   2 : 36NYG
+2023-05-23 16:20:19,244: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-23 16:20:19,250: INFO: Finished ROI tile intersection
+2023-05-23 16:20:19,250: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:19,250: INFO: Starting acd_integrated_raster():
+2023-05-23 16:20:19,250: INFO: ---------------------------------------------------------------
+2023-05-23 16:20:19,253: ERROR: /home/i/ir81/credentials/credentials_ir.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-23 16:20:19,254: INFO: Starting ACD Raster Processes for Tile :  36NXG

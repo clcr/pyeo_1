@@ -143,6 +143,8 @@ def acd_by_tile_raster(config_path: str, tile: str):
         tile_log.error(
             f"{credentials_path} does not exist, did you write the correct filepath in pyeo_1.ini?"
         )
+        tile_log.error("exiting process as no valid credentials path supplied")
+        sys.exit(1)
 
     sen_user = credentials_dict["sent_2"]["user"]
     sen_pass = credentials_dict["sent_2"]["pass"]
