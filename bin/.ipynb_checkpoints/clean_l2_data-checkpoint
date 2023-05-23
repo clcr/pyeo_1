@@ -1,5 +1,0 @@
-#!/bin/bash
-set -o errexit
-set -o nounset
-
-python "$pyeo_1"/pyeo_1/apps/subprocessing/clean_l2_data.py "$@" 
