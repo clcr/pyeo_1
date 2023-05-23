@@ -419,7 +419,9 @@ def acd_by_tile_raster(
                 l1c_products = l1c_products.drop(index=drop)
             if len(add) > 0:
                 #l2a_products = l2a_products.append(add)
+                add = pd.DataFrame(add)
                 l2a_products = pd.concat([l2a_products, add])
+
             l2a_products = l2a_products.drop_duplicates(subset="title")
             tile_log.info(
                 "    {} L1C products remaining for download".format(
@@ -1022,6 +1024,7 @@ def acd_by_tile_raster(
                     # TODO: test the above fix for:
                     # pyeo_1/pyeo_1/apps/change_detection/tile_based_change_detection_from_cover_maps.py:456: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
                 else:
+                    add = pd.DataFrame(add)
                     l2a_products = pd.concat([l2a_products, add])
 
             tile_log.info(
