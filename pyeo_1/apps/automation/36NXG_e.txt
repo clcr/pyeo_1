@@ -10,3 +10,5 @@ python: can't open file '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/app
 tput: No value for $TERM and no -T specified
 tput: No value for $TERM and no -T specified
 tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified

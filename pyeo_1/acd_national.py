@@ -472,17 +472,18 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
             ## TODO Update to obtain these from config file on config_path and match variable names to standardise on those in pyeo_1.ini)
             ## TODO Change print statments to log.info
             ## (Temporary test paths point to a test function 'apps/automation/_random_duration_test_program.py' that returns after a short random time delay)
-            data_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation' # config_dict["tile_dir"]
-            sen2cor_path = '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  # config_dict["sen2cor_path"]
+            data_directory = config_dict["tile_dir"] # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation' # 
+            sen2cor_path = config_dict["sen2cor_path"] # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  # 
             conda_environment_directory = '/home/i/ir81/miniconda3/envs'  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
-            conda_environment_name = 'pyeo_env'  # config_dict["conda_env_name"]
+            conda_environment_name = config_dict["conda_env_name"] # 'pyeo_env'  # 
             conda_environment_path = os.path.join(conda_environment_directory, conda_environment_name)  
-            code_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # config_dict["pyeo_dir"]
-            python_executable = 'apps/automation/_random_duration_test_program.py'  # 'apps/acd_national/acd_by_tile_raster.py'
-            qsub_options = 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb' # 'walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb'
-            config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
-            config_filename = 'pyeo_1.ini'
-            automation_script_path = os.path.join(code_directory, 'apps/automation/automate_launch.sh')
+            code_directory = config_dict["pyeo_dir"] # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # 
+            python_executable = 'pyeo_1/apps/acd_national/acd_by_tile_raster.py' # 'apps/automation/_random_duration_test_program.py'  # 
+            qsub_options = 'walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb' # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+            # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
+            # config_filename = 'pyeo_1.ini'
+            # config_path = os.path.join(config_directory, config_filename)
+            automation_script_path = os.path.join(code_directory, 'pyeo_1/apps/automation/automate_launch.sh')
 
             tile_name = tile[0]
 
@@ -493,23 +494,25 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
                 # log.info('current_tile_processes_df')
                 # log.info(current_tile_processes_df)
                 for index, p in current_tile_processes_df.iterrows():
-                    print(p)
+                    log.info(p)
                     if (p['Status'] in ['Q', 'R']):
                         job_id = p['JobID'].split('.')[0]
-                        print(f'{new_line}Deleting job: {job_id} {new_line}')
+                        log.info(f'{new_line}Deleting job: {job_id} {new_line}')
                         os.system(f'qdel {job_id}')
 
 
-            log.info('automation_test.py: Preparing to launch tile processing of tile {tile_name}')
+            log.info(f'automation_test.py: Preparing to launch tile processing of tile {tile_name}')
+            # log.info(f'config_path: {type(config_path)}')
+            # log.info(f'config_path: {config_path[0]}')
 
-            python_launch_string = f"cd {data_directory}; module load python; source activate {conda_environment_path}; SEN2COR_HOME={sen2cor_path}; export SEN2COR_HOME; python {os.path.join(code_directory, python_executable)} {os.path.join(config_directory, config_filename)} {tile_name}"
+            python_launch_string = f"cd {data_directory}; module load python; source activate {conda_environment_path}; SEN2COR_HOME={sen2cor_path}; export SEN2COR_HOME; python {os.path.join(code_directory, python_executable)} {config_path} {tile_name}"
             qsub_launch_string = f'qsub -N {tile_name} -o {os.path.join(data_directory, tile_name + "_o.txt")} -e {os.path.join(data_directory, tile_name + "_e.txt")} -l {qsub_options}'
             shell_command_string = f"{automation_script_path} '{python_launch_string}' '{qsub_launch_string}'"
 
             new_line = '\n'
-            log.info(f'{python_launch_string=}{new_line}')
-            log.info(f'{qsub_launch_string=}{new_line}')
-            log.info(f'{shell_command_string=}{new_line}')
+            log.info(f'python_launch_string: {python_launch_string}{new_line}')
+            log.info(f'qsub_launch_string: {qsub_launch_string}{new_line}')
+            log.info(f'shell_command_string: {shell_command_string}{new_line}')
 
             result = subprocess.run(shell_command_string, capture_output=True, text=True, shell=True)
             log.info(f' Subprocess launched for tile {tile_name}, return value: {result.stdout}')
@@ -523,8 +526,8 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
 
         # TODO Move these parameters into the config file and change monitoring loop to a while loop
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
-        monitoring_cycles = 60
-        monitoring_period_seconds = 10
+        monitoring_cycles = 24 * 60 # 24 hours
+        monitoring_period_seconds = 60
 
         end_monitoring = False
         for i in range(monitoring_cycles):
@@ -541,7 +544,7 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
                     for index, p in current_tile_processes_df.iterrows():
                         if (p['Status'] in ['Q', 'R']): # ['Q', 'R', 'C']):
                             job_id = p['JobID'].split('.')[0]
-                            print(f'Tile {tile[0]} still running pid: {job_id}, status; {p["Status"]} ')
+                            log.info(f'Tile {tile[0]} still running pid: {job_id}, status; {p["Status"]} ')
                             active_process_count += 1
                 if (active_process_count == 0):
                     end_monitoring = True
