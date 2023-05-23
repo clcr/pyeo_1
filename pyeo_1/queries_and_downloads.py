@@ -117,6 +117,7 @@ api_url = "https://scihub.copernicus.eu/dhus/"
 rest_url = "https://apihub.copernicus.eu/apihub/search"
 # api_url = "https://apihub.copernicus.eu/apihub/"
 
+
 # I.R.
 # def _rest_query(user, passwd, footprint_wkt, start_date, end_date, cloud=100, start_row=0, filename=None):
 def _rest_query(
@@ -163,6 +164,7 @@ def _file_api_query(
     user, passwd, start_date, end_date, filename, cloud=100, producttype="S2MSI2A"
 ):
     api = SentinelAPI(user, passwd, timeout=600)
+
     # try 20 times to connect to the server if it is not responding before producing an error
     @tenacity.retry(stop=tenacity.stop_after_attempt(20), wait=tenacity.wait_fixed(300))
     def query(*args, **kwargs):
@@ -193,6 +195,7 @@ def _tile_api_query(
     filename=None,
 ):
     api = SentinelAPI(user, passwd, timeout=600)
+
     # try 20 times to connect to the server if it is not responding before producing an error
     @tenacity.retry(stop=tenacity.stop_after_attempt(20), wait=tenacity.wait_fixed(300))
     def query(*args, **kwargs):
@@ -290,6 +293,7 @@ def _sentinelsat_query(user, passwd, footprint_wkt, start_date, end_date, cloud=
     """
     # Originally by Ciaran Robb
     api = SentinelAPI(user, passwd, timeout=600)
+
     # try 20 times to connect to the server if it is not responding before producing an error
     @tenacity.retry(stop=tenacity.stop_after_attempt(20), wait=tenacity.wait_fixed(300))
     def query(*args, **kwargs):

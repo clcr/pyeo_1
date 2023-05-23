@@ -1,5 +1,6 @@
 import logging
 
+
 def band_naming(band: int, log):
     """
     This function provides a variable name (string) based on the input integer.
@@ -18,7 +19,7 @@ def band_naming(band: int, log):
 
     """
     # note to self : + 1 from Python
-    # fields may get shortened (laundered)
+    # fields may get shortened (laundered)
 
     if band == 1:
         band_name = "band1"
@@ -64,7 +65,9 @@ def band_naming(band: int, log):
     return band_name
 
 
-def vectorise_from_band(change_report_path: str, band: int, log: logging.Logger, conda_env_name: str):
+def vectorise_from_band(
+    change_report_path: str, band: int, log: logging.Logger, conda_env_name: str
+):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -148,7 +151,7 @@ def vectorise_from_band(change_report_path: str, band: int, log: logging.Logger,
                 dst_field,  # -1 for no field column
                 [],
             )
-            
+
         except RuntimeError as error:
             log.error(f"GDAL Polygonize failed: \n {error}")
         except Exception as error:
@@ -164,7 +167,9 @@ def vectorise_from_band(change_report_path: str, band: int, log: logging.Logger,
     return out_filename
 
 
-def clean_zero_nodata_vectorised_band(vectorised_band_path: str, log: logging.Logger, conda_env_name: str):
+def clean_zero_nodata_vectorised_band(
+    vectorised_band_path: str, log: logging.Logger, conda_env_name: str
+):
     """
 
     This function removes 0s and nodata values from the vectorised bands.
@@ -226,7 +231,6 @@ def clean_zero_nodata_vectorised_band(vectorised_band_path: str, log: logging.Lo
 
 
 def boundingBoxToOffsets(bbox, geot):
-
     """
 
     This function converts a bounding box to offsets.
@@ -250,7 +254,6 @@ def boundingBoxToOffsets(bbox, geot):
 
 
 def geotFromOffsets(row_offset, col_offset, geot):
-
     """
 
     This function calculates a new geotransform from offsets.
@@ -280,9 +283,8 @@ def geotFromOffsets(row_offset, col_offset, geot):
 
 
 def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
+    """
 
-    """ 
-    
     This function sets the feature stats to calculate from the array.
 
     Parameters
@@ -332,7 +334,6 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
 def zonal_statistics(
     raster_path: str, shapefile_path: str, report_band: int, log, conda_env_name: str
 ):
-
     """
     This function calculates zonal statistics on a raster.
     The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
@@ -371,7 +372,7 @@ def zonal_statistics(
     os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
     os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
-    #log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
+    # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
     with TemporaryDirectory(dir=os.getcwd()) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -399,12 +400,10 @@ def zonal_statistics(
 
         # while lyr.GetNextFeature() returns a polygon feature, do the following:
         while p_feat:
-
             try:
                 # if a geometry is returned from p_feat, do the following:
                 if p_feat.GetGeometryRef() is not None:
                     if os.path.exists(shp_name):
-
                         mem_driver.DeleteDataSource(shp_name)
 
                     # tp_ds = temporary datasource
@@ -533,7 +532,6 @@ def merge_and_calculate_spatial(
     tileid: str,
     conda_env_name: str,
 ):
-
     """
     This function takes the zonal statistics Pandas DataFrames and performs a table join
     to the vectorised binary polygons that are the basis of the vectorised change report.
@@ -687,4 +685,3 @@ def merge_and_calculate_spatial(
             log.info("Could not delete intermediate files")
 
     return
-

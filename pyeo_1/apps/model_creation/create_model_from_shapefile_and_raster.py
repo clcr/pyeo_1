@@ -29,11 +29,17 @@ import argparse
 import sklearn.ensemble as ens
 import joblib
 
-if __name__=="__main__":
-
-    parser = argparse.ArgumentParser(description='Produces a trained model from a raster and associated shapefile')
-    parser.add_argument('--conf', dest='config_path', action='store', default=r'model_creation.ini',
-                        help="Path to the .ini file specifying the job.")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Produces a trained model from a raster and associated shapefile"
+    )
+    parser.add_argument(
+        "--conf",
+        dest="config_path",
+        action="store",
+        default=r"model_creation.ini",
+        help="Path to the .ini file specifying the job.",
+    )
     args = parser.parse_args()
 
     conf = configparser.ConfigParser()
@@ -49,9 +55,18 @@ if __name__=="__main__":
 
     # This will be changed in the near future as I'm planning to refactor core soon
     #  to make the ML model building functions more granular
-    learning_data, classes = pyeo_1.classification.get_training_data(training_raster_path, training_shape_path,
-                                                                   class_field)
-    model = ens.ExtraTreesClassifier(bootstrap=False, criterion="gini", max_features=0.55, min_samples_leaf=2,
-                                     min_samples_split=16, n_estimators=100, n_jobs=4, class_weight='balanced')
+    learning_data, classes = pyeo_1.classification.get_training_data(
+        training_raster_path, training_shape_path, class_field
+    )
+    model = ens.ExtraTreesClassifier(
+        bootstrap=False,
+        criterion="gini",
+        max_features=0.55,
+        min_samples_leaf=2,
+        min_samples_split=16,
+        n_estimators=100,
+        n_jobs=4,
+        class_weight="balanced",
+    )
     model.fit(learning_data, classes)
     joblib.dump(model, model_out_path)

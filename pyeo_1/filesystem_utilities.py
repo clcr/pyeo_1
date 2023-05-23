@@ -23,6 +23,7 @@ import glob
 import logging
 import numpy as np
 import os
+from pathlib import Path
 import pandas as pd
 import re
 import shutil
@@ -63,6 +64,7 @@ def init_log(log_path):
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
     log.info("****PROCESSING START****")
+
     return log
 
 
@@ -101,10 +103,41 @@ def init_log_acd(log_path, logger_name):
 
     return logger
 
-def config_path_to_config_dict(config_path: str):
+def conda_check(config_path: str):
+    """
+    
+    This function takes the path to the config (pyeo_1.ini) and checks whether the conda environment exists.
+
+    Parameters
+    ----------
+
+    config_path : str
+        path to pyeo_1.ini
+
+    Returns
+    --------
+
+    True/False (bool)
 
     """
     
+    conda_config = configparser.ConfigParser(allow_no_value=True)
+    conda_config.read(config_path)
+
+    conda_env_name = conda_config["environment"]["conda_env_name"]
+    home = str(Path.home())
+    conda_directory = f"{home}/miniconda3/envs/{conda_env_name}"
+
+    if os.path.exists(conda_directory):
+        return True
+    else:
+        return False
+
+
+
+def config_path_to_config_dict(config_path: str):
+    """
+
     This function takes the path to the config (pyeo_1.ini) and simplifies the keys
 
     Parameters
@@ -127,7 +160,9 @@ def config_path_to_config_dict(config_path: str):
     config_dict = {}
 
     config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
-    config_dict["do_raster"] = config.getboolean("raster_processing_parameters", "do_raster")
+    config_dict["do_raster"] = config.getboolean(
+        "raster_processing_parameters", "do_raster"
+    )
     config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
     config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
     config_dict["do_classify"] = config.getboolean(
@@ -207,7 +242,7 @@ def config_path_to_config_dict(config_path: str):
     config_dict["to_classes"] = json.loads(
         config["raster_processing_parameters"]["change_to_classes"]
     )
-
+    config_dict["conda_directory"] = config["environment"]["conda_directory"]
     config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
     config_dict["pyeo_dir"] = config["environment"]["pyeo_dir"]
     config_dict["tile_dir"] = config["environment"]["tile_dir"]
@@ -229,19 +264,30 @@ def config_path_to_config_dict(config_path: str):
         "vector_processing_parameters", "do_delete_existing_vector"
     )
 
-    config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
-    config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
-    config_dict["do_filter"] = config.getboolean("vector_processing_parameters", "do_filter")
-    
+    config_dict["do_vectorise"] = config.getboolean(
+        "vector_processing_parameters", "do_vectorise"
+    )
+    config_dict["do_integrate"] = config.getboolean(
+        "vector_processing_parameters", "do_integrate"
+    )
+    config_dict["do_filter"] = config.getboolean(
+        "vector_processing_parameters", "do_filter"
+    )
+
     config_dict["counties_of_interest"] = json.loads(
         config["vector_processing_parameters"]["counties_of_interest"]
     )
-    config_dict["minimum_area_to_report_m2"] = int(config["vector_processing_parameters"]["minimum_area_to_report_m2"])
-    config_dict["do_distribution"] = config.getboolean("vector_processing_parameters", "do_distribution")
+    config_dict["minimum_area_to_report_m2"] = int(
+        config["vector_processing_parameters"]["minimum_area_to_report_m2"]
+    )
+    config_dict["do_distribution"] = config.getboolean(
+        "vector_processing_parameters", "do_distribution"
+    )
 
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict
+
 
 def create_file_structure(root: str):
     """
@@ -1075,7 +1121,6 @@ def get_mask_path(image_path):
 
 
 def serial_date_to_string(srl_no: int):
-
     """
     Converts a serial date (days since X), to a date as a string.
     Author: AER
@@ -1101,7 +1146,6 @@ def serial_date_to_string(srl_no: int):
 
 
 def zip_contents(directory: str, notstartswith=None):
-
     """
     This function zips the contents of the directory passed
 
@@ -1146,7 +1190,6 @@ def zip_contents(directory: str, notstartswith=None):
 
 
 def unzip_contents(zippath: str, ifstartswith=None, ending=None):
-
     """
     This function unzips the zipped path provided
 

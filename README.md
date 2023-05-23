@@ -68,12 +68,19 @@ conda env create --file environment.yml --name pyeo_env
 conda activate pyeo_env
 python -m pip install -e .
 ```
-For Linux users, you can optionally access the `pyeo_1` command line functions, by adding the following to your .bashrc
+### Automated Pipeline Execution
+To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_1.ini`, make the following file an executable by issuing this command:
+```bash
+cd pyeo_1/apps/automation/
+chmod u+x automate_launch.sh
+```
+
+<!-- For Linux users, you can optionally access the `pyeo_1` command line functions, by adding the following to your .bashrc
 
 ```bash
 export pyeo_1=/path/to/pyeo_1
 export PATH=$PATH:$pyeo_1/bin
-```
+``` -->
 
 
 

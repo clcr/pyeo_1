@@ -232,7 +232,6 @@ def build_sample_array(raster_array, slope_array, red_band_index, ir_band_index)
 def do_terrain_correction(
     raster_path, dem_path, out_raster_path, raster_datetime, is_landsat=False
 ):
-
     """
     Corrects for shadow effects due to terrain features.
     Algorithm:
@@ -259,7 +258,6 @@ def do_terrain_correction(
     """
 
     with TemporaryDirectory() as td:
-
         in_raster = gdal.Open(raster_path)
         in_array = in_raster.GetVirtualMemArray()
         out_raster = ras.create_matching_dataset(

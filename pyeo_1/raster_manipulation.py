@@ -3067,6 +3067,7 @@ def apply_processing_baseline_0400_offset_correction_to_tiff_file_directory(
 
 # Added I.R. 20220607 END
 
+
 # Added I.R. 20230312 START
 def apply_processing_baseline_offset_correction_to_tiff_file_directory(
     in_tif_directory,
@@ -4205,7 +4206,7 @@ def __change_from_class_maps(
     viband1=None,
     viband2=None,
     dNDVI_threshold=None,
-    log=logging.getLogger(__name__)
+    log=logging.getLogger(__name__),
 ):
     """
     UNTESTED DEVELOPMENT VERSION:
@@ -4275,7 +4276,7 @@ def __change_from_class_maps(
     log : (Optional)
         If not provided, the default namespace logger will be used.
         Otherwise, the logger passed will be used to print statements to.
-    
+
     Returns:
     ----------
     change_raster : str (path to a raster file of type Int32)
@@ -4438,7 +4439,9 @@ def __change_from_class_maps(
                     old_image_array = old_image.GetVirtualMemArray(
                         eAccess=gdal.gdalconst.GF_Read
                     ).squeeze()
-                    log.info("old image successfully read as a Virtual Memory Array and squeezed")
+                    log.info(
+                        "old image successfully read as a Virtual Memory Array and squeezed"
+                    )
                     # calculate composite VI (N.B. -1 because array starts numbering with 0 and GDAL numbers bands from 1
                     with np.errstate(divide="ignore", invalid="ignore"):
                         vi_old = np.true_divide(
