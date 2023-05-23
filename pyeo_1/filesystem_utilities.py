@@ -23,6 +23,7 @@ import glob
 import logging
 import numpy as np
 import os
+from pathlib import Path
 import pandas as pd
 import re
 import shutil
@@ -63,6 +64,7 @@ def init_log(log_path):
     file_handler.setFormatter(formatter)
     log.addHandler(file_handler)
     log.info("****PROCESSING START****")
+
     return log
 
 
@@ -100,6 +102,37 @@ def init_log_acd(log_path, logger_name):
     logger.info("****PROCESSING START****")
 
     return logger
+
+def conda_check(config_path: str):
+    """
+    
+    This function takes the path to the config (pyeo_1.ini) and checks whether the conda environment exists.
+
+    Parameters
+    ----------
+
+    config_path : str
+        path to pyeo_1.ini
+
+    Returns
+    --------
+
+    True/False (bool)
+
+    """
+    
+    conda_config = configparser.ConfigParser(allow_no_value=True)
+    conda_config.read(config_path)
+
+    conda_env_name = conda_config["environment"]["conda_env_name"]
+    home = str(Path.home())
+    conda_directory = f"{home}/miniconda3/envs/{conda_env_name}"
+
+    if os.path.exists(conda_directory):
+        return True
+    else:
+        return False
+
 
 
 def config_path_to_config_dict(config_path: str):
@@ -209,7 +242,7 @@ def config_path_to_config_dict(config_path: str):
     config_dict["to_classes"] = json.loads(
         config["raster_processing_parameters"]["change_to_classes"]
     )
-
+    config_dict["conda_directory"] = config["environment"]["conda_directory"]
     config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
     config_dict["pyeo_dir"] = config["environment"]["pyeo_dir"]
     config_dict["tile_dir"] = config["environment"]["tile_dir"]

@@ -149,6 +149,9 @@ def acd_initialisation(config_path):
         logger_name="pyeo_1_acd_log",
     )
 
+    # check conda directory exists
+    #conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
+
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
     log.info("---------------------------------------------------------------")
@@ -296,8 +299,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"Path to the Administrative Boundaries used in the Change Report Vectorisation   : {config_dict['level_1_boundaries_path']}"
     )
     log.info(f"Path to Sen2Cor is   : {config_dict['sen2cor_path']}")
+    
     log.info(
-        f"The Conda Environment which was provided in .ini file is :  {config_dict['conda_env_name']}"
+        f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
     log.info("-------------------------------------------")
     # log.info("Streaming config parameters to log file for reference")
@@ -470,10 +474,12 @@ def acd_integrated_raster(
             sen2cor_path = config_dict[
                 "sen2cor_path"
             ]  # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  #
-            conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
+
+            conda_directory = config_dict["conda_directory"]
+            #conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
             conda_environment_name = config_dict["conda_env_name"]  # 'pyeo_env'  #
             conda_environment_path = os.path.join(
-                conda_environment_directory, conda_environment_name
+                conda_directory, conda_environment_name
             )
             code_directory = config_dict[
                 "pyeo_dir"
