@@ -160,6 +160,11 @@ def config_path_to_config_dict(config_path: str):
     config_dict = {}
 
     config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
+    config_dict["wall_time_hours"] = int(config["run_mode"]["wall_time_hours"])
+    config_dict["watch_time_hours"] = int(config["run_mode"]["watch_time_hours"])
+    config_dict["watch_period_minutes"] = int(config["run_mode"]["watch_period_minutes"])
+    config_dict["qsub_processor_options"] = config_dict["run_mode"]["qsub_processor_options"]
+
     config_dict["do_raster"] = config.getboolean(
         "raster_processing_parameters", "do_raster"
     )
