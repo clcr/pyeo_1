@@ -101,10 +101,10 @@ def init_log_acd(log_path, logger_name):
 
     return logger
 
-def config_path_to_config_dict(config_path: str):
 
+def config_path_to_config_dict(config_path: str):
     """
-    
+
     This function takes the path to the config (pyeo_1.ini) and simplifies the keys
 
     Parameters
@@ -127,7 +127,9 @@ def config_path_to_config_dict(config_path: str):
     config_dict = {}
 
     config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
-    config_dict["do_raster"] = config.getboolean("raster_processing_parameters", "do_raster")
+    config_dict["do_raster"] = config.getboolean(
+        "raster_processing_parameters", "do_raster"
+    )
     config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
     config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
     config_dict["do_classify"] = config.getboolean(
@@ -229,19 +231,30 @@ def config_path_to_config_dict(config_path: str):
         "vector_processing_parameters", "do_delete_existing_vector"
     )
 
-    config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
-    config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
-    config_dict["do_filter"] = config.getboolean("vector_processing_parameters", "do_filter")
-    
+    config_dict["do_vectorise"] = config.getboolean(
+        "vector_processing_parameters", "do_vectorise"
+    )
+    config_dict["do_integrate"] = config.getboolean(
+        "vector_processing_parameters", "do_integrate"
+    )
+    config_dict["do_filter"] = config.getboolean(
+        "vector_processing_parameters", "do_filter"
+    )
+
     config_dict["counties_of_interest"] = json.loads(
         config["vector_processing_parameters"]["counties_of_interest"]
     )
-    config_dict["minimum_area_to_report_m2"] = int(config["vector_processing_parameters"]["minimum_area_to_report_m2"])
-    config_dict["do_distribution"] = config.getboolean("vector_processing_parameters", "do_distribution")
+    config_dict["minimum_area_to_report_m2"] = int(
+        config["vector_processing_parameters"]["minimum_area_to_report_m2"]
+    )
+    config_dict["do_distribution"] = config.getboolean(
+        "vector_processing_parameters", "do_distribution"
+    )
 
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict
+
 
 def create_file_structure(root: str):
     """
@@ -1075,7 +1088,6 @@ def get_mask_path(image_path):
 
 
 def serial_date_to_string(srl_no: int):
-
     """
     Converts a serial date (days since X), to a date as a string.
     Author: AER
@@ -1101,7 +1113,6 @@ def serial_date_to_string(srl_no: int):
 
 
 def zip_contents(directory: str, notstartswith=None):
-
     """
     This function zips the contents of the directory passed
 
@@ -1146,7 +1157,6 @@ def zip_contents(directory: str, notstartswith=None):
 
 
 def unzip_contents(zippath: str, ifstartswith=None, ending=None):
-
     """
     This function unzips the zipped path provided
 

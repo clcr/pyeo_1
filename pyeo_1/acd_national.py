@@ -13,9 +13,9 @@ import pandas as pd
 from tempfile import TemporaryDirectory
 import time
 
+
 # acd_national is the top-level function which controls the raster and vector processes for pyeo_1
 def automatic_change_detection_national(config_path):
-
     """
     This function:
         - acts as the singular call to run automatic change detection per tile, then aggregate to national, then distribute the change alerts.
@@ -51,29 +51,20 @@ def automatic_change_detection_national(config_path):
         acd_log.info("Starting acd_integrated_raster():")
         acd_log.info("---------------------------------------------------------------")
 
-        acd_integrated_raster(
-            config_dict,
-            acd_log,
-            tilelist_filepath,
-            config_path
-            )
+        acd_integrated_raster(config_dict, acd_log, tilelist_filepath, config_path)
 
     # and skip already existing vectors
     if config_dict["do_vectorise"]:
-
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_vectorisation()")
         acd_log.info("  vectorising each change report raster, by tile")
         acd_log.info("---------------------------------------------------------------")
 
         acd_integrated_vectorisation(
-            log=acd_log,
-            tilelist_filepath=tilelist_filepath,
-            config_path=config_path
+            log=acd_log, tilelist_filepath=tilelist_filepath, config_path=config_path
         )
 
     if config_dict["do_integrate"]:
-            
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_national_integration")
         acd_log.info("---------------------------------------------------------------")
@@ -87,23 +78,18 @@ def automatic_change_detection_national(config_path):
         )
 
     if config_dict["do_filter"]:
-
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_national_filtering")
         acd_log.info("---------------------------------------------------------------")
         if config_dict["counties_of_interest"]:
-            acd_national_filtering(log=acd_log,
-                                config_dict=config_dict)
-
+            acd_national_filtering(log=acd_log, config_dict=config_dict)
 
     if config_dict["do_distribution"]:
-
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_national_distribution()")
         acd_log.info("---------------------------------------------------------------")
         # acd_national_distribution()
         # messaging services to Park Rangers (e.g. WhatsApp, Maps2Me)
-
 
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("---                  INTEGRATED PROCESSING END              ---")
@@ -133,7 +119,6 @@ def acd_composite_update():
 
 
 def acd_initialisation(config_path):
-
     """
 
     This function initialises the log.txt, making the log object available
@@ -152,7 +137,7 @@ def acd_initialisation(config_path):
 
     """
 
-    # build dictionary of configuration parameters
+    # build dictionary of configuration parameters
     config_dict = filesystem_utilities.config_path_to_config_dict(config_path)
 
     # changes directory to pyeo_dir, enabling the use of relative paths from the config file
@@ -160,9 +145,7 @@ def acd_initialisation(config_path):
 
     # initialise log file
     log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(
-            config_dict["log_dir"], config_dict["log_filename"]
-        ),
+        log_path=os.path.join(config_dict["log_dir"], config_dict["log_filename"]),
         logger_name="pyeo_1_acd_log",
     )
 
@@ -172,13 +155,11 @@ def acd_initialisation(config_path):
 
     log.info("Reading in parameters defined in the Config")
     log.info("---------------------------------------------------------------")
-  
-    
+
     return config_dict, log
 
 
 def acd_config_to_log(config_dict: dict, log: logging.Logger):
-
     """
     This function echoes the contents of config_dict to the log file. \n
     It does not return anything.
@@ -201,7 +182,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
     log.info("Options:")
     if config_dict["do_parallel"]:
         log.info("  --do_parallel")
-        log.info("        running in parallel mode, parallel functions will be enabled where available")
+        log.info(
+            "        running in parallel mode, parallel functions will be enabled where available"
+        )
 
     if config_dict["do_dev"]:
         log.info(
@@ -224,7 +207,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         if config_dict["do_download"]:
             log.info("  --download for change detection images")
             if not config_dict["build_composite"]:
-                log.info("  --download_source = {}".format(config_dict["download_source"]))
+                log.info(
+                    "  --download_source = {}".format(config_dict["download_source"])
+                )
         if config_dict["do_classify"]:
             log.info(
                 "  --classify to apply the random forest model and create classification layers"
@@ -236,7 +221,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info(f"         change start date  : {config_dict['composite_start']}")
             log.info(f"         change end date  : {config_dict['composite_end']}")
         if config_dict["do_update"]:
-            log.info("  --update to update the baseline composite with new observations")
+            log.info(
+                "  --update to update the baseline composite with new observations"
+            )
         if config_dict["do_quicklooks"]:
             log.info("  --quicklooks to create image quicklooks")
         if config_dict["do_delete"]:
@@ -248,7 +235,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
                 "           Deletes remaining temporary directories starting with 'tmp' from interrupted processing runs."
             )
             log.info("           Keeps only L2A images, composites and report files.")
-            log.info("           Overrides --zip for the above files. WARNING! FILE LOSS!")
+            log.info(
+                "           Overrides --zip for the above files. WARNING! FILE LOSS!"
+            )
         if config_dict["do_zip"]:
             log.info(
                 "  --zip archives L2A images, and if --remove is not selected also L1C,"
@@ -278,7 +267,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info(f"        {n}  :  {county}")
 
         log.info("  --minimum_area_to_report_m2")
-        log.info(f"       Only Change Detections > {config_dict['minimum_area_to_report_m2']} metres squared will be reported")
+        log.info(
+            f"       Only Change Detections > {config_dict['minimum_area_to_report_m2']} metres squared will be reported"
+        )
     # reporting more parameters
     log.info(f"EPSG used is: {config_dict['epsg']}")
     log.info(f"List of image bands: {config_dict['bands']}")
@@ -391,8 +382,9 @@ def acd_roi_tile_intersection(config_dict, log):
     return tilelist_filepath
 
 
-def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filepath: str, config_path: str):
-
+def acd_integrated_raster(
+    config_dict: dict, log: logging.Logger, tilelist_filepath: str, config_path: str
+):
     """
 
     This function:
@@ -458,7 +450,7 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
 
     ######## run acd_by_tile_raster
     for _, tile in tilelist_df.iterrows():
-        #try:
+        # try:
         log.info(f"Starting ACD Raster Processes for Tile :  {tile[0]}")
 
         if not config_dict["do_parallel"]:
@@ -468,40 +460,53 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
         if config_dict["do_parallel"]:
             # Launch an instance for this tile using qsub for parallelism
 
-            # Setup required paths 
+            # Setup required paths
             ## TODO Update to obtain these from config file on config_path and match variable names to standardise on those in pyeo_1.ini)
             ## TODO Change print statments to log.info
             ## (Temporary test paths point to a test function 'apps/automation/_random_duration_test_program.py' that returns after a short random time delay)
-            data_directory = config_dict["tile_dir"] # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation' # 
-            sen2cor_path = config_dict["sen2cor_path"] # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  # 
-            conda_environment_directory = '/home/i/ir81/miniconda3/envs'  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
-            conda_environment_name = config_dict["conda_env_name"] # 'pyeo_env'  # 
-            conda_environment_path = os.path.join(conda_environment_directory, conda_environment_name)  
-            code_directory = config_dict["pyeo_dir"] # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # 
-            python_executable = 'pyeo_1/apps/acd_national/acd_by_tile_raster.py' # 'apps/automation/_random_duration_test_program.py'  # 
-            qsub_options = 'walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb' # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+            data_directory = config_dict[
+                "tile_dir"
+            ]  # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation' #
+            sen2cor_path = config_dict[
+                "sen2cor_path"
+            ]  # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  #
+            conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
+            conda_environment_name = config_dict["conda_env_name"]  # 'pyeo_env'  #
+            conda_environment_path = os.path.join(
+                conda_environment_directory, conda_environment_name
+            )
+            code_directory = config_dict[
+                "pyeo_dir"
+            ]  # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' #
+            python_executable = "pyeo_1/apps/acd_national/acd_by_tile_raster.py"  # 'apps/automation/_random_duration_test_program.py'  #
+            qsub_options = "walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
             # config_filename = 'pyeo_1.ini'
             # config_path = os.path.join(config_directory, config_filename)
-            automation_script_path = os.path.join(code_directory, 'pyeo_1/apps/automation/automate_launch.sh')
+            automation_script_path = os.path.join(
+                code_directory, "pyeo_1/apps/automation/automate_launch.sh"
+            )
 
             tile_name = tile[0]
 
-            log.info(f'automation_test.py: Checking if tile {tile_name} is already being processed and, if so, deleting current process to avoid possible conflicts')
+            log.info(
+                f"automation_test.py: Checking if tile {tile_name} is already being processed and, if so, deleting current process to avoid possible conflicts"
+            )
             df = qstat_to_dataframe()
-            if (not df.empty):
-                current_tile_processes_df = df[df['Name']==tile_name]
+            if not df.empty:
+                current_tile_processes_df = df[df["Name"] == tile_name]
                 # log.info('current_tile_processes_df')
                 # log.info(current_tile_processes_df)
                 for index, p in current_tile_processes_df.iterrows():
                     log.info(p)
-                    if (p['Status'] in ['Q', 'R']):
-                        job_id = p['JobID'].split('.')[0]
-                        log.info(f'{new_line}Deleting job: {job_id} {new_line}')
-                        os.system(f'qdel {job_id}')
+                    if p["Status"] in ["Q", "R"]:
+                        job_id = p["JobID"].split(".")[0]
+                        log.info(f"{new_line}Deleting job: {job_id} {new_line}")
+                        os.system(f"qdel {job_id}")
 
-
-            log.info(f'automation_test.py: Preparing to launch tile processing of tile {tile_name}')
+            log.info(
+                f"automation_test.py: Preparing to launch tile processing of tile {tile_name}"
+            )
             # log.info(f'config_path: {type(config_path)}')
             # log.info(f'config_path: {config_path[0]}')
 
@@ -509,61 +514,70 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
             qsub_launch_string = f'qsub -N {tile_name} -o {os.path.join(data_directory, tile_name + "_o.txt")} -e {os.path.join(data_directory, tile_name + "_e.txt")} -l {qsub_options}'
             shell_command_string = f"{automation_script_path} '{python_launch_string}' '{qsub_launch_string}'"
 
-            new_line = '\n'
-            log.info(f'python_launch_string: {python_launch_string}{new_line}')
-            log.info(f'qsub_launch_string: {qsub_launch_string}{new_line}')
-            log.info(f'shell_command_string: {shell_command_string}{new_line}')
+            new_line = "\n"
+            log.info(f"python_launch_string: {python_launch_string}{new_line}")
+            log.info(f"qsub_launch_string: {qsub_launch_string}{new_line}")
+            log.info(f"shell_command_string: {shell_command_string}{new_line}")
 
-            result = subprocess.run(shell_command_string, capture_output=True, text=True, shell=True)
-            log.info(f' Subprocess launched for tile {tile_name}, return value: {result.stdout}')
+            result = subprocess.run(
+                shell_command_string, capture_output=True, text=True, shell=True
+            )
+            log.info(
+                f" Subprocess launched for tile {tile_name}, return value: {result.stdout}"
+            )
         # except:
-            # log.error(f"Could not complete ACD Raster Processes for Tile: {tile[0]}")
+        # log.error(f"Could not complete ACD Raster Processes for Tile: {tile[0]}")
 
     # if parallel, monitor parallel processes once all have been launched
     if config_dict["do_parallel"]:
-        log.info('automation_test.py: subprocess launching completed')
-        log.info('automation_test.py: subprocess monitoring started')
+        log.info("automation_test.py: subprocess launching completed")
+        log.info("automation_test.py: subprocess monitoring started")
 
         # TODO Move these parameters into the config file and change monitoring loop to a while loop
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
-        monitoring_cycles = 24 * 60 # 24 hours
+        monitoring_cycles = 24 * 60  # 24 hours
         monitoring_period_seconds = 60
 
         end_monitoring = False
         for i in range(monitoring_cycles):
             time.sleep(monitoring_period_seconds)
-            log.info(f'automation_test.py: Checking which tiles are still being processed after {i * monitoring_period_seconds} seconds')
+            log.info(
+                f"automation_test.py: Checking which tiles are still being processed after {i * monitoring_period_seconds} seconds"
+            )
 
             df = qstat_to_dataframe()
-            if (not df.empty and end_monitoring == False):
+            if not df.empty and end_monitoring == False:
                 active_process_count = 0
                 for _, tile in tilelist_df.iterrows():
-                    current_tile_processes_df = df[df['Name']==tile[0]]
+                    current_tile_processes_df = df[df["Name"] == tile[0]]
                     # log.info('current_tile_processes_df')
                     # log.info(current_tile_processes_df)
                     for index, p in current_tile_processes_df.iterrows():
-                        if (p['Status'] in ['Q', 'R']): # ['Q', 'R', 'C']):
-                            job_id = p['JobID'].split('.')[0]
-                            log.info(f'Tile {tile[0]} still running pid: {job_id}, status; {p["Status"]} ')
+                        if p["Status"] in ["Q", "R"]:  # ['Q', 'R', 'C']):
+                            job_id = p["JobID"].split(".")[0]
+                            log.info(
+                                f'Tile {tile[0]} still running pid: {job_id}, status; {p["Status"]} '
+                            )
                             active_process_count += 1
-                if (active_process_count == 0):
+                if active_process_count == 0:
                     end_monitoring = True
             else:
-                log.info('All tiles have been processed.. continuing to next pipeline stage')
+                log.info(
+                    "All tiles have been processed.. continuing to next pipeline stage"
+                )
                 break
 
-        log.info('automation_test.py subprocesses completed')
-
+        log.info("automation_test.py subprocesses completed")
 
 
 def qstat_to_dataframe():
     """
 
     This function:
-        - Runs the pbs qstat command as a subprocess, 
+        - Runs the pbs qstat command as a subprocess,
         - Captures the stdout
         - Parses the output into a dataframe summarising all active processes to allow monitoring of parallel processes launched when in do_parallel mode.
-        
+
     Parameters
     ----------
     None
@@ -574,29 +588,28 @@ def qstat_to_dataframe():
     """
 
     # Run qstat command and capture the stdout
-    result = subprocess.run(['qstat'], capture_output=True)
+    result = subprocess.run(["qstat"], capture_output=True)
     # Decode the byte string into a regular string
-    output = result.stdout.decode('utf-8')
+    output = result.stdout.decode("utf-8")
     # Split the output into lines and remove any empty lines
-    lines = output.split('\n')
+    lines = output.split("\n")
     lines = [line.strip() for line in lines if line.strip()]
 
-    if (len(output) > 0):
+    if len(output) > 0:
         # Extract the header and data rows
         header = lines[0].split()
         data_rows = [line.split() for line in lines[2:]]
         # Create the pandas DataFrame setting colum names manually to match qstat output
-        df = pd.DataFrame(data_rows, columns=['JobID', 'Name', 'User', 'TimeUsed', 'Status', 'Queue'])
+        df = pd.DataFrame(
+            data_rows, columns=["JobID", "Name", "User", "TimeUsed", "Status", "Queue"]
+        )
         return df
     else:
         return pd.DataFrame()  # Return an empty dataframe is no output from qstat
 
 
-
 def acd_integrated_vectorisation(
-    log: logging.Logger,
-    tilelist_filepath: str,
-    config_path: str
+    log: logging.Logger, tilelist_filepath: str, config_path: str
 ):
     """
 
@@ -622,7 +635,9 @@ def acd_integrated_vectorisation(
     import glob
     import os
 
-    config_dict = filesystem_utilities.config_path_to_config_dict(config_path=config_path)
+    config_dict = filesystem_utilities.config_path_to_config_dict(
+        config_path=config_path
+    )
 
     # check if tilelist_filepath exists, open if it does, exit if it doesn't
     if os.path.exists(tilelist_filepath):
@@ -636,32 +651,40 @@ def acd_integrated_vectorisation(
         )
         log.error("exiting pipeline")
         sys.exit(1)
-   
+
     # get all report.tif that are within the root_dir with search pattern
     tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
     report_tif_pattern = "/output/probabilities/report*.tif"
     search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
-    
+
     tiles_paths = glob.glob(os.path.join(config_dict["tile_dir"], search_pattern))
 
     # only keep filepaths which match tilelist
     matching_filepaths = []
 
     for filepath in tiles_paths:
-        if tilelist_df["tile"].str.contains(filepath.split("/")[-1].split("_")[2]).any():
+        if (
+            tilelist_df["tile"]
+            .str.contains(filepath.split("/")[-1].split("_")[2])
+            .any()
+        ):
             matching_filepaths.append(filepath)
 
     # sort filepaths in ascending order
     sorted_filepaths = sorted(matching_filepaths)
     if len(sorted_filepaths) == 0:
         log.error("there are no change reports to vectorise, here are some pointers:")
-        log.error("    Ensure the raster processing pipeline has successfully ran and completed ")
+        log.error(
+            "    Ensure the raster processing pipeline has successfully ran and completed "
+        )
         log.error("    Ensure tile_dir has been specified correctly in pyeo_1.ini")
         log.error("Now exiting the vector pipeline")
         sys.exit(1)
 
-    log.info(f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:")
-    
+    log.info(
+        f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:"
+    )
+
     # log the filepaths to vectorise
     for n, tile_path in enumerate(sorted_filepaths):
         log.info(f"{n+1}  :  {tile_path}")
@@ -669,9 +692,7 @@ def acd_integrated_vectorisation(
 
     # vectorise per path logic
     for report in sorted_filepaths:
-
         if config_dict["do_delete_existing_vector"]:
-
             # get list of existing report files in report path
             log.info(
                 "do_delete_existing_vector flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs"
@@ -696,15 +717,17 @@ def acd_integrated_vectorisation(
         tile = sorted_filepaths[0].split("/")[-1].split("_")[-2]
 
         if not config_dict["do_parallel"]:
-            #try:
+            # try:
             acd_by_tile_vectorisation.vector_report_generation(config_path, tile)
-            #except:
-             #   log.error(f"Sequential Mode: Failed to vectorise {report}, moving on to the next")
+            # except:
+            #   log.error(f"Sequential Mode: Failed to vectorise {report}, moving on to the next")
         if config_dict["do_parallel"]:
             try:
                 subprocess.run()
             except:
-                log.error(f"Parallel Mode: Failed to vectorise {report}, moving on to the next")
+                log.error(
+                    f"Parallel Mode: Failed to vectorise {report}, moving on to the next"
+                )
 
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
@@ -716,9 +739,12 @@ def acd_integrated_vectorisation(
 
 
 def acd_national_integration(
-    root_dir: str, log: logging.Logger, epsg: int, conda_env_name: str, config_dict: dict
+    root_dir: str,
+    log: logging.Logger,
+    epsg: int,
+    conda_env_name: str,
+    config_dict: dict,
 ):
-
     """
 
     This function:
@@ -749,7 +775,9 @@ def acd_national_integration(
 
     # glob through passed directory, return files matching the two patterns
     vectorised_paths = glob.glob(os.path.join(root_dir, search_pattern))
-    log.info(f"Number of change Report Shapefiles to integrate  :  {len(vectorised_paths)}")
+    log.info(
+        f"Number of change Report Shapefiles to integrate  :  {len(vectorised_paths)}"
+    )
     log.info("Paths of shapefiles to integrate are:")
     for number, path in enumerate(sorted(vectorised_paths)):
         log.info(f"{number} : {path}")
@@ -768,7 +796,7 @@ def acd_national_integration(
 
     # specify roi path
     roi_filepath = os.path.join(config_dict["roi_dir"], config_dict["roi_filename"])
-    
+
     # logic if roi path does not exist
     if not os.path.exists(roi_filepath):
         log.error("Could not open ROI, filepath does not exist")
@@ -778,7 +806,7 @@ def acd_national_integration(
     # read in ROI, reproject
     log.info("Reading in ROI")
     roi = gpd.read_file(roi_filepath)
-    #log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
+    # log.info(f"Ensuring ROI is of EPSG  :  {epsg}")
     roi = roi.to_crs(epsg)
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
@@ -788,7 +816,7 @@ def acd_national_integration(
                 # read in shapefile, reproject
                 log.info(f"Reading in change report shapefile   :  {vector}")
                 shape = gpd.read_file(vector)
-                #log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
+                # log.info(f"Ensuring change report shapefile is of EPSG  :  {epsg}")
                 shape = shape.to_crs(epsg)
 
                 # spatial filter intersection of shapefile with ROI
@@ -805,7 +833,9 @@ def acd_national_integration(
                 # recompute area
                 merged_gdf["area"] = merged_gdf.area
 
-                log.info(f"Integrated geodataframe length is currently  :  {len(merged_gdf['area'])}")
+                log.info(
+                    f"Integrated geodataframe length is currently  :  {len(merged_gdf['area'])}"
+                )
             except:
                 log.error(f"failed to merge geodataframe: {vector}")
 
@@ -813,7 +843,9 @@ def acd_national_integration(
     with TemporaryDirectory(dir=os.getcwd()) as td:
         try:
             out_path = f"{os.path.join(root_dir, 'national_geodataframe.shp')}"
-            log.info(f"Merging loop complete, now writing integrated shapefile to {out_path}")
+            log.info(
+                f"Merging loop complete, now writing integrated shapefile to {out_path}"
+            )
             merged_gdf.to_file(filename=out_path)
         except:
             log.error(f"failed to write output at :  {out_path}")
@@ -827,6 +859,7 @@ def acd_national_integration(
 
     return
 
+
 def acd_national_filtering(log: logging.Logger, config_dict: dict):
     """
 
@@ -837,7 +870,7 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
                 - Minimum Area
                 - Date Period?
 
-                
+
     Parameters:
     ----------
 
@@ -863,17 +896,24 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 
     # find national_geodataframe
     search_pattern = "national_geodataframe.shp"
-    national_change_report_path = glob.glob(os.path.join(config_dict["tile_dir"], search_pattern))[0]
+    national_change_report_path = glob.glob(
+        os.path.join(config_dict["tile_dir"], search_pattern)
+    )[0]
 
     # read in national geodataframe created before by the integrated step
     if os.path.exists(national_change_report_path):
         national_gdf = gpd.read_file(national_change_report_path)
     else:
-        log.error(f"national geodataframe does not exist, have you set 'do_integrate' to True in pyeo_1.ini?")
+        log.error(
+            f"national geodataframe does not exist, have you set 'do_integrate' to True in pyeo_1.ini?"
+        )
         sys.exit(1)
 
     # create a query based on the county list provided in pyeo_1.ini
-    query_values = " or ".join(f"County == '{county_name}'" for county_name in config_dict["counties_of_interest"])
+    query_values = " or ".join(
+        f"County == '{county_name}'"
+        for county_name in config_dict["counties_of_interest"]
+    )
 
     # apply the county query filter
     filtered = national_gdf.query(query_values)
@@ -888,7 +928,9 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
     with TemporaryDirectory(dir=os.getcwd()) as td:
         try:
             out_path = f"{os.path.join(config_dict['tile_dir'], 'national_geodataframe_filtered.shp')}"
-            log.info(f"Filtering complete, now writing filtered national shapefile to :")
+            log.info(
+                f"Filtering complete, now writing filtered national shapefile to :"
+            )
             log.info(f"        {out_path}")
             filtered.to_file(filename=out_path)
         except:

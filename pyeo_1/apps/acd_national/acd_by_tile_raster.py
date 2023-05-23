@@ -15,10 +15,8 @@ from pyeo_1 import classification
 from pyeo_1 import acd_national
 from tempfile import TemporaryDirectory
 
-def acd_by_tile_raster(
-    config_path: str,
-    tile: str
-    ):
+
+def acd_by_tile_raster(config_path: str, tile: str):
     """
 
     This function:
@@ -35,10 +33,10 @@ def acd_by_tile_raster(
             - SCL Cloud Mask
 
         - Classifies the Composite and Change Imagery
-        
+
         - Runs Change Detection between the Composite and all Change images
 
-        - Produces a Change Report as a Raster 
+        - Produces a Change Report as a Raster
 
     Parameters
     ----------
@@ -53,19 +51,15 @@ def acd_by_tile_raster(
 
     """
 
-
-
     config_dict = filesystem_utilities.config_path_to_config_dict(config_path)
 
     # wrap the whole process in a try block
     # try:
-    # get path where the tiles are downloaded to 
+    # get path where the tiles are downloaded to
     tile_directory_path = config_dict["tile_dir"]
 
     # check for and create the folder structure pyeo expects
-    individual_tile_directory_path = os.path.join(
-        tile_directory_path, tile
-    )
+    individual_tile_directory_path = os.path.join(tile_directory_path, tile)
     if not os.path.exists(individual_tile_directory_path):
         # log.info(
         #     f"individual tile directory path  : {individual_tile_directory_path}"
@@ -74,15 +68,13 @@ def acd_by_tile_raster(
             individual_tile_directory_path
         )
     # else:
-        # log.info(
-        #     f"This individual tile directory already exists  : {individual_tile_directory_path}"
-        # )
+    # log.info(
+    #     f"This individual tile directory already exists  : {individual_tile_directory_path}"
+    # )
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(
-            individual_tile_directory_path, "log", tile + "_log.txt"
-        ),
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
         logger_name=f"pyeo_1_tile_{tile}_log",
     )
 
@@ -160,27 +152,21 @@ def acd_by_tile_raster(
     # ------------------------------------------------------------------------
 
     if config_dict["build_composite"] or config_dict["do_all"]:
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Creating an initial cloud-free median composite from Sentinel-2 as a baseline map"
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
         try:
-            composite_products_all = (
-                queries_and_downloads.check_for_s2_data_by_date(
-                    tile_root_dir,
-                    composite_start_date,
-                    composite_end_date,
-                    credentials_dict,
-                    cloud_cover=cloud_cover,
-                    tile_id=tile,
-                    producttype=None,  # "S2MSI2A" or "S2MSI1C"
-                )
+            composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
+                tile_root_dir,
+                composite_start_date,
+                composite_end_date,
+                credentials_dict,
+                cloud_cover=cloud_cover,
+                tile_id=tile,
+                producttype=None,  # "S2MSI2A" or "S2MSI1C"
             )
         except Exception as error:
             tile_log.error(
@@ -223,9 +209,7 @@ def acd_by_tile_raster(
         if len(rel_orbits) > 0:
             if l1c_products.shape[0] > max_image_number / len(rel_orbits):
                 tile_log.info(
-                    "Capping the number of L1C products to {}".format(
-                        max_image_number
-                    )
+                    "Capping the number of L1C products to {}".format(max_image_number)
                 )
                 tile_log.info(
                     "Relative orbits found covering tile: {}".format(rel_orbits)
@@ -252,9 +236,7 @@ def acd_by_tile_raster(
         if len(rel_orbits) > 0:
             if l2a_products.shape[0] > max_image_number / len(rel_orbits):
                 tile_log.info(
-                    "Capping the number of L2A products to {}".format(
-                        max_image_number
-                    )
+                    "Capping the number of L2A products to {}".format(max_image_number)
                 )
                 tile_log.info(
                     "Relative orbits found covering tile: {}".format(rel_orbits)
@@ -407,9 +389,7 @@ def acd_by_tile_raster(
                         )
                         > faulty_granule_threshold
                     ):
-                        tile_log.info(
-                            "Replacing L1C {} with L2A product:".format(id)
-                        )
+                        tile_log.info("Replacing L1C {} with L2A product:".format(id))
                         tile_log.info(
                             "              {}".format(
                                 matching_l2a_products_df.iloc[0, :]["title"]
@@ -420,7 +400,7 @@ def acd_by_tile_raster(
             if len(drop) > 0:
                 l1c_products = l1c_products.drop(index=drop)
             if len(add) > 0:
-                #l2a_products = l2a_products.append(add)
+                # l2a_products = l2a_products.append(add)
                 add = pd.DataFrame(add)
                 l2a_products = pd.concat([l2a_products, add])
 
@@ -479,9 +459,7 @@ def acd_by_tile_raster(
             for index, safe_dir in enumerate(incomplete_downloads):
                 if sizes[
                     index
-                ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(
-                    safe_dir
-                ):
+                ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(safe_dir):
                     tile_log.warning(
                         "Found likely incomplete download of size {} MB: {}".format(
                             str(round(sizes[index] / 1024 / 1024)), safe_dir
@@ -489,15 +467,11 @@ def acd_by_tile_raster(
                     )
                     # shutil.rmtree(safe_dir)
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Image download and atmospheric correction for composite is complete."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         if config_dict["do_delete"]:
             tile_log.info(
@@ -515,9 +489,7 @@ def acd_by_tile_raster(
             tile_log.info(
                 "---------------------------------------------------------------"
             )
-            tile_log.info(
-                "Deletion of L1C images complete. Keeping only L2A images."
-            )
+            tile_log.info("Deletion of L1C images complete. Keeping only L2A images.")
             tile_log.info(
                 "---------------------------------------------------------------"
             )
@@ -541,15 +513,11 @@ def acd_by_tile_raster(
                     "---------------------------------------------------------------"
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         directory = composite_l2_masked_image_dir
         masked_file_paths = [
@@ -559,9 +527,7 @@ def acd_by_tile_raster(
         ]
 
         directory = composite_l2_image_dir
-        l2a_zip_file_paths = [
-            f for f in os.listdir(directory) if f.endswith(".zip")
-        ]
+        l2a_zip_file_paths = [f for f in os.listdir(directory) if f.endswith(".zip")]
 
         if len(l2a_zip_file_paths) > 0:
             for f in l2a_zip_file_paths:
@@ -617,27 +583,17 @@ def acd_by_tile_raster(
             )
         # I.R. 20220607 START
         # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Offsetting cloud masked L2A images for composite.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(
             composite_l2_masked_image_dir, composite_l2_masked_image_dir
         )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
-        tile_log.info(
-            "Offsetting of cloud masked L2A images for composite complete."
-        )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
+        tile_log.info("Offsetting of cloud masked L2A images for composite complete.")
+        tile_log.info("---------------------------------------------------------------")
         # I.R. 20220607 END
 
         if config_dict["do_quicklooks"] or config_dict["do_all"]:
@@ -664,9 +620,7 @@ def acd_by_tile_raster(
                             quicklook_dir,
                             os.path.basename(f).split(".")[0] + ".png",
                         )
-                        tile_log.info(
-                            "Creating quicklook: {}".format(quicklook_path)
-                        )
+                        tile_log.info("Creating quicklook: {}".format(quicklook_path))
                         raster_manipulation.create_quicklook(
                             f,
                             quicklook_path,
@@ -697,17 +651,13 @@ def acd_by_tile_raster(
                 "---------------------------------------------------------------"
             )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Building initial cloud-free median composite from directory {}".format(
                 composite_l2_masked_image_dir
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         directory = composite_l2_masked_image_dir
         masked_file_paths = [
             f
@@ -786,9 +736,7 @@ def acd_by_tile_raster(
                     "---------------------------------------------------------------"
                 )
                 tile_log.info("Intermediate file products have been deleted.")
-                tile_log.info(
-                    "They can be reprocessed from the downloaded L2A images."
-                )
+                tile_log.info("They can be reprocessed from the downloaded L2A images.")
                 tile_log.info(
                     "---------------------------------------------------------------"
                 )
@@ -825,9 +773,7 @@ def acd_by_tile_raster(
             )
             for root, dirs, files in os.walk(composite_dir):
                 all_tiffs = [
-                    image_name
-                    for image_name in files
-                    if image_name.endswith(".tif")
+                    image_name for image_name in files if image_name.endswith(".tif")
                 ]
                 for this_tiff in all_tiffs:
                     raster_manipulation.compress_tiff(
@@ -859,17 +805,13 @@ def acd_by_tile_raster(
     # Step 2: Download change detection images for the specific time window (L2A where available plus additional L1C)
     # ------------------------------------------------------------------------
     if config_dict["do_all"] or config_dict["do_download"]:
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Downloading change detection images between {} and {} with cloud cover <= {}".format(
                 start_date, end_date, cloud_cover
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         products_all = queries_and_downloads.check_for_s2_data_by_date(
             tile_root_dir,
@@ -980,9 +922,7 @@ def acd_by_tile_raster(
                         matching_l2a_products_df.iloc[0, :]["size"]
                         > faulty_granule_threshold
                     ):
-                        tile_log.info(
-                            "Replacing L1C {} with L2A product:".format(id)
-                        )
+                        tile_log.info("Replacing L1C {} with L2A product:".format(id))
                         tile_log.info(
                             "              {}".format(
                                 matching_l2a_products_df.iloc[0, :]["title"]
@@ -1006,9 +946,7 @@ def acd_by_tile_raster(
                         matching_l2a_products_df.iloc[0, :]["size"]
                         > faulty_granule_threshold
                     ):
-                        tile_log.info(
-                            "Replacing L1C {} with L2A product:".format(id)
-                        )
+                        tile_log.info("Replacing L1C {} with L2A product:".format(id))
                         tile_log.info(
                             "              {}".format(
                                 matching_l2a_products_df.iloc[0, :]["title"]
@@ -1080,9 +1018,7 @@ def acd_by_tile_raster(
             for index, safe_dir in enumerate(incomplete_downloads):
                 if sizes[
                     index
-                ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(
-                    safe_dir
-                ):
+                ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(safe_dir):
                     tile_log.warning(
                         "Found likely incomplete download of size {} MB: {}".format(
                             str(round(sizes[index] / 1024 / 1024)), safe_dir
@@ -1090,15 +1026,11 @@ def acd_by_tile_raster(
                     )
                     # shutil.rmtree(safe_dir)
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Image download and atmospheric correction for change detection images is complete."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         # TODO: delete L1C images if do_delete is True
         if config_dict["do_delete"]:
             tile_log.info(
@@ -1139,15 +1071,11 @@ def acd_by_tile_raster(
                     "---------------------------------------------------------------"
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         # l2a_paths = [ f.path for f in os.scandir(l2_image_dir) if f.is_dir() ]
         # tile_log.info("  l2_image_dir: {}".format(l2_image_dir))
         # tile_log.info("  l2_masked_image_dir: {}".format(l2_masked_image_dir))
@@ -1164,37 +1092,23 @@ def acd_by_tile_raster(
             skip_existing=skip_existing,
         )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
-        tile_log.info(
-            "Cloud masking and band stacking of new L2A images are complete."
-        )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
+        tile_log.info("Cloud masking and band stacking of new L2A images are complete.")
+        tile_log.info("---------------------------------------------------------------")
 
         # I.R. 20220607 START
         # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Offsetting cloud masked L2A images.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(
             l2_masked_image_dir, l2_masked_image_dir
         )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Offsetting of cloud masked L2A images complete.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         # I.R. 20220607 END
 
         if config_dict["do_quicklooks"] or config_dict["do_all"]:
@@ -1221,9 +1135,7 @@ def acd_by_tile_raster(
                             quicklook_dir,
                             os.path.basename(f).split(".")[0] + ".png",
                         )
-                        tile_log.info(
-                            "Creating quicklook: {}".format(quicklook_path)
-                        )
+                        tile_log.info("Creating quicklook: {}".format(quicklook_path))
                         raster_manipulation.create_quicklook(
                             f,
                             quicklook_path,
@@ -1252,17 +1164,13 @@ def acd_by_tile_raster(
                 "---------------------------------------------------------------"
             )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Compressing tiff files in directory {} and all subdirectories".format(
                 l2_masked_image_dir
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         for root, dirs, files in os.walk(l2_masked_image_dir):
             all_tiffs = [
                 image_name for image_name in files if image_name.endswith(".tif")
@@ -1272,32 +1180,24 @@ def acd_by_tile_raster(
                     os.path.join(root, this_tiff), os.path.join(root, this_tiff)
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Pre-processing of change detection images, file compression, zipping"
         )
         tile_log.info(
             "and deletion of intermediate file products (if selected) are complete."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
     # ------------------------------------------------------------------------
     # Step 3: Classify each L2A image and the baseline composite
     # ------------------------------------------------------------------------
     if config_dict["do_all"] or config_dict["do_classify"]:
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Classify a land cover map for each L2A image and composite image using a saved model"
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Model used: {}".format(model_path))
         if skip_existing:
             tile_log.info("Skipping existing classification images if found.")
@@ -1322,17 +1222,13 @@ def acd_by_tile_raster(
             skip_existing=skip_existing,
         )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Compressing tiff files in directory {} and all subdirectories".format(
                 categorised_image_dir
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         for root, dirs, files in os.walk(categorised_image_dir):
             all_tiffs = [
                 image_name for image_name in files if image_name.endswith(".tif")
@@ -1342,13 +1238,9 @@ def acd_by_tile_raster(
                     os.path.join(root, this_tiff), os.path.join(root, this_tiff)
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Classification of all images is complete.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
         if config_dict["do_quicklooks"] or config_dict["do_all"]:
             tile_log.info(
@@ -1376,9 +1268,7 @@ def acd_by_tile_raster(
                             quicklook_dir,
                             os.path.basename(f).split(".")[0] + ".png",
                         )
-                        tile_log.info(
-                            "Creating quicklook: {}".format(quicklook_path)
-                        )
+                        tile_log.info("Creating quicklook: {}".format(quicklook_path))
                         raster_manipulation.create_quicklook(
                             f, quicklook_path, width=512, height=512, format="PNG"
                         )
@@ -1396,18 +1286,22 @@ def acd_by_tile_raster(
         tile_log.info("Creating change layers from stacked class images.")
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Changes of interest:")
-        tile_log.info("  from any of the classes {}".format(config_dict["from_classes"]))
+        tile_log.info(
+            "  from any of the classes {}".format(config_dict["from_classes"])
+        )
         tile_log.info("  to   any of the classes {}".format(config_dict["to_classes"]))
 
         # optionally sieve the class images
         if sieve > 0:
             tile_log.info("Applying sieve to classification outputs.")
-            sieved_paths = raster_manipulation.sieve_directory(in_dir = categorised_image_dir,
-                                                                    out_dir = sieved_image_dir,
-                                                                    neighbours = 8,
-                                                                    sieve=sieve,
-                                                                    out_type="GTiff",
-                                                                    skip_existing=skip_existing)
+            sieved_paths = raster_manipulation.sieve_directory(
+                in_dir=categorised_image_dir,
+                out_dir=sieved_image_dir,
+                neighbours=8,
+                sieve=sieve,
+                out_type="GTiff",
+                skip_existing=skip_existing,
+            )
             # if sieve was chosen, work with the sieved class images
             class_image_dir = sieved_image_dir
         else:
@@ -1415,96 +1309,147 @@ def acd_by_tile_raster(
             class_image_dir = categorised_image_dir
 
         # get all image paths in the classification maps directory except the class composites
-        class_image_paths = [ f.path for f in os.scandir(class_image_dir) if f.is_file() and f.name.endswith(".tif") \
-                                and not "composite_" in f.name ]
+        class_image_paths = [
+            f.path
+            for f in os.scandir(class_image_dir)
+            if f.is_file() and f.name.endswith(".tif") and not "composite_" in f.name
+        ]
         if len(class_image_paths) == 0:
-            raise FileNotFoundError("No class images found in {}.".format(class_image_dir))
+            raise FileNotFoundError(
+                "No class images found in {}.".format(class_image_dir)
+            )
 
         # sort class images by image acquisition date
-        class_image_paths = list(filter(filesystem_utilities.get_image_acquisition_time, class_image_paths))
-        class_image_paths.sort(key=lambda x: filesystem_utilities.get_image_acquisition_time(x))
+        class_image_paths = list(
+            filter(filesystem_utilities.get_image_acquisition_time, class_image_paths)
+        )
+        class_image_paths.sort(
+            key=lambda x: filesystem_utilities.get_image_acquisition_time(x)
+        )
         for index, image in enumerate(class_image_paths):
             tile_log.info("{}: {}".format(index, image))
 
         # find the latest available composite
         try:
-            latest_composite_name = \
-                filesystem_utilities.sort_by_timestamp(
-                    [image_name for image_name in os.listdir(composite_dir) if image_name.endswith(".tif")],
-                    recent_first=True
-                )[0]
+            latest_composite_name = filesystem_utilities.sort_by_timestamp(
+                [
+                    image_name
+                    for image_name in os.listdir(composite_dir)
+                    if image_name.endswith(".tif")
+                ],
+                recent_first=True,
+            )[0]
             latest_composite_path = os.path.join(composite_dir, latest_composite_name)
             tile_log.info("Most recent composite at {}".format(latest_composite_path))
         except IndexError:
-            tile_log.critical("Latest composite not found. The first time you run this script, you need to include the "
-                            "--build-composite flag to create a base composite to work off. If you have already done this,"
-                            "check that the earliest dated image in your images/merged folder is later than the earliest"
-                            " dated image in your composite/ folder.")
+            tile_log.critical(
+                "Latest composite not found. The first time you run this script, you need to include the "
+                "--build-composite flag to create a base composite to work off. If you have already done this,"
+                "check that the earliest dated image in your images/merged folder is later than the earliest"
+                " dated image in your composite/ folder."
+            )
             sys.exit(1)
 
         latest_class_composite_path = os.path.join(
-                                                    class_image_dir, \
-                                                    [ f.path for f in os.scandir(class_image_dir) if f.is_file() \
-                                                        and os.path.basename(latest_composite_path)[:-4] in f.name \
-                                                        and f.name.endswith(".tif")][0]
-                                        )
+            class_image_dir,
+            [
+                f.path
+                for f in os.scandir(class_image_dir)
+                if f.is_file()
+                and os.path.basename(latest_composite_path)[:-4] in f.name
+                and f.name.endswith(".tif")
+            ][0],
+        )
 
-        tile_log.info("Most recent class composite at {}".format(latest_class_composite_path))
+        tile_log.info(
+            "Most recent class composite at {}".format(latest_class_composite_path)
+        )
         if not os.path.exists(latest_class_composite_path):
-            tile_log.critical("Latest class composite not found. The first time you run this script, you need to include the "
-                            "--build-composite flag to create a base composite to work off. If you have already done this,"
-                            "check that the earliest dated image in your images/merged folder is later than the earliest"
-                            " dated image in your composite/ folder. Then, you need to run the --classify option.")
+            tile_log.critical(
+                "Latest class composite not found. The first time you run this script, you need to include the "
+                "--build-composite flag to create a base composite to work off. If you have already done this,"
+                "check that the earliest dated image in your images/merged folder is later than the earliest"
+                " dated image in your composite/ folder. Then, you need to run the --classify option."
+            )
             sys.exit(1)
 
-        if config_dict["do_dev"]: # set the name of the report file in the development version run
-            before_timestamp = filesystem_utilities.get_change_detection_dates(os.path.basename(latest_class_composite_path))[0]
-            #I.R. 20220611 START
+        if config_dict[
+            "do_dev"
+        ]:  # set the name of the report file in the development version run
+            before_timestamp = filesystem_utilities.get_change_detection_dates(
+                os.path.basename(latest_class_composite_path)
+            )[0]
+            # I.R. 20220611 START
             ## Timestamp report with the date of most recent classified image that contributes to it
-            after_timestamp  = filesystem_utilities.get_image_acquisition_time(os.path.basename(class_image_paths[-1]))
+            after_timestamp = filesystem_utilities.get_image_acquisition_time(
+                os.path.basename(class_image_paths[-1])
+            )
             ## ORIGINAL
             # gets timestamp of the earliest change image of those available in class_image_path
             # after_timestamp  = pyeo_1.filesystem_utilities.get_image_acquisition_time(os.path.basename(class_image_paths[0]))
-            #I.R. 20220611 END
-            output_product = os.path.join(probability_image_dir,
-                                            "report_{}_{}_{}.tif".format(
-                                            before_timestamp.strftime("%Y%m%dT%H%M%S"),
-                                            tile,
-                                            after_timestamp.strftime("%Y%m%dT%H%M%S"))
-                                            )
+            # I.R. 20220611 END
+            output_product = os.path.join(
+                probability_image_dir,
+                "report_{}_{}_{}.tif".format(
+                    before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                    tile,
+                    after_timestamp.strftime("%Y%m%dT%H%M%S"),
+                ),
+            )
             tile_log.info("I.R. Report file name will be {}".format(output_product))
 
             # if a report file exists, archive it  ( I.R. Changed from 'rename it to show it has been updated')
-            n_report_files = len([ f for f in os.scandir(probability_image_dir) if f.is_file() \
-                                    and f.name.startswith("report_") \
-                                    and f.name.endswith(".tif")])
+            n_report_files = len(
+                [
+                    f
+                    for f in os.scandir(probability_image_dir)
+                    if f.is_file()
+                    and f.name.startswith("report_")
+                    and f.name.endswith(".tif")
+                ]
+            )
 
             if n_report_files > 0:
                 # I.R. ToDo: Should iterate over output_product_existing in case more than one report file is present (though unlikely)
-                output_product_existing = [ f.path for f in os.scandir(probability_image_dir) if f.is_file() \
-                                            and f.name.startswith("report_") \
-                                            and f.name.endswith(".tif")][0]
-                tile_log.info("Found existing report image product: {}".format(output_product_existing))
-                #I.R. 20220610 START
+                output_product_existing = [
+                    f.path
+                    for f in os.scandir(probability_image_dir)
+                    if f.is_file()
+                    and f.name.startswith("report_")
+                    and f.name.endswith(".tif")
+                ][0]
+                tile_log.info(
+                    "Found existing report image product: {}".format(
+                        output_product_existing
+                    )
+                )
+                # I.R. 20220610 START
                 ## Mark existing reports as 'archive_'
                 ## - do not try and extend upon existing reports
                 ## - calls to __change_from_class_maps below will build a report incorporating all new AND pre-existing change maps
                 ## - this might be the cause of the error in report generation that caused over-range and periodicity in the histogram - as reported to Heiko by email
                 # report_timestamp = pyeo_1.filesystem_utilities.get_change_detection_dates(os.path.basename(output_product_existing))[1]
                 # if report_timestamp < after_timestamp:
-                    # tile_log.info("Report timestamp {}".format(report_timestamp.strftime("%Y%m%dT%H%M%S")))
-                    # tile_log.info(" is earlier than {}".format(after_timestamp.strftime("%Y%m%dT%H%M%S")))
-                    # tile_log.info("Updating its file name to: {}".format(output_product))
-                    # os.rename(output_product_existing, output_product)
+                # tile_log.info("Report timestamp {}".format(report_timestamp.strftime("%Y%m%dT%H%M%S")))
+                # tile_log.info(" is earlier than {}".format(after_timestamp.strftime("%Y%m%dT%H%M%S")))
+                # tile_log.info("Updating its file name to: {}".format(output_product))
+                # os.rename(output_product_existing, output_product)
 
                 # Renaming any pre-existing report file with prefix 'archive_'
                 ## it will therefore not be detected in __change_from_class_maps which will therefore create a new report file
 
-                output_product_existing_archived = os.path.join(os.path.dirname(output_product_existing), 'archived_' + os.path.basename(output_product_existing))
-                tile_log.info("Renaming existing report image product to: {}".format(output_product_existing_archived))
+                output_product_existing_archived = os.path.join(
+                    os.path.dirname(output_product_existing),
+                    "archived_" + os.path.basename(output_product_existing),
+                )
+                tile_log.info(
+                    "Renaming existing report image product to: {}".format(
+                        output_product_existing_archived
+                    )
+                )
                 os.rename(output_product_existing, output_product_existing_archived)
 
-                #I.R. 20220610 END
+                # I.R. 20220610 END
 
         # find change patterns in the stack of classification images
 
@@ -1514,73 +1459,99 @@ def acd_by_tile_raster(
             log.info(f"  printing index, image   : {index}, {image}")
             log.info("")
             log.info("")
-            before_timestamp = filesystem_utilities.get_change_detection_dates(os.path.basename(latest_class_composite_path))[0]
-            after_timestamp  = filesystem_utilities.get_image_acquisition_time(os.path.basename(image))
-            #I.R. 20220612 START
-            tile_log.info("*** PROCESSING CLASSIFIED IMAGE: {} of {} filename: {} ***".format(index, len(class_image_paths), image))
-            #I.R. 20220612 END
+            before_timestamp = filesystem_utilities.get_change_detection_dates(
+                os.path.basename(latest_class_composite_path)
+            )[0]
+            after_timestamp = filesystem_utilities.get_image_acquisition_time(
+                os.path.basename(image)
+            )
+            # I.R. 20220612 START
+            tile_log.info(
+                "*** PROCESSING CLASSIFIED IMAGE: {} of {} filename: {} ***".format(
+                    index, len(class_image_paths), image
+                )
+            )
+            # I.R. 20220612 END
             tile_log.info("  early time stamp: {}".format(before_timestamp))
             tile_log.info("  late  time stamp: {}".format(after_timestamp))
-            change_raster = os.path.join(probability_image_dir,
-                                            "change_{}_{}_{}.tif".format(
-                                            before_timestamp.strftime("%Y%m%dT%H%M%S"),
-                                            tile,
-                                            after_timestamp.strftime("%Y%m%dT%H%M%S"))
-                                            )
-            tile_log.info("  Change raster file to be created: {}".format(change_raster))
+            change_raster = os.path.join(
+                probability_image_dir,
+                "change_{}_{}_{}.tif".format(
+                    before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                    tile,
+                    after_timestamp.strftime("%Y%m%dT%H%M%S"),
+                ),
+            )
+            tile_log.info(
+                "  Change raster file to be created: {}".format(change_raster)
+            )
 
-            dNDVI_raster = os.path.join(probability_image_dir,
-                                            "dNDVI_{}_{}_{}.tif".format(
-                                            before_timestamp.strftime("%Y%m%dT%H%M%S"),
-                                            tile,
-                                            after_timestamp.strftime("%Y%m%dT%H%M%S"))
-                                            )
-            tile_log.info("  I.R. dNDVI raster file to be created: {}".format(dNDVI_raster))
+            dNDVI_raster = os.path.join(
+                probability_image_dir,
+                "dNDVI_{}_{}_{}.tif".format(
+                    before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                    tile,
+                    after_timestamp.strftime("%Y%m%dT%H%M%S"),
+                ),
+            )
+            tile_log.info(
+                "  I.R. dNDVI raster file to be created: {}".format(dNDVI_raster)
+            )
 
-            NDVI_raster = os.path.join(probability_image_dir,
-                                            "NDVI_{}_{}_{}.tif".format(
-                                            before_timestamp.strftime("%Y%m%dT%H%M%S"),
-                                            tile,
-                                            after_timestamp.strftime("%Y%m%dT%H%M%S"))
-                                            )
-            tile_log.info("  I.R. NDVI raster file of change image to be created: {}".format(NDVI_raster))
+            NDVI_raster = os.path.join(
+                probability_image_dir,
+                "NDVI_{}_{}_{}.tif".format(
+                    before_timestamp.strftime("%Y%m%dT%H%M%S"),
+                    tile,
+                    after_timestamp.strftime("%Y%m%dT%H%M%S"),
+                ),
+            )
+            tile_log.info(
+                "  I.R. NDVI raster file of change image to be created: {}".format(
+                    NDVI_raster
+                )
+            )
 
             if config_dict["do_dev"]:
                 # This function looks for changes from class 'change_from' in the composite to any of the 'change_to_classes'
                 # in the change images. Pixel values are the acquisition date of the detected change of interest or zero.
-                #TODO: In change_from_class_maps(), add a flag (e.g. -1) whether a pixel was a cloud in the later image.
+                # TODO: In change_from_class_maps(), add a flag (e.g. -1) whether a pixel was a cloud in the later image.
                 # Applying check whether dNDVI < -0.2, i.e. greenness has decreased over changed areas
 
-                tile_log.info("Update of the report image product based on change detection image.")
-                raster_manipulation.__change_from_class_maps(old_class_path=latest_class_composite_path,
-                                                            new_class_path=image,
-                                                            change_raster=change_raster,
-                                                            dNDVI_raster=dNDVI_raster,
-                                                            NDVI_raster=NDVI_raster,
-                                                            change_from = from_classes,
-                                                            change_to = to_classes,
-                                                            report_path = output_product,
-                                                            skip_existing = skip_existing,
-                                                            old_image_dir = composite_dir,
-                                                            new_image_dir = l2_masked_image_dir,
-                                                            viband1 = 4,
-                                                            viband2 = 3,
-                                                            dNDVI_threshold = -0.2,
-                                                            log=tile_log
-                                                            )
+                tile_log.info(
+                    "Update of the report image product based on change detection image."
+                )
+                raster_manipulation.__change_from_class_maps(
+                    old_class_path=latest_class_composite_path,
+                    new_class_path=image,
+                    change_raster=change_raster,
+                    dNDVI_raster=dNDVI_raster,
+                    NDVI_raster=NDVI_raster,
+                    change_from=from_classes,
+                    change_to=to_classes,
+                    report_path=output_product,
+                    skip_existing=skip_existing,
+                    old_image_dir=composite_dir,
+                    new_image_dir=l2_masked_image_dir,
+                    viband1=4,
+                    viband2=3,
+                    dNDVI_threshold=-0.2,
+                    log=tile_log,
+                )
             else:
-                raster_manipulation.change_from_class_maps(latest_class_composite_path,
-                                                            image,
-                                                            change_raster,
-                                                            change_from = from_classes,
-                                                            change_to = to_classes,
-                                                            skip_existing = skip_existing
-                                                            )
+                raster_manipulation.change_from_class_maps(
+                    latest_class_composite_path,
+                    image,
+                    change_raster,
+                    change_from=from_classes,
+                    change_to=to_classes,
+                    skip_existing=skip_existing,
+                )
 
         # I.R. ToDo: Function compute additional layers derived from set of layers in report file generated in __change_from_class_maps()
         # pyeo_1.raster_manipulation.computed_report_layer_generation(report_path = output_product)
 
-        # I.R. ToDo: Function to generate 3D time series array of classified (+NDVI?) images over full date range 
+        # I.R. ToDo: Function to generate 3D time series array of classified (+NDVI?) images over full date range
         ## and save it to disk as a layered GeoTIFF (or numpy array)
         ## (Build into above loop that generates report...?)
         # pyeo_1.raster_manipulation.time_series_construction(classified_image_dir = classified_image_dir, change_from = from_classes,change_to = to_classes)
@@ -1588,11 +1559,11 @@ def acd_by_tile_raster(
         # I.R. ToDo: Insert function to perform time series analysis on 3D classified (+NDVI?) time series array and generate forest alert outputs
         ## in a GeoTIFF file
         # pyeo_1.raster_manipulation.time_series_analysis(report_path = output_product)
-        # 
+        #
         # I.R. ToDo: Alternatively.. implement sliding buffer to scan through classified (and/or NDVI) image set so that FIR, IIR and State-Machine
-        ## filters can be implemented to generate forest alerts  
+        ## filters can be implemented to generate forest alerts
         ## e.g. 5 layers to hold rotating buffer of classification and/or NDVI state plus additional layers to hold state variables
-        ## Use state to record a run of n consecutive change_from classes, 
+        ## Use state to record a run of n consecutive change_from classes,
         ## detect transition to bare earth class with a simultaneous NDVI drop of > threshold
         ## record time point as first change date
         ## detect subsequent change to grassland class as bare earth re-greens with new growth
@@ -1605,18 +1576,13 @@ def acd_by_tile_raster(
         tile_log.info("Post-classification change detection complete.")
         tile_log.info("---------------------------------------------------------------")
 
-
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Compressing tiff files in directory {} and all subdirectories".format(
                 probability_image_dir
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         for root, dirs, files in os.walk(probability_image_dir):
             all_tiffs = [
                 image_name for image_name in files if image_name.endswith(".tif")
@@ -1626,17 +1592,13 @@ def acd_by_tile_raster(
                     os.path.join(root, this_tiff), os.path.join(root, this_tiff)
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Compressing tiff files in directory {} and all subdirectories".format(
                 sieved_image_dir
             )
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         for root, dirs, files in os.walk(sieved_image_dir):
             all_tiffs = [
                 image_name for image_name in files if image_name.endswith(".tif")
@@ -1669,15 +1631,11 @@ def acd_by_tile_raster(
                     "No class images found in {}.".format(categorised_image_dir)
                 )
 
-            before_timestamp = (
-                filesystem_utilities.get_change_detection_dates(
-                    os.path.basename(latest_class_composite_path)
-                )[0]
-            )
-            after_timestamp = (
-                filesystem_utilities.get_image_acquisition_time(
-                    os.path.basename(class_image_paths[-1])
-                )
+            before_timestamp = filesystem_utilities.get_change_detection_dates(
+                os.path.basename(latest_class_composite_path)
+            )[0]
+            after_timestamp = filesystem_utilities.get_image_acquisition_time(
+                os.path.basename(class_image_paths[-1])
             )
             output_product = os.path.join(
                 probability_image_dir,
@@ -1691,16 +1649,12 @@ def acd_by_tile_raster(
             tile_log.info("Combining date maps: {}".format(date_image_paths))
             raster_manipulation.combine_date_maps(date_image_paths, output_product)
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Report image product completed / updated: {}".format(output_product)
         )
         tile_log.info("Compressing the report image.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         raster_manipulation.compress_tiff(output_product, output_product)
 
         if config_dict["do_delete"]:
@@ -1725,12 +1679,8 @@ def acd_by_tile_raster(
                 paths = [f for f in os.listdir(directory)]
                 for f in paths:
                     # keep the classified composite layers and the report image product for the next change detection
-                    if not f.startswith("composite_") and not f.startswith(
-                        "report_"
-                    ):
-                        tile_log.info(
-                            "Deleting {}".format(os.path.join(directory, f))
-                        )
+                    if not f.startswith("composite_") and not f.startswith("report_"):
+                        tile_log.info("Deleting {}".format(os.path.join(directory, f)))
                         if os.path.isdir(os.path.join(directory, f)):
                             shutil.rmtree(os.path.join(directory, f))
                         else:
@@ -1766,28 +1716,20 @@ def acd_by_tile_raster(
                     "---------------------------------------------------------------"
                 )
 
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
             "Change detection and report image product updating, file compression, zipping"
         )
         tile_log.info(
             "and deletion of intermediate file products (if selected) are complete."
         )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
     if config_dict["do_delete"]:
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Deleting temporary directories starting with 'tmp*'")
         tile_log.info("These can be left over from interrupted processing runs.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         directory = tile_root_dir
         for root, dirs, files in os.walk(directory):
             temp_dirs = [d for d in dirs if d.startswith("tmp")]
@@ -1801,13 +1743,9 @@ def acd_by_tile_raster(
                             os.path.join(root, temp_dir)
                         )
                     )
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
         tile_log.info("Deletion of temporary directories complete.")
-        tile_log.info(
-            "---------------------------------------------------------------"
-        )
+        tile_log.info("---------------------------------------------------------------")
 
     # ------------------------------------------------------------------------
     # Step 5: Update the baseline composite with the reflectance values of only the changed pixels.
@@ -1937,6 +1875,5 @@ def acd_by_tile_raster(
 
 # if run from terminal, do this:
 if __name__ == "__main__":
-
     # assuming argv[0] is script name, config_path passed as 1 and tile string as 2
     acd_by_tile_raster(config_path=sys.argv[1], tile=sys.argv[2])

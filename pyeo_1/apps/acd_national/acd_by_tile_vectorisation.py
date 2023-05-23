@@ -5,13 +5,10 @@ import logging
 from pyeo_1 import filesystem_utilities
 from pyeo_1 import vectorisation
 
-def vector_report_generation(
-    config_path: str,
-    tile: str
-    ):
-    
+
+def vector_report_generation(config_path: str, tile: str):
     """
-    
+
     This function:
 
         - Vectorises the Change Report Raster, with the aim of producing shapefiles \n
@@ -31,7 +28,9 @@ def vector_report_generation(
     """
 
     # get the config
-    config_dict = filesystem_utilities.config_path_to_config_dict(config_path=config_path)
+    config_dict = filesystem_utilities.config_path_to_config_dict(
+        config_path=config_path
+    )
 
     # get other parameters
     conda_env_name = config_dict["conda_env_name"]
@@ -46,27 +45,24 @@ def vector_report_generation(
     report_tif_pattern = "/output/probabilities/report*.tif"
     search_pattern = f"{tile}{report_tif_pattern}"
 
-    change_report_path = glob.glob(os.path.join(config_dict["tile_dir"], search_pattern))[0]
+    change_report_path = glob.glob(
+        os.path.join(config_dict["tile_dir"], search_pattern)
+    )[0]
 
     ## setting up the per tile logger
-    # get path where the tiles are downloaded to 
+    # get path where the tiles are downloaded to
     tile_directory_path = config_dict["tile_dir"]
     # check for and create the folder structure pyeo expects
-    individual_tile_directory_path = os.path.join(
-        tile_directory_path, tile
-    )
+    individual_tile_directory_path = os.path.join(tile_directory_path, tile)
     # get the logger for this tile
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(
-            individual_tile_directory_path, "log", tile + "_log.txt"
-        ),
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
         logger_name=f"pyeo_1_tile_{tile}_log",
     )
 
     tile_log.info("--" * 20)
     tile_log.info(f"Starting Vectorisation of the Change Report Raster of Tile: {tile}")
     tile_log.info("--" * 20)
-
 
     path_vectorised_binary = vectorisation.vectorise_from_band(
         change_report_path=change_report_path,
@@ -133,8 +129,8 @@ def vector_report_generation(
 
     return
 
+
 # if run from terminal, do this:
 if __name__ == "__main__":
-
     # assuming argv[0] is script name, config_path passed as index 1 and tile string as index 2
     vector_report_generation(config_path=sys.argv[1], tile=sys.argv[2])

@@ -275,9 +275,9 @@ def unzip_downloaded_product(write_directory: str, product_name: str) -> None:
     -------
 
     """
-    
+
     LOGGER.info(f"Attempting to unzip image: {product_name}")
-    
+
     try:
         zip_path = os.path.join(write_directory, product_name + ".zip")
         zip_ref = zipfile.ZipFile(zip_path, "r")
