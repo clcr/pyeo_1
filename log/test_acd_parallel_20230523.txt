@@ -516,3 +516,63 @@
 2023-05-23 18:06:53,552: INFO: automation_test.py: Checking which tiles are still being processed after 720 seconds
 2023-05-23 18:06:53,591: INFO: Tile 36NXG still running pid: 21409650, status; Q 
 2023-05-23 18:06:53,592: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:07:53,647: INFO: automation_test.py: Checking which tiles are still being processed after 780 seconds
+2023-05-23 18:07:53,685: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:07:53,686: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:08:53,729: INFO: automation_test.py: Checking which tiles are still being processed after 840 seconds
+2023-05-23 18:08:53,776: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:08:53,777: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:09:53,829: INFO: automation_test.py: Checking which tiles are still being processed after 900 seconds
+2023-05-23 18:09:53,865: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:09:53,865: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:10:53,925: INFO: automation_test.py: Checking which tiles are still being processed after 960 seconds
+2023-05-23 18:10:53,964: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:10:53,965: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:11:54,023: INFO: automation_test.py: Checking which tiles are still being processed after 1020 seconds
+2023-05-23 18:11:54,058: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:11:54,059: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:12:54,115: INFO: automation_test.py: Checking which tiles are still being processed after 1080 seconds
+2023-05-23 18:12:54,195: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:12:54,195: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:13:54,256: INFO: automation_test.py: Checking which tiles are still being processed after 1140 seconds
+2023-05-23 18:13:54,347: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:13:54,347: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:14:54,402: INFO: automation_test.py: Checking which tiles are still being processed after 1200 seconds
+2023-05-23 18:14:54,451: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:14:54,452: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:15:54,512: INFO: automation_test.py: Checking which tiles are still being processed after 1260 seconds
+2023-05-23 18:15:54,552: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:15:54,553: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:16:54,613: INFO: automation_test.py: Checking which tiles are still being processed after 1320 seconds
+2023-05-23 18:16:54,654: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:16:54,654: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:17:54,714: INFO: automation_test.py: Checking which tiles are still being processed after 1380 seconds
+2023-05-23 18:17:54,749: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:17:54,750: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:18:54,796: INFO: automation_test.py: Checking which tiles are still being processed after 1440 seconds
+2023-05-23 18:18:54,838: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:18:54,839: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:19:54,899: INFO: automation_test.py: Checking which tiles are still being processed after 1500 seconds
+2023-05-23 18:19:54,939: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:19:54,940: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:20:55,000: INFO: automation_test.py: Checking which tiles are still being processed after 1560 seconds
+2023-05-23 18:20:55,035: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:20:55,036: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:21:55,091: INFO: automation_test.py: Checking which tiles are still being processed after 1620 seconds
+2023-05-23 18:21:55,130: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:21:55,131: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:22:55,191: INFO: automation_test.py: Checking which tiles are still being processed after 1680 seconds
+2023-05-23 18:22:55,230: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:22:55,231: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:23:55,279: INFO: automation_test.py: Checking which tiles are still being processed after 1740 seconds
+2023-05-23 18:23:55,318: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:23:55,318: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:24:55,354: INFO: automation_test.py: Checking which tiles are still being processed after 1800 seconds
+2023-05-23 18:24:55,394: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:24:55,395: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:25:55,444: INFO: automation_test.py: Checking which tiles are still being processed after 1860 seconds
+2023-05-23 18:25:55,481: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:25:55,482: INFO: Tile 36NYG still running pid: 21409651, status; Q 
+2023-05-23 18:26:55,540: INFO: automation_test.py: Checking which tiles are still being processed after 1920 seconds
+2023-05-23 18:26:55,578: INFO: Tile 36NXG still running pid: 21409650, status; Q 
+2023-05-23 18:26:55,578: INFO: Tile 36NYG still running pid: 21409651, status; Q 

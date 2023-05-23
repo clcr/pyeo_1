@@ -485,7 +485,14 @@ def acd_integrated_raster(
                 "pyeo_dir"
             ]  # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' #
             python_executable = "pyeo_1/apps/acd_national/acd_by_tile_raster.py"  # 'apps/automation/_random_duration_test_program.py'  #
-            qsub_options = "walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+            wall_time_hours = config_dict["wall_time_hours"]
+            watch_time_hours = config_dict["watch_time_hours"]
+            watch_period_minutes = config_dict["watch_period_minutes"]
+            qsub_processor_options = config_dict["qsub_processor_options"]
+
+            qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
+
+            # qsub_options = f"walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
             # config_filename = 'pyeo_1.ini'
             # config_path = os.path.join(config_directory, config_filename)
@@ -541,8 +548,11 @@ def acd_integrated_raster(
 
         # TODO Move these parameters into the config file and change monitoring loop to a while loop
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
-        monitoring_cycles = 24 * 60  # 24 hours
-        monitoring_period_seconds = 60
+        # monitoring_cycles = 24 * 60  # 24 hours
+        # monitoring_period_seconds = 60
+
+        monitoring_cycles = wall_time_hours
+        monitoring_period_seconds = watch_period_minutes
 
         end_monitoring = False
         for i in range(monitoring_cycles):
