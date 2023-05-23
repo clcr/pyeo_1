@@ -231,10 +231,14 @@ def config_path_to_config_dict(config_path: str):
 
     config_dict["do_vectorise"] = config.getboolean("vector_processing_parameters", "do_vectorise")
     config_dict["do_integrate"] = config.getboolean("vector_processing_parameters", "do_integrate")
+    config_dict["do_filter"] = config.getboolean("vector_processing_parameters", "do_filter")
+    
     config_dict["counties_of_interest"] = json.loads(
         config["vector_processing_parameters"]["counties_of_interest"]
     )
     config_dict["minimum_area_to_report_m2"] = int(config["vector_processing_parameters"]["minimum_area_to_report_m2"])
+    config_dict["do_distribution"] = config.getboolean("vector_processing_parameters", "do_distribution")
+
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict

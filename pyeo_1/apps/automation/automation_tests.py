@@ -32,31 +32,23 @@ def qstat_to_dataframe():
     result = subprocess.run(['qstat'], capture_output=True)
     # Decode the byte string into a regular string
     output = result.stdout.decode('utf-8')
-
     # Split the output into lines
     lines = output.split('\n')
-
     # Remove any empty lines
     lines = [line.strip() for line in lines if line.strip()]
-
-    # print('output:', len(output))
-    # print('lines:', len(lines))
-
     if (len(output) > 0):
         # Extract the header and data rows
         header = lines[0].split()
         data_rows = [line.split() for line in lines[2:]]
-
         # Create the pandas DataFrame
         df = pd.DataFrame(data_rows, columns=['JobID', 'Name', 'User', 'TimeUsed', 'Status', 'Queue'])
-
         return df
     else:
         return pd.DataFrame()  # Return an empty dataframe is no output from qstat
 
 
 for tile in tile_list:
-    print(f'{new_line}*** Preparing to Launching {python_executable} for tile: {tile} ***{new_line}')
+    print(f'{new_line}*** Preparing to launch {python_executable} for tile: {tile} ***{new_line}')
     # os.system('echo "python _random_duration_test_program.py" | qsub -N f'test_instance{i}' -o o.txt -l walltime=00:10:00,nodes=1:ppn=16,vmem=2Gb')
     # os.system('python _random_duration_test_program.py')
     # result = subprocess.run(shell_command_string, capture_output=True, text=True, shell=True)

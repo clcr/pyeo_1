@@ -1,0 +1,1772 @@
+2023-05-22 13:11:06,628: INFO: ****PROCESSING START****
+2023-05-22 13:11:06,628: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,628: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:11:06,629: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,629: INFO: Reading in parameters defined in the Config
+2023-05-22 13:11:06,629: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,629: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,629: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:11:06,629: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,629: INFO: Options:
+2023-05-22 13:11:06,629: INFO:   --do_parallel
+2023-05-22 13:11:06,629: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:11:06,629: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:11:06,629: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:11:06,629: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:11:06,629: INFO:   --do_vectorise
+2023-05-22 13:11:06,629: INFO:       raster change reports will be vectorised
+2023-05-22 13:11:06,629: INFO: EPSG used is: 21097
+2023-05-22 13:11:06,629: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:11:06,630: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:11:06,630: INFO: 
+2023-05-22 13:11:06,630: INFO: List of class labels:
+2023-05-22 13:11:06,630: INFO:   1 : primary forest
+2023-05-22 13:11:06,630: INFO:   2 : plantation forest
+2023-05-22 13:11:06,630: INFO:   3 : bare soil
+2023-05-22 13:11:06,630: INFO:   4 : crops
+2023-05-22 13:11:06,630: INFO:   5 : grassland
+2023-05-22 13:11:06,630: INFO:   6 : open water
+2023-05-22 13:11:06,630: INFO:   7 : burn scar
+2023-05-22 13:11:06,630: INFO:   8 : cloud
+2023-05-22 13:11:06,630: INFO:   9 : cloud shadow
+2023-05-22 13:11:06,630: INFO:   10 : haze
+2023-05-22 13:11:06,630: INFO:   11 : sparse woodland
+2023-05-22 13:11:06,630: INFO:   12 : dense woodland
+2023-05-22 13:11:06,630: INFO:   13 : artificial
+2023-05-22 13:11:06,631: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:11:06,631: INFO:                     to any of the classes: [3]
+2023-05-22 13:11:06,631: INFO: ------------------------------------------------------------
+2023-05-22 13:11:06,631: INFO: Reporting Directories and Filepaths
+2023-05-22 13:11:06,631: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:11:06,631: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:11:06,631: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:11:06,631: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:11:06,631: INFO: ROI Directory is   : ./roi
+2023-05-22 13:11:06,631: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:11:06,631: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:11:06,631: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:11:06,631: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:11:06,631: INFO: -------------------------------------------
+2023-05-22 13:11:06,631: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:06,631: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:11:06,632: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:07,029: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:11:07,029: INFO: These tiles are  :
+2023-05-22 13:11:07,029: INFO:   1 : 36NXG
+2023-05-22 13:11:07,030: INFO:   2 : 36NYG
+2023-05-22 13:11:07,030: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:11:07,038: INFO: Finished ROI tile intersection
+2023-05-22 13:11:07,038: INFO: ---------------------------------------------------------------
+2023-05-22 13:11:07,038: INFO: Starting acd_integrated_vectorisation()
+2023-05-22 13:11:07,038: INFO:   vectorising each change report raster, by tile
+2023-05-22 13:11:07,038: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,721: INFO: ****PROCESSING START****
+2023-05-22 13:29:13,722: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,722: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:29:13,722: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,722: INFO: Reading in parameters defined in the Config
+2023-05-22 13:29:13,722: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,723: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,723: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:29:13,723: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,723: INFO: Options:
+2023-05-22 13:29:13,723: INFO:   --do_parallel
+2023-05-22 13:29:13,723: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:29:13,723: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:29:13,724: INFO:   --do_raster
+2023-05-22 13:29:13,724: INFO:       raster pipeline enabled
+2023-05-22 13:29:13,724: INFO:   --download for change detection images
+2023-05-22 13:29:13,724: INFO:   --download_source = "scihub"
+2023-05-22 13:29:13,724: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:29:13,724: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:29:13,724: INFO: EPSG used is: 21097
+2023-05-22 13:29:13,724: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:29:13,725: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:29:13,725: INFO: 
+2023-05-22 13:29:13,725: INFO: List of class labels:
+2023-05-22 13:29:13,725: INFO:   1 : primary forest
+2023-05-22 13:29:13,725: INFO:   2 : plantation forest
+2023-05-22 13:29:13,725: INFO:   3 : bare soil
+2023-05-22 13:29:13,725: INFO:   4 : crops
+2023-05-22 13:29:13,725: INFO:   5 : grassland
+2023-05-22 13:29:13,726: INFO:   6 : open water
+2023-05-22 13:29:13,726: INFO:   7 : burn scar
+2023-05-22 13:29:13,726: INFO:   8 : cloud
+2023-05-22 13:29:13,726: INFO:   9 : cloud shadow
+2023-05-22 13:29:13,726: INFO:   10 : haze
+2023-05-22 13:29:13,726: INFO:   11 : sparse woodland
+2023-05-22 13:29:13,726: INFO:   12 : dense woodland
+2023-05-22 13:29:13,726: INFO:   13 : artificial
+2023-05-22 13:29:13,727: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:29:13,727: INFO:                     to any of the classes: [3]
+2023-05-22 13:29:13,727: INFO: ------------------------------------------------------------
+2023-05-22 13:29:13,727: INFO: Reporting Directories and Filepaths
+2023-05-22 13:29:13,727: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:29:13,727: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:29:13,727: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:29:13,728: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:29:13,728: INFO: ROI Directory is   : ./roi
+2023-05-22 13:29:13,728: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:29:13,728: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:29:13,728: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:29:13,728: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:29:13,728: INFO: -------------------------------------------
+2023-05-22 13:29:13,728: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:13,729: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:29:13,729: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:14,077: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:29:14,077: INFO: These tiles are  :
+2023-05-22 13:29:14,077: INFO:   1 : 36NXG
+2023-05-22 13:29:14,077: INFO:   2 : 36NYG
+2023-05-22 13:29:14,078: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:29:14,117: INFO: Finished ROI tile intersection
+2023-05-22 13:29:14,117: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:14,117: INFO: Starting acd_integrated_raster():
+2023-05-22 13:29:14,117: INFO: ---------------------------------------------------------------
+2023-05-22 13:29:14,120: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 13:29:14,120: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 13:29:14,120: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:29:14,139: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:29:14,370: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:29:14 BST 2023
+\n
+21404511.master.cm.cluster
+
+2023-05-22 13:29:14,371: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 13:29:14,371: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:29:14,387: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:29:14,481: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:29:14 BST 2023
+\n
+21404512.master.cm.cluster
+
+2023-05-22 13:29:14,481: INFO: automation_test.py: subprocess launching completed
+2023-05-22 13:29:14,481: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 13:30:32,036: INFO: ****PROCESSING START****
+2023-05-22 13:30:32,036: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,036: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:30:32,037: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,037: INFO: Reading in parameters defined in the Config
+2023-05-22 13:30:32,037: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,037: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,037: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:30:32,037: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,037: INFO: Options:
+2023-05-22 13:30:32,037: INFO:   --do_parallel
+2023-05-22 13:30:32,037: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:30:32,037: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:30:32,037: INFO:   --do_raster
+2023-05-22 13:30:32,037: INFO:       raster pipeline enabled
+2023-05-22 13:30:32,037: INFO:   --download for change detection images
+2023-05-22 13:30:32,037: INFO:   --download_source = "scihub"
+2023-05-22 13:30:32,037: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:30:32,037: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:30:32,038: INFO: EPSG used is: 21097
+2023-05-22 13:30:32,038: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:30:32,038: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:30:32,038: INFO: 
+2023-05-22 13:30:32,038: INFO: List of class labels:
+2023-05-22 13:30:32,038: INFO:   1 : primary forest
+2023-05-22 13:30:32,038: INFO:   2 : plantation forest
+2023-05-22 13:30:32,038: INFO:   3 : bare soil
+2023-05-22 13:30:32,038: INFO:   4 : crops
+2023-05-22 13:30:32,038: INFO:   5 : grassland
+2023-05-22 13:30:32,038: INFO:   6 : open water
+2023-05-22 13:30:32,038: INFO:   7 : burn scar
+2023-05-22 13:30:32,038: INFO:   8 : cloud
+2023-05-22 13:30:32,038: INFO:   9 : cloud shadow
+2023-05-22 13:30:32,038: INFO:   10 : haze
+2023-05-22 13:30:32,038: INFO:   11 : sparse woodland
+2023-05-22 13:30:32,039: INFO:   12 : dense woodland
+2023-05-22 13:30:32,039: INFO:   13 : artificial
+2023-05-22 13:30:32,039: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:30:32,039: INFO:                     to any of the classes: [3]
+2023-05-22 13:30:32,039: INFO: ------------------------------------------------------------
+2023-05-22 13:30:32,039: INFO: Reporting Directories and Filepaths
+2023-05-22 13:30:32,039: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:30:32,039: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:30:32,039: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:30:32,039: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:30:32,039: INFO: ROI Directory is   : ./roi
+2023-05-22 13:30:32,039: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:30:32,039: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:30:32,039: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:30:32,039: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:30:32,039: INFO: -------------------------------------------
+2023-05-22 13:30:32,039: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,040: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:30:32,040: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,274: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:30:32,274: INFO: These tiles are  :
+2023-05-22 13:30:32,274: INFO:   1 : 36NXG
+2023-05-22 13:30:32,274: INFO:   2 : 36NYG
+2023-05-22 13:30:32,275: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:30:32,286: INFO: Finished ROI tile intersection
+2023-05-22 13:30:32,286: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,286: INFO: Starting acd_integrated_raster():
+2023-05-22 13:30:32,286: INFO: ---------------------------------------------------------------
+2023-05-22 13:30:32,288: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 13:30:32,289: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 13:30:32,289: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:30:32,308: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:30:32,406: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:30:32 BST 2023
+\n
+21404513.master.cm.cluster
+
+2023-05-22 13:30:32,406: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 13:30:32,406: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:30:32,421: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:30:32,527: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:30:32 BST 2023
+\n
+21404514.master.cm.cluster
+
+2023-05-22 13:30:32,527: INFO: automation_test.py: subprocess launching completed
+2023-05-22 13:30:32,528: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 13:39:07,609: INFO: ****PROCESSING START****
+2023-05-22 13:39:07,610: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,610: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:39:07,610: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,610: INFO: Reading in parameters defined in the Config
+2023-05-22 13:39:07,610: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,610: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,610: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:39:07,610: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,610: INFO: Options:
+2023-05-22 13:39:07,610: INFO:   --do_parallel
+2023-05-22 13:39:07,610: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:39:07,610: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:39:07,610: INFO:   --do_raster
+2023-05-22 13:39:07,610: INFO:       raster pipeline enabled
+2023-05-22 13:39:07,610: INFO:   --download for change detection images
+2023-05-22 13:39:07,610: INFO:   --download_source = "scihub"
+2023-05-22 13:39:07,611: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:39:07,611: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:39:07,611: INFO: EPSG used is: 21097
+2023-05-22 13:39:07,611: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:39:07,611: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:39:07,611: INFO: 
+2023-05-22 13:39:07,611: INFO: List of class labels:
+2023-05-22 13:39:07,611: INFO:   1 : primary forest
+2023-05-22 13:39:07,611: INFO:   2 : plantation forest
+2023-05-22 13:39:07,611: INFO:   3 : bare soil
+2023-05-22 13:39:07,611: INFO:   4 : crops
+2023-05-22 13:39:07,611: INFO:   5 : grassland
+2023-05-22 13:39:07,611: INFO:   6 : open water
+2023-05-22 13:39:07,611: INFO:   7 : burn scar
+2023-05-22 13:39:07,611: INFO:   8 : cloud
+2023-05-22 13:39:07,611: INFO:   9 : cloud shadow
+2023-05-22 13:39:07,612: INFO:   10 : haze
+2023-05-22 13:39:07,612: INFO:   11 : sparse woodland
+2023-05-22 13:39:07,612: INFO:   12 : dense woodland
+2023-05-22 13:39:07,612: INFO:   13 : artificial
+2023-05-22 13:39:07,612: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:39:07,612: INFO:                     to any of the classes: [3]
+2023-05-22 13:39:07,612: INFO: ------------------------------------------------------------
+2023-05-22 13:39:07,612: INFO: Reporting Directories and Filepaths
+2023-05-22 13:39:07,612: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:39:07,612: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:39:07,612: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:39:07,612: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:39:07,612: INFO: ROI Directory is   : ./roi
+2023-05-22 13:39:07,612: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:39:07,612: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:39:07,612: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:39:07,613: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:39:07,613: INFO: -------------------------------------------
+2023-05-22 13:39:07,613: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,613: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:39:07,613: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,878: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:39:07,878: INFO: These tiles are  :
+2023-05-22 13:39:07,878: INFO:   1 : 36NXG
+2023-05-22 13:39:07,878: INFO:   2 : 36NYG
+2023-05-22 13:39:07,878: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:39:07,908: INFO: Finished ROI tile intersection
+2023-05-22 13:39:07,909: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,909: INFO: Starting acd_integrated_raster():
+2023-05-22 13:39:07,909: INFO: ---------------------------------------------------------------
+2023-05-22 13:39:07,912: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 13:39:07,912: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 13:39:07,912: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:39:07,928: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:39:08,035: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:39:07 BST 2023
+\n
+21404516.master.cm.cluster
+
+2023-05-22 13:39:08,035: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 13:39:08,035: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:39:08,051: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:39:08,146: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:39:08 BST 2023
+\n
+21404517.master.cm.cluster
+
+2023-05-22 13:39:08,146: INFO: automation_test.py: subprocess launching completed
+2023-05-22 13:39:08,146: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 13:45:39,103: INFO: automation_test.py subprocesses completed
+2023-05-22 13:45:39,103: INFO: ---------------------------------------------------------------
+2023-05-22 13:45:39,103: INFO: Starting acd_national_filtering
+2023-05-22 13:45:39,103: INFO: ---------------------------------------------------------------
+2023-05-22 13:45:39,103: INFO: ---------------------------------------------------------------
+2023-05-22 13:45:39,103: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 13:45:39,104: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: ****PROCESSING START****
+2023-05-22 13:51:40,700: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:51:40,700: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: Reading in parameters defined in the Config
+2023-05-22 13:51:40,700: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:51:40,700: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,700: INFO: Options:
+2023-05-22 13:51:40,701: INFO:   --do_parallel
+2023-05-22 13:51:40,701: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:51:40,701: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:51:40,701: INFO:   --do_raster
+2023-05-22 13:51:40,701: INFO:       raster pipeline enabled
+2023-05-22 13:51:40,701: INFO:   --download for change detection images
+2023-05-22 13:51:40,701: INFO:   --download_source = "scihub"
+2023-05-22 13:51:40,701: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:51:40,701: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:51:40,701: INFO: EPSG used is: 21097
+2023-05-22 13:51:40,701: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:51:40,701: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:51:40,701: INFO: 
+2023-05-22 13:51:40,701: INFO: List of class labels:
+2023-05-22 13:51:40,701: INFO:   1 : primary forest
+2023-05-22 13:51:40,701: INFO:   2 : plantation forest
+2023-05-22 13:51:40,702: INFO:   3 : bare soil
+2023-05-22 13:51:40,702: INFO:   4 : crops
+2023-05-22 13:51:40,702: INFO:   5 : grassland
+2023-05-22 13:51:40,702: INFO:   6 : open water
+2023-05-22 13:51:40,702: INFO:   7 : burn scar
+2023-05-22 13:51:40,702: INFO:   8 : cloud
+2023-05-22 13:51:40,702: INFO:   9 : cloud shadow
+2023-05-22 13:51:40,702: INFO:   10 : haze
+2023-05-22 13:51:40,702: INFO:   11 : sparse woodland
+2023-05-22 13:51:40,702: INFO:   12 : dense woodland
+2023-05-22 13:51:40,702: INFO:   13 : artificial
+2023-05-22 13:51:40,702: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:51:40,702: INFO:                     to any of the classes: [3]
+2023-05-22 13:51:40,702: INFO: ------------------------------------------------------------
+2023-05-22 13:51:40,702: INFO: Reporting Directories and Filepaths
+2023-05-22 13:51:40,702: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:51:40,703: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:51:40,703: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:51:40,703: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:51:40,703: INFO: ROI Directory is   : ./roi
+2023-05-22 13:51:40,703: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:51:40,703: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:51:40,703: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:51:40,703: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:51:40,703: INFO: -------------------------------------------
+2023-05-22 13:51:40,703: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,703: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:51:40,703: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,956: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:51:40,956: INFO: These tiles are  :
+2023-05-22 13:51:40,956: INFO:   1 : 36NXG
+2023-05-22 13:51:40,956: INFO:   2 : 36NYG
+2023-05-22 13:51:40,957: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:51:40,987: INFO: Finished ROI tile intersection
+2023-05-22 13:51:40,987: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,987: INFO: Starting acd_integrated_raster():
+2023-05-22 13:51:40,987: INFO: ---------------------------------------------------------------
+2023-05-22 13:51:40,990: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 13:51:40,990: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 13:51:40,990: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:51:41,005: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:51:41,177: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:51:41 BST 2023
+\n
+21404520.master.cm.cluster
+
+2023-05-22 13:51:41,177: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 13:51:41,177: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:51:41,192: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:51:41,366: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:51:41 BST 2023
+\n
+21404521.master.cm.cluster
+
+2023-05-22 13:51:41,366: INFO: automation_test.py: subprocess launching completed
+2023-05-22 13:51:41,367: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 13:51:51,375: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 13:52:01,460: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 13:52:11,591: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 13:52:21,617: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 13:52:31,633: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 13:52:41,654: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 13:52:51,672: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 13:53:01,689: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 13:53:11,706: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 13:53:21,729: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 13:53:31,754: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 13:53:41,772: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 13:53:51,798: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 13:54:01,826: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 13:54:11,931: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 13:54:21,954: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 13:54:31,971: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 13:54:41,991: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 13:54:52,020: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 13:55:02,060: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 13:55:12,163: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 13:55:22,186: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 13:55:32,206: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 13:55:42,226: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 13:55:52,253: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 13:56:02,298: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 13:56:12,402: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 13:56:22,424: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 13:56:32,441: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 13:56:42,467: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 13:56:52,491: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 13:57:02,517: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 13:57:12,545: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 13:57:22,564: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 13:57:32,588: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 13:57:42,614: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 13:57:52,638: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 13:57:52,654: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 13:57:52,654: INFO: automation_test.py subprocesses completed
+2023-05-22 13:57:52,654: INFO: ---------------------------------------------------------------
+2023-05-22 13:57:52,654: INFO: Starting acd_national_filtering
+2023-05-22 13:57:52,654: INFO: ---------------------------------------------------------------
+2023-05-22 13:57:52,654: INFO: ---------------------------------------------------------------
+2023-05-22 13:57:52,654: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 13:57:52,654: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,670: INFO: ****PROCESSING START****
+2023-05-22 13:59:46,670: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,671: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 13:59:46,671: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,671: INFO: Reading in parameters defined in the Config
+2023-05-22 13:59:46,671: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,671: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,671: INFO: Starting acd_to_config_to_log()
+2023-05-22 13:59:46,671: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,671: INFO: Options:
+2023-05-22 13:59:46,671: INFO:   --do_parallel
+2023-05-22 13:59:46,671: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 13:59:46,671: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 13:59:46,671: INFO:   --do_raster
+2023-05-22 13:59:46,671: INFO:       raster pipeline enabled
+2023-05-22 13:59:46,671: INFO:   --download for change detection images
+2023-05-22 13:59:46,671: INFO:   --download_source = "scihub"
+2023-05-22 13:59:46,671: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 13:59:46,672: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 13:59:46,672: INFO: EPSG used is: 21097
+2023-05-22 13:59:46,672: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 13:59:46,672: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 13:59:46,672: INFO: 
+2023-05-22 13:59:46,672: INFO: List of class labels:
+2023-05-22 13:59:46,672: INFO:   1 : primary forest
+2023-05-22 13:59:46,672: INFO:   2 : plantation forest
+2023-05-22 13:59:46,672: INFO:   3 : bare soil
+2023-05-22 13:59:46,672: INFO:   4 : crops
+2023-05-22 13:59:46,672: INFO:   5 : grassland
+2023-05-22 13:59:46,672: INFO:   6 : open water
+2023-05-22 13:59:46,672: INFO:   7 : burn scar
+2023-05-22 13:59:46,672: INFO:   8 : cloud
+2023-05-22 13:59:46,672: INFO:   9 : cloud shadow
+2023-05-22 13:59:46,672: INFO:   10 : haze
+2023-05-22 13:59:46,673: INFO:   11 : sparse woodland
+2023-05-22 13:59:46,673: INFO:   12 : dense woodland
+2023-05-22 13:59:46,673: INFO:   13 : artificial
+2023-05-22 13:59:46,673: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 13:59:46,673: INFO:                     to any of the classes: [3]
+2023-05-22 13:59:46,673: INFO: ------------------------------------------------------------
+2023-05-22 13:59:46,673: INFO: Reporting Directories and Filepaths
+2023-05-22 13:59:46,673: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 13:59:46,673: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 13:59:46,673: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 13:59:46,673: INFO: Integrated Directory is   : ./integrated
+2023-05-22 13:59:46,673: INFO: ROI Directory is   : ./roi
+2023-05-22 13:59:46,673: INFO: Geometry Directory is   : ./geometry
+2023-05-22 13:59:46,673: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 13:59:46,673: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 13:59:46,673: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 13:59:46,673: INFO: -------------------------------------------
+2023-05-22 13:59:46,674: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,674: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 13:59:46,674: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,921: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 13:59:46,921: INFO: These tiles are  :
+2023-05-22 13:59:46,921: INFO:   1 : 36NXG
+2023-05-22 13:59:46,921: INFO:   2 : 36NYG
+2023-05-22 13:59:46,921: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 13:59:46,962: INFO: Finished ROI tile intersection
+2023-05-22 13:59:46,962: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,962: INFO: Starting acd_integrated_raster():
+2023-05-22 13:59:46,962: INFO: ---------------------------------------------------------------
+2023-05-22 13:59:46,965: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 13:59:46,965: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 13:59:46,965: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:59:46,979: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:59:46,979: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 13:59:46,980: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 13:59:46,980: INFO: shell_command_string="'/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh' 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 13:59:47,085: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:59:47 BST 2023
+\n
+21404523.master.cm.cluster
+
+2023-05-22 13:59:47,086: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 13:59:47,086: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 13:59:47,099: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 13:59:47,099: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 13:59:47,099: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 13:59:47,100: INFO: shell_command_string="'/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh' 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 13:59:47,210: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 13:59:47 BST 2023
+\n
+21404524.master.cm.cluster
+
+2023-05-22 13:59:47,211: INFO: automation_test.py: subprocess launching completed
+2023-05-22 13:59:47,211: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 13:59:57,220: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 14:00:07,246: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 14:00:17,266: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 14:00:27,294: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 14:00:37,320: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 14:00:47,343: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 14:00:57,361: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 14:01:07,387: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 14:01:17,413: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 14:01:27,436: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 14:01:37,461: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 14:01:47,484: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 14:01:57,509: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 14:02:07,529: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 14:02:17,547: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 14:02:27,571: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 14:02:37,597: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 14:02:47,615: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 14:02:57,634: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 14:03:07,661: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 14:03:17,678: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 14:03:27,702: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 14:03:37,729: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 14:03:47,755: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 14:03:57,773: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 14:04:07,799: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 14:04:17,822: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 14:04:27,847: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 14:04:37,864: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 14:04:47,886: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 14:04:57,910: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 14:05:07,938: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 14:05:17,957: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 14:05:17,972: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 14:05:17,972: INFO: automation_test.py subprocesses completed
+2023-05-22 14:05:17,972: INFO: ---------------------------------------------------------------
+2023-05-22 14:05:17,972: INFO: Starting acd_national_filtering
+2023-05-22 14:05:17,972: INFO: ---------------------------------------------------------------
+2023-05-22 14:05:17,972: INFO: ---------------------------------------------------------------
+2023-05-22 14:05:17,972: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 14:05:17,973: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,394: INFO: ****PROCESSING START****
+2023-05-22 14:17:57,395: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,395: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 14:17:57,396: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,396: INFO: Reading in parameters defined in the Config
+2023-05-22 14:17:57,396: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,396: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,396: INFO: Starting acd_to_config_to_log()
+2023-05-22 14:17:57,396: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,396: INFO: Options:
+2023-05-22 14:17:57,396: INFO:   --do_parallel
+2023-05-22 14:17:57,396: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 14:17:57,396: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 14:17:57,396: INFO:   --do_raster
+2023-05-22 14:17:57,396: INFO:       raster pipeline enabled
+2023-05-22 14:17:57,396: INFO:   --download for change detection images
+2023-05-22 14:17:57,396: INFO:   --download_source = "scihub"
+2023-05-22 14:17:57,396: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 14:17:57,396: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 14:17:57,397: INFO: EPSG used is: 21097
+2023-05-22 14:17:57,397: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 14:17:57,397: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 14:17:57,397: INFO: 
+2023-05-22 14:17:57,397: INFO: List of class labels:
+2023-05-22 14:17:57,397: INFO:   1 : primary forest
+2023-05-22 14:17:57,397: INFO:   2 : plantation forest
+2023-05-22 14:17:57,397: INFO:   3 : bare soil
+2023-05-22 14:17:57,397: INFO:   4 : crops
+2023-05-22 14:17:57,397: INFO:   5 : grassland
+2023-05-22 14:17:57,397: INFO:   6 : open water
+2023-05-22 14:17:57,397: INFO:   7 : burn scar
+2023-05-22 14:17:57,397: INFO:   8 : cloud
+2023-05-22 14:17:57,397: INFO:   9 : cloud shadow
+2023-05-22 14:17:57,397: INFO:   10 : haze
+2023-05-22 14:17:57,397: INFO:   11 : sparse woodland
+2023-05-22 14:17:57,398: INFO:   12 : dense woodland
+2023-05-22 14:17:57,398: INFO:   13 : artificial
+2023-05-22 14:17:57,398: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 14:17:57,398: INFO:                     to any of the classes: [3]
+2023-05-22 14:17:57,398: INFO: ------------------------------------------------------------
+2023-05-22 14:17:57,398: INFO: Reporting Directories and Filepaths
+2023-05-22 14:17:57,398: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 14:17:57,398: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 14:17:57,398: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 14:17:57,398: INFO: Integrated Directory is   : ./integrated
+2023-05-22 14:17:57,398: INFO: ROI Directory is   : ./roi
+2023-05-22 14:17:57,398: INFO: Geometry Directory is   : ./geometry
+2023-05-22 14:17:57,398: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 14:17:57,398: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 14:17:57,398: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 14:17:57,398: INFO: -------------------------------------------
+2023-05-22 14:17:57,399: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,399: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 14:17:57,399: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,688: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 14:17:57,688: INFO: These tiles are  :
+2023-05-22 14:17:57,688: INFO:   1 : 36NXG
+2023-05-22 14:17:57,689: INFO:   2 : 36NYG
+2023-05-22 14:17:57,689: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 14:17:57,712: INFO: Finished ROI tile intersection
+2023-05-22 14:17:57,712: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,712: INFO: Starting acd_integrated_raster():
+2023-05-22 14:17:57,712: INFO: ---------------------------------------------------------------
+2023-05-22 14:17:57,715: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 14:17:57,715: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 14:17:57,715: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 14:17:57,730: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 14:17:57,730: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 14:17:57,730: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 14:17:57,730: INFO: shell_command_string="'/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh' '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 14:17:58,589: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 14:17:57 BST 2023
+\n
+21404534.master.cm.cluster
+
+2023-05-22 14:17:58,590: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 14:17:58,590: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 14:17:58,607: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 14:17:58,607: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 14:17:58,607: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 14:17:58,607: INFO: shell_command_string="'/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh' '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 14:17:58,685: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 14:17:58 BST 2023
+\n
+21404535.master.cm.cluster
+
+2023-05-22 14:17:58,686: INFO: automation_test.py: subprocess launching completed
+2023-05-22 14:17:58,686: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 14:18:08,694: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 14:18:18,713: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 14:18:28,734: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 14:18:38,757: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 14:18:48,784: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 14:18:58,810: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 14:19:08,828: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 14:19:18,854: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 14:19:28,879: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 14:19:38,903: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 14:19:48,926: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 14:19:58,946: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 14:20:08,969: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 14:20:18,992: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 14:20:29,017: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 14:20:39,046: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 14:20:49,072: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 14:20:59,097: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 14:21:09,122: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 14:21:19,145: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 14:21:29,170: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 14:21:39,197: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 14:21:49,222: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 14:21:59,242: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 14:22:09,269: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 14:22:19,287: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 14:22:29,307: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 14:22:39,334: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 14:23:20,516: INFO: ****PROCESSING START****
+2023-05-22 14:23:20,516: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,516: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 14:23:20,516: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,516: INFO: Reading in parameters defined in the Config
+2023-05-22 14:23:20,516: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,516: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,516: INFO: Starting acd_to_config_to_log()
+2023-05-22 14:23:20,516: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,517: INFO: Options:
+2023-05-22 14:23:20,517: INFO:   --do_parallel
+2023-05-22 14:23:20,517: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 14:23:20,517: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 14:23:20,517: INFO:   --do_raster
+2023-05-22 14:23:20,517: INFO:       raster pipeline enabled
+2023-05-22 14:23:20,517: INFO:   --download for change detection images
+2023-05-22 14:23:20,517: INFO:   --download_source = "scihub"
+2023-05-22 14:23:20,517: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 14:23:20,517: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 14:23:20,517: INFO: EPSG used is: 21097
+2023-05-22 14:23:20,517: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 14:23:20,517: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 14:23:20,517: INFO: 
+2023-05-22 14:23:20,517: INFO: List of class labels:
+2023-05-22 14:23:20,517: INFO:   1 : primary forest
+2023-05-22 14:23:20,518: INFO:   2 : plantation forest
+2023-05-22 14:23:20,518: INFO:   3 : bare soil
+2023-05-22 14:23:20,518: INFO:   4 : crops
+2023-05-22 14:23:20,518: INFO:   5 : grassland
+2023-05-22 14:23:20,518: INFO:   6 : open water
+2023-05-22 14:23:20,518: INFO:   7 : burn scar
+2023-05-22 14:23:20,518: INFO:   8 : cloud
+2023-05-22 14:23:20,518: INFO:   9 : cloud shadow
+2023-05-22 14:23:20,518: INFO:   10 : haze
+2023-05-22 14:23:20,518: INFO:   11 : sparse woodland
+2023-05-22 14:23:20,518: INFO:   12 : dense woodland
+2023-05-22 14:23:20,518: INFO:   13 : artificial
+2023-05-22 14:23:20,518: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 14:23:20,518: INFO:                     to any of the classes: [3]
+2023-05-22 14:23:20,518: INFO: ------------------------------------------------------------
+2023-05-22 14:23:20,518: INFO: Reporting Directories and Filepaths
+2023-05-22 14:23:20,519: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 14:23:20,519: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 14:23:20,519: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 14:23:20,519: INFO: Integrated Directory is   : ./integrated
+2023-05-22 14:23:20,519: INFO: ROI Directory is   : ./roi
+2023-05-22 14:23:20,519: INFO: Geometry Directory is   : ./geometry
+2023-05-22 14:23:20,519: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 14:23:20,519: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 14:23:20,519: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 14:23:20,519: INFO: -------------------------------------------
+2023-05-22 14:23:20,519: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,519: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 14:23:20,519: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,761: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 14:23:20,761: INFO: These tiles are  :
+2023-05-22 14:23:20,762: INFO:   1 : 36NXG
+2023-05-22 14:23:20,762: INFO:   2 : 36NYG
+2023-05-22 14:23:20,762: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 14:23:20,802: INFO: Finished ROI tile intersection
+2023-05-22 14:23:20,802: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,803: INFO: Starting acd_integrated_raster():
+2023-05-22 14:23:20,803: INFO: ---------------------------------------------------------------
+2023-05-22 14:23:20,805: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 14:23:20,805: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 14:23:20,806: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 14:23:20,822: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 14:23:20,822: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 14:23:20,822: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 14:23:20,822: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 14:23:20,901: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 14:23:20 BST 2023
+\n
+21404540.master.cm.cluster
+
+2023-05-22 14:23:20,901: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 14:23:20,901: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 14:23:20,915: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 14:23:20,915: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 14:23:20,916: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 14:23:20,916: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 14:23:20,978: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 14:23:20 BST 2023
+\n
+21404541.master.cm.cluster
+
+2023-05-22 14:23:20,978: INFO: automation_test.py: subprocess launching completed
+2023-05-22 14:23:20,978: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 14:23:30,979: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 14:23:41,007: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 14:23:51,030: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 14:24:01,065: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 14:24:11,173: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 14:24:21,191: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 14:24:31,216: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 14:24:41,242: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 14:24:51,268: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 14:25:01,291: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 14:25:11,314: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 14:25:21,339: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 14:25:31,366: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 14:25:41,390: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 14:25:51,417: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 14:26:01,449: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 14:26:11,493: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 14:26:21,514: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 14:26:31,539: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 14:26:41,565: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 14:26:51,591: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 14:27:01,609: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 14:27:11,634: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 14:27:21,655: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 14:27:31,678: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 14:27:41,705: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 14:27:51,729: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 14:28:01,760: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 14:28:11,821: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 14:28:21,844: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 14:28:31,869: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 14:28:41,891: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 14:28:51,909: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 14:29:01,938: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 14:29:11,964: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 14:29:22,009: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 14:29:32,033: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 14:29:42,054: INFO: automation_test.py: Checking which tiles are still being processed after 370 seconds
+2023-05-22 14:29:52,070: INFO: automation_test.py: Checking which tiles are still being processed after 380 seconds
+2023-05-22 14:29:52,086: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 14:29:52,086: INFO: automation_test.py subprocesses completed
+2023-05-22 14:29:52,086: INFO: ---------------------------------------------------------------
+2023-05-22 14:29:52,086: INFO: Starting acd_national_filtering
+2023-05-22 14:29:52,086: INFO: ---------------------------------------------------------------
+2023-05-22 14:29:52,086: INFO: ---------------------------------------------------------------
+2023-05-22 14:29:52,086: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 14:29:52,086: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,373: INFO: ****PROCESSING START****
+2023-05-22 15:03:43,532: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,532: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 15:03:43,532: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,532: INFO: Reading in parameters defined in the Config
+2023-05-22 15:03:43,532: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,532: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,532: INFO: Starting acd_to_config_to_log()
+2023-05-22 15:03:43,532: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,532: INFO: Options:
+2023-05-22 15:03:43,532: INFO:   --do_parallel
+2023-05-22 15:03:43,532: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 15:03:43,532: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 15:03:43,533: INFO:   --do_raster
+2023-05-22 15:03:43,533: INFO:       raster pipeline enabled
+2023-05-22 15:03:43,533: INFO:   --download for change detection images
+2023-05-22 15:03:43,533: INFO:   --download_source = "scihub"
+2023-05-22 15:03:43,533: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 15:03:43,533: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 15:03:43,533: INFO: EPSG used is: 21097
+2023-05-22 15:03:43,533: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 15:03:43,533: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 15:03:43,533: INFO: 
+2023-05-22 15:03:43,533: INFO: List of class labels:
+2023-05-22 15:03:43,533: INFO:   1 : primary forest
+2023-05-22 15:03:43,533: INFO:   2 : plantation forest
+2023-05-22 15:03:43,533: INFO:   3 : bare soil
+2023-05-22 15:03:43,533: INFO:   4 : crops
+2023-05-22 15:03:43,533: INFO:   5 : grassland
+2023-05-22 15:03:43,534: INFO:   6 : open water
+2023-05-22 15:03:43,534: INFO:   7 : burn scar
+2023-05-22 15:03:43,534: INFO:   8 : cloud
+2023-05-22 15:03:43,534: INFO:   9 : cloud shadow
+2023-05-22 15:03:43,534: INFO:   10 : haze
+2023-05-22 15:03:43,534: INFO:   11 : sparse woodland
+2023-05-22 15:03:43,534: INFO:   12 : dense woodland
+2023-05-22 15:03:43,534: INFO:   13 : artificial
+2023-05-22 15:03:43,534: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 15:03:43,534: INFO:                     to any of the classes: [3]
+2023-05-22 15:03:43,534: INFO: ------------------------------------------------------------
+2023-05-22 15:03:43,534: INFO: Reporting Directories and Filepaths
+2023-05-22 15:03:43,534: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 15:03:43,534: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 15:03:43,534: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 15:03:43,534: INFO: Integrated Directory is   : ./integrated
+2023-05-22 15:03:43,535: INFO: ROI Directory is   : ./roi
+2023-05-22 15:03:43,535: INFO: Geometry Directory is   : ./geometry
+2023-05-22 15:03:43,535: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 15:03:43,535: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 15:03:43,535: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 15:03:43,535: INFO: -------------------------------------------
+2023-05-22 15:03:43,535: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,535: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 15:03:43,535: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,892: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 15:03:43,892: INFO: These tiles are  :
+2023-05-22 15:03:43,892: INFO:   1 : 36NXG
+2023-05-22 15:03:43,893: INFO:   2 : 36NYG
+2023-05-22 15:03:43,893: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 15:03:43,972: INFO: Finished ROI tile intersection
+2023-05-22 15:03:43,972: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,972: INFO: Starting acd_integrated_raster():
+2023-05-22 15:03:43,973: INFO: ---------------------------------------------------------------
+2023-05-22 15:03:43,975: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 15:03:43,975: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 15:03:43,975: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:03:43,993: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:03:43,993: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 15:03:43,994: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:03:43,994: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:03:44,215: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:03:44 BST 2023
+\n
+21404610.master.cm.cluster
+
+2023-05-22 15:03:44,216: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 15:03:44,216: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:03:44,230: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:03:44,230: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 15:03:44,231: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:03:44,231: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:03:44,323: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:03:44 BST 2023
+\n
+21404611.master.cm.cluster
+
+2023-05-22 15:03:44,323: INFO: automation_test.py: subprocess launching completed
+2023-05-22 15:03:44,323: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 15:03:54,333: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 15:04:04,359: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 15:04:14,390: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 15:04:24,421: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 15:04:34,446: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 15:04:44,463: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 15:04:54,485: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 15:05:04,511: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 15:05:14,712: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 15:05:24,739: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 15:05:34,763: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 15:05:44,798: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 15:05:54,992: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 15:06:05,009: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 15:06:15,031: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 15:06:25,059: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 15:06:35,086: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 15:06:45,123: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 15:06:55,146: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 15:07:05,173: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 15:07:15,192: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 15:07:25,217: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 15:07:35,242: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 15:07:45,263: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 15:07:55,289: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 15:08:05,306: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 15:08:15,334: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 15:08:25,360: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 15:08:35,382: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 15:08:45,406: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 15:08:55,429: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 15:09:05,454: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 15:09:15,484: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 15:09:25,501: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 15:09:35,528: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 15:09:45,550: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 15:09:55,576: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 15:10:05,603: INFO: automation_test.py: Checking which tiles are still being processed after 370 seconds
+2023-05-22 15:10:15,629: INFO: automation_test.py: Checking which tiles are still being processed after 380 seconds
+2023-05-22 15:10:25,653: INFO: automation_test.py: Checking which tiles are still being processed after 390 seconds
+2023-05-22 15:10:35,676: INFO: automation_test.py: Checking which tiles are still being processed after 400 seconds
+2023-05-22 15:10:45,699: INFO: automation_test.py: Checking which tiles are still being processed after 410 seconds
+2023-05-22 15:10:55,726: INFO: automation_test.py: Checking which tiles are still being processed after 420 seconds
+2023-05-22 15:11:05,753: INFO: automation_test.py: Checking which tiles are still being processed after 430 seconds
+2023-05-22 15:11:15,777: INFO: automation_test.py: Checking which tiles are still being processed after 440 seconds
+2023-05-22 15:11:25,804: INFO: automation_test.py: Checking which tiles are still being processed after 450 seconds
+2023-05-22 15:11:35,823: INFO: automation_test.py: Checking which tiles are still being processed after 460 seconds
+2023-05-22 15:11:45,850: INFO: automation_test.py: Checking which tiles are still being processed after 470 seconds
+2023-05-22 15:11:55,877: INFO: automation_test.py: Checking which tiles are still being processed after 480 seconds
+2023-05-22 15:12:05,899: INFO: automation_test.py: Checking which tiles are still being processed after 490 seconds
+2023-05-22 15:12:15,932: INFO: automation_test.py: Checking which tiles are still being processed after 500 seconds
+2023-05-22 15:12:25,958: INFO: automation_test.py: Checking which tiles are still being processed after 510 seconds
+2023-05-22 15:12:35,986: INFO: automation_test.py: Checking which tiles are still being processed after 520 seconds
+2023-05-22 15:12:46,004: INFO: automation_test.py: Checking which tiles are still being processed after 530 seconds
+2023-05-22 15:12:56,029: INFO: automation_test.py: Checking which tiles are still being processed after 540 seconds
+2023-05-22 15:13:06,057: INFO: automation_test.py: Checking which tiles are still being processed after 550 seconds
+2023-05-22 15:13:16,083: INFO: automation_test.py: Checking which tiles are still being processed after 560 seconds
+2023-05-22 15:13:26,102: INFO: automation_test.py: Checking which tiles are still being processed after 570 seconds
+2023-05-22 15:13:36,127: INFO: automation_test.py: Checking which tiles are still being processed after 580 seconds
+2023-05-22 15:13:46,154: INFO: automation_test.py: Checking which tiles are still being processed after 590 seconds
+2023-05-22 15:13:46,222: INFO: automation_test.py subprocesses completed
+2023-05-22 15:13:46,222: INFO: ---------------------------------------------------------------
+2023-05-22 15:13:46,222: INFO: Starting acd_national_filtering
+2023-05-22 15:13:46,222: INFO: ---------------------------------------------------------------
+2023-05-22 15:13:46,222: INFO: ---------------------------------------------------------------
+2023-05-22 15:13:46,222: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 15:13:46,222: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,199: INFO: ****PROCESSING START****
+2023-05-22 15:14:46,199: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,199: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 15:14:46,199: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,199: INFO: Reading in parameters defined in the Config
+2023-05-22 15:14:46,200: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,200: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,200: INFO: Starting acd_to_config_to_log()
+2023-05-22 15:14:46,200: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,200: INFO: Options:
+2023-05-22 15:14:46,200: INFO:   --do_parallel
+2023-05-22 15:14:46,200: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 15:14:46,200: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 15:14:46,200: INFO:   --do_raster
+2023-05-22 15:14:46,200: INFO:       raster pipeline enabled
+2023-05-22 15:14:46,200: INFO:   --download for change detection images
+2023-05-22 15:14:46,200: INFO:   --download_source = "scihub"
+2023-05-22 15:14:46,200: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 15:14:46,200: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 15:14:46,200: INFO: EPSG used is: 21097
+2023-05-22 15:14:46,200: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 15:14:46,201: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 15:14:46,201: INFO: 
+2023-05-22 15:14:46,201: INFO: List of class labels:
+2023-05-22 15:14:46,201: INFO:   1 : primary forest
+2023-05-22 15:14:46,201: INFO:   2 : plantation forest
+2023-05-22 15:14:46,201: INFO:   3 : bare soil
+2023-05-22 15:14:46,201: INFO:   4 : crops
+2023-05-22 15:14:46,201: INFO:   5 : grassland
+2023-05-22 15:14:46,201: INFO:   6 : open water
+2023-05-22 15:14:46,201: INFO:   7 : burn scar
+2023-05-22 15:14:46,201: INFO:   8 : cloud
+2023-05-22 15:14:46,201: INFO:   9 : cloud shadow
+2023-05-22 15:14:46,201: INFO:   10 : haze
+2023-05-22 15:14:46,201: INFO:   11 : sparse woodland
+2023-05-22 15:14:46,201: INFO:   12 : dense woodland
+2023-05-22 15:14:46,202: INFO:   13 : artificial
+2023-05-22 15:14:46,202: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 15:14:46,202: INFO:                     to any of the classes: [3]
+2023-05-22 15:14:46,202: INFO: ------------------------------------------------------------
+2023-05-22 15:14:46,202: INFO: Reporting Directories and Filepaths
+2023-05-22 15:14:46,202: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 15:14:46,202: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 15:14:46,202: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 15:14:46,202: INFO: Integrated Directory is   : ./integrated
+2023-05-22 15:14:46,202: INFO: ROI Directory is   : ./roi
+2023-05-22 15:14:46,202: INFO: Geometry Directory is   : ./geometry
+2023-05-22 15:14:46,202: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 15:14:46,202: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 15:14:46,202: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 15:14:46,202: INFO: -------------------------------------------
+2023-05-22 15:14:46,202: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,203: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 15:14:46,203: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,545: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 15:14:46,545: INFO: These tiles are  :
+2023-05-22 15:14:46,545: INFO:   1 : 36NXG
+2023-05-22 15:14:46,545: INFO:   2 : 36NYG
+2023-05-22 15:14:46,545: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 15:14:46,564: INFO: Finished ROI tile intersection
+2023-05-22 15:14:46,565: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,565: INFO: Starting acd_integrated_raster():
+2023-05-22 15:14:46,565: INFO: ---------------------------------------------------------------
+2023-05-22 15:14:46,567: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 15:14:46,567: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 15:14:46,567: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:14:46,586: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:14:46,586: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 15:14:46,586: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:14:46,586: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:14:46,818: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:14:46 BST 2023
+\n
+21404614.master.cm.cluster
+
+2023-05-22 15:14:46,819: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 15:14:46,819: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:14:46,836: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:14:46,836: INFO: python_launch_string='#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 15:14:46,836: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:14:46,836: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh '#!/bin/bash; cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:14:47,057: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:14:46 BST 2023
+\n
+21404615.master.cm.cluster
+
+2023-05-22 15:14:47,057: INFO: automation_test.py: subprocess launching completed
+2023-05-22 15:14:47,057: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 15:14:57,067: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 15:15:07,090: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 15:15:17,112: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 15:15:27,135: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 15:15:37,160: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 15:15:47,178: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 15:15:57,199: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 15:16:07,225: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 15:16:17,252: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 15:16:27,278: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 15:16:37,308: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 15:16:47,333: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 15:16:57,362: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 15:17:07,389: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 15:17:17,414: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 15:17:27,435: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 15:17:37,462: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 15:17:47,483: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 15:17:57,504: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 15:18:07,527: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 15:18:17,552: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 15:18:27,571: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 15:18:37,591: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 15:18:47,615: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 15:18:57,642: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 15:19:07,664: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 15:19:17,692: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 15:19:27,719: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 15:19:37,741: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 15:19:47,761: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 15:19:57,792: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 15:20:11,363: INFO: ****PROCESSING START****
+2023-05-22 15:20:11,363: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,363: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 15:20:11,364: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,364: INFO: Reading in parameters defined in the Config
+2023-05-22 15:20:11,364: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,364: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,364: INFO: Starting acd_to_config_to_log()
+2023-05-22 15:20:11,364: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,364: INFO: Options:
+2023-05-22 15:20:11,364: INFO:   --do_parallel
+2023-05-22 15:20:11,364: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 15:20:11,364: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 15:20:11,364: INFO:   --do_raster
+2023-05-22 15:20:11,364: INFO:       raster pipeline enabled
+2023-05-22 15:20:11,364: INFO:   --download for change detection images
+2023-05-22 15:20:11,364: INFO:   --download_source = "scihub"
+2023-05-22 15:20:11,364: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 15:20:11,364: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 15:20:11,364: INFO: EPSG used is: 21097
+2023-05-22 15:20:11,365: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 15:20:11,365: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 15:20:11,365: INFO: 
+2023-05-22 15:20:11,365: INFO: List of class labels:
+2023-05-22 15:20:11,365: INFO:   1 : primary forest
+2023-05-22 15:20:11,365: INFO:   2 : plantation forest
+2023-05-22 15:20:11,365: INFO:   3 : bare soil
+2023-05-22 15:20:11,365: INFO:   4 : crops
+2023-05-22 15:20:11,365: INFO:   5 : grassland
+2023-05-22 15:20:11,365: INFO:   6 : open water
+2023-05-22 15:20:11,365: INFO:   7 : burn scar
+2023-05-22 15:20:11,365: INFO:   8 : cloud
+2023-05-22 15:20:11,365: INFO:   9 : cloud shadow
+2023-05-22 15:20:11,365: INFO:   10 : haze
+2023-05-22 15:20:11,365: INFO:   11 : sparse woodland
+2023-05-22 15:20:11,365: INFO:   12 : dense woodland
+2023-05-22 15:20:11,366: INFO:   13 : artificial
+2023-05-22 15:20:11,366: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 15:20:11,366: INFO:                     to any of the classes: [3]
+2023-05-22 15:20:11,366: INFO: ------------------------------------------------------------
+2023-05-22 15:20:11,366: INFO: Reporting Directories and Filepaths
+2023-05-22 15:20:11,366: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 15:20:11,366: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 15:20:11,366: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 15:20:11,366: INFO: Integrated Directory is   : ./integrated
+2023-05-22 15:20:11,366: INFO: ROI Directory is   : ./roi
+2023-05-22 15:20:11,366: INFO: Geometry Directory is   : ./geometry
+2023-05-22 15:20:11,366: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 15:20:11,366: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 15:20:11,366: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 15:20:11,366: INFO: -------------------------------------------
+2023-05-22 15:20:11,366: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,366: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 15:20:11,367: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,605: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 15:20:11,605: INFO: These tiles are  :
+2023-05-22 15:20:11,605: INFO:   1 : 36NXG
+2023-05-22 15:20:11,605: INFO:   2 : 36NYG
+2023-05-22 15:20:11,605: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 15:20:11,620: INFO: Finished ROI tile intersection
+2023-05-22 15:20:11,621: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,621: INFO: Starting acd_integrated_raster():
+2023-05-22 15:20:11,621: INFO: ---------------------------------------------------------------
+2023-05-22 15:20:11,623: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 15:20:11,623: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 15:20:11,623: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:20:11,640: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:20:11,641: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG'
+
+2023-05-22 15:20:11,641: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:20:11,641: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:20:11,719: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:20:11 BST 2023
+\n
+21404620.master.cm.cluster
+
+2023-05-22 15:20:11,720: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 15:20:11,720: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:20:11,736: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:20:11,736: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG'
+
+2023-05-22 15:20:11,736: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:20:11,736: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:20:11,801: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:20:11 BST 2023
+\n
+21404621.master.cm.cluster
+
+2023-05-22 15:20:11,801: INFO: automation_test.py: subprocess launching completed
+2023-05-22 15:20:11,801: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 15:20:21,801: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 15:20:31,823: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 15:20:41,840: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 15:20:51,868: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 15:21:01,891: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 15:21:11,911: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 15:21:21,939: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 15:21:31,966: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 15:21:41,992: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 15:21:52,013: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 15:22:02,046: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 15:22:12,207: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 15:22:22,236: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 15:22:32,258: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 15:22:42,296: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 15:22:52,365: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 15:23:02,387: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 15:23:12,409: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 15:23:22,435: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 15:23:32,457: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 15:23:42,484: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 15:23:52,501: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 15:24:02,535: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 15:24:12,600: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 15:24:22,627: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 15:24:32,655: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 15:24:42,675: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 15:24:52,700: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 15:25:02,728: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 15:25:12,810: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 15:25:22,835: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 15:25:32,861: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 15:25:42,887: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 15:25:52,905: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 15:26:02,931: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 15:26:13,000: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 15:26:23,027: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 15:26:33,054: INFO: automation_test.py: Checking which tiles are still being processed after 370 seconds
+2023-05-22 15:26:43,076: INFO: automation_test.py: Checking which tiles are still being processed after 380 seconds
+2023-05-22 15:26:53,106: INFO: automation_test.py: Checking which tiles are still being processed after 390 seconds
+2023-05-22 15:27:03,133: INFO: automation_test.py: Checking which tiles are still being processed after 400 seconds
+2023-05-22 15:27:13,150: INFO: automation_test.py: Checking which tiles are still being processed after 410 seconds
+2023-05-22 15:27:23,170: INFO: automation_test.py: Checking which tiles are still being processed after 420 seconds
+2023-05-22 15:27:23,185: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 15:27:23,185: INFO: automation_test.py subprocesses completed
+2023-05-22 15:27:23,186: INFO: ---------------------------------------------------------------
+2023-05-22 15:27:23,186: INFO: Starting acd_national_filtering
+2023-05-22 15:27:23,186: INFO: ---------------------------------------------------------------
+2023-05-22 15:27:23,186: INFO: ---------------------------------------------------------------
+2023-05-22 15:27:23,186: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 15:27:23,186: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,981: INFO: ****PROCESSING START****
+2023-05-22 15:55:09,981: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,982: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 15:55:09,982: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,982: INFO: Reading in parameters defined in the Config
+2023-05-22 15:55:09,982: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,982: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,982: INFO: Starting acd_to_config_to_log()
+2023-05-22 15:55:09,982: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,982: INFO: Options:
+2023-05-22 15:55:09,982: INFO:   --do_parallel
+2023-05-22 15:55:09,982: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 15:55:09,982: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 15:55:09,982: INFO:   --do_raster
+2023-05-22 15:55:09,982: INFO:       raster pipeline enabled
+2023-05-22 15:55:09,982: INFO:   --download for change detection images
+2023-05-22 15:55:09,982: INFO:   --download_source = "scihub"
+2023-05-22 15:55:09,982: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 15:55:09,983: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 15:55:09,983: INFO: EPSG used is: 21097
+2023-05-22 15:55:09,983: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 15:55:09,983: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 15:55:09,983: INFO: 
+2023-05-22 15:55:09,983: INFO: List of class labels:
+2023-05-22 15:55:09,983: INFO:   1 : primary forest
+2023-05-22 15:55:09,983: INFO:   2 : plantation forest
+2023-05-22 15:55:09,983: INFO:   3 : bare soil
+2023-05-22 15:55:09,983: INFO:   4 : crops
+2023-05-22 15:55:09,983: INFO:   5 : grassland
+2023-05-22 15:55:09,983: INFO:   6 : open water
+2023-05-22 15:55:09,983: INFO:   7 : burn scar
+2023-05-22 15:55:09,983: INFO:   8 : cloud
+2023-05-22 15:55:09,983: INFO:   9 : cloud shadow
+2023-05-22 15:55:09,983: INFO:   10 : haze
+2023-05-22 15:55:09,984: INFO:   11 : sparse woodland
+2023-05-22 15:55:09,984: INFO:   12 : dense woodland
+2023-05-22 15:55:09,984: INFO:   13 : artificial
+2023-05-22 15:55:09,984: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 15:55:09,984: INFO:                     to any of the classes: [3]
+2023-05-22 15:55:09,984: INFO: ------------------------------------------------------------
+2023-05-22 15:55:09,984: INFO: Reporting Directories and Filepaths
+2023-05-22 15:55:09,984: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 15:55:09,984: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 15:55:09,984: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 15:55:09,984: INFO: Integrated Directory is   : ./integrated
+2023-05-22 15:55:09,984: INFO: ROI Directory is   : ./roi
+2023-05-22 15:55:09,984: INFO: Geometry Directory is   : ./geometry
+2023-05-22 15:55:09,984: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 15:55:09,984: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 15:55:09,984: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 15:55:09,984: INFO: -------------------------------------------
+2023-05-22 15:55:09,985: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:09,985: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 15:55:09,985: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:10,230: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 15:55:10,230: INFO: These tiles are  :
+2023-05-22 15:55:10,230: INFO:   1 : 36NXG
+2023-05-22 15:55:10,230: INFO:   2 : 36NYG
+2023-05-22 15:55:10,230: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 15:55:10,235: INFO: Finished ROI tile intersection
+2023-05-22 15:55:10,235: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:10,235: INFO: Starting acd_integrated_raster():
+2023-05-22 15:55:10,235: INFO: ---------------------------------------------------------------
+2023-05-22 15:55:10,237: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 15:55:10,238: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 15:55:10,238: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:55:10,254: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:55:10,254: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG'
+
+2023-05-22 15:55:10,255: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:55:10,255: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:55:10,340: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:55:10 BST 2023
+\n
+21404659.master.cm.cluster
+
+2023-05-22 15:55:10,341: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 15:55:10,341: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 15:55:10,355: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 15:55:10,356: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG'
+
+2023-05-22 15:55:10,356: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 15:55:10,356: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 15:55:10,434: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 15:55:10 BST 2023
+\n
+21404660.master.cm.cluster
+
+2023-05-22 15:55:10,434: INFO: automation_test.py: subprocess launching completed
+2023-05-22 15:55:10,434: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 15:55:20,442: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 15:55:30,464: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 15:55:40,490: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 15:55:50,517: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 15:56:00,554: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 15:56:10,628: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 15:56:20,653: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 15:56:30,679: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 15:56:40,706: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 15:56:50,726: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 15:57:00,753: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 15:57:10,780: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 15:57:20,800: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 15:57:30,826: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 15:57:40,854: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 15:57:50,875: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 15:58:00,907: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 15:58:10,984: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 15:58:21,012: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 15:58:31,039: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 15:58:41,059: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 15:58:51,084: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 15:59:01,110: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 15:59:11,135: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 15:59:21,158: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 15:59:31,185: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 15:59:41,213: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 15:59:51,231: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 16:00:01,262: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 16:00:11,412: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 16:00:21,439: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 16:00:31,464: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 16:00:41,491: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 16:00:51,560: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 16:01:01,581: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 16:01:11,602: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 16:01:21,630: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 16:01:31,655: INFO: automation_test.py: Checking which tiles are still being processed after 370 seconds
+2023-05-22 16:01:41,680: INFO: automation_test.py: Checking which tiles are still being processed after 380 seconds
+2023-05-22 16:01:51,705: INFO: automation_test.py: Checking which tiles are still being processed after 390 seconds
+2023-05-22 16:02:01,731: INFO: automation_test.py: Checking which tiles are still being processed after 400 seconds
+2023-05-22 16:02:11,812: INFO: automation_test.py: Checking which tiles are still being processed after 410 seconds
+2023-05-22 16:02:21,833: INFO: automation_test.py: Checking which tiles are still being processed after 420 seconds
+2023-05-22 16:02:31,864: INFO: automation_test.py: Checking which tiles are still being processed after 430 seconds
+2023-05-22 16:02:41,889: INFO: automation_test.py: Checking which tiles are still being processed after 440 seconds
+2023-05-22 16:02:51,914: INFO: automation_test.py: Checking which tiles are still being processed after 450 seconds
+2023-05-22 16:03:01,938: INFO: automation_test.py: Checking which tiles are still being processed after 460 seconds
+2023-05-22 16:03:11,964: INFO: automation_test.py: Checking which tiles are still being processed after 470 seconds
+2023-05-22 16:03:21,989: INFO: automation_test.py: Checking which tiles are still being processed after 480 seconds
+2023-05-22 16:03:32,017: INFO: automation_test.py: Checking which tiles are still being processed after 490 seconds
+2023-05-22 16:03:42,047: INFO: automation_test.py: Checking which tiles are still being processed after 500 seconds
+2023-05-22 16:03:52,077: INFO: automation_test.py: Checking which tiles are still being processed after 510 seconds
+2023-05-22 16:04:07,534: INFO: ****PROCESSING START****
+2023-05-22 16:04:07,534: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,534: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 16:04:07,534: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,534: INFO: Reading in parameters defined in the Config
+2023-05-22 16:04:07,534: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,534: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,534: INFO: Starting acd_to_config_to_log()
+2023-05-22 16:04:07,534: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,534: INFO: Options:
+2023-05-22 16:04:07,534: INFO:   --do_parallel
+2023-05-22 16:04:07,535: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 16:04:07,535: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 16:04:07,535: INFO:   --do_raster
+2023-05-22 16:04:07,535: INFO:       raster pipeline enabled
+2023-05-22 16:04:07,535: INFO:   --download for change detection images
+2023-05-22 16:04:07,535: INFO:   --download_source = "scihub"
+2023-05-22 16:04:07,535: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 16:04:07,535: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 16:04:07,535: INFO: EPSG used is: 21097
+2023-05-22 16:04:07,535: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 16:04:07,535: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 16:04:07,535: INFO: 
+2023-05-22 16:04:07,535: INFO: List of class labels:
+2023-05-22 16:04:07,535: INFO:   1 : primary forest
+2023-05-22 16:04:07,535: INFO:   2 : plantation forest
+2023-05-22 16:04:07,535: INFO:   3 : bare soil
+2023-05-22 16:04:07,535: INFO:   4 : crops
+2023-05-22 16:04:07,536: INFO:   5 : grassland
+2023-05-22 16:04:07,536: INFO:   6 : open water
+2023-05-22 16:04:07,536: INFO:   7 : burn scar
+2023-05-22 16:04:07,536: INFO:   8 : cloud
+2023-05-22 16:04:07,536: INFO:   9 : cloud shadow
+2023-05-22 16:04:07,536: INFO:   10 : haze
+2023-05-22 16:04:07,536: INFO:   11 : sparse woodland
+2023-05-22 16:04:07,536: INFO:   12 : dense woodland
+2023-05-22 16:04:07,536: INFO:   13 : artificial
+2023-05-22 16:04:07,536: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 16:04:07,536: INFO:                     to any of the classes: [3]
+2023-05-22 16:04:07,536: INFO: ------------------------------------------------------------
+2023-05-22 16:04:07,536: INFO: Reporting Directories and Filepaths
+2023-05-22 16:04:07,536: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 16:04:07,536: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 16:04:07,536: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 16:04:07,537: INFO: Integrated Directory is   : ./integrated
+2023-05-22 16:04:07,537: INFO: ROI Directory is   : ./roi
+2023-05-22 16:04:07,537: INFO: Geometry Directory is   : ./geometry
+2023-05-22 16:04:07,537: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 16:04:07,537: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 16:04:07,537: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 16:04:07,537: INFO: -------------------------------------------
+2023-05-22 16:04:07,537: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,537: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 16:04:07,537: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,781: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 16:04:07,781: INFO: These tiles are  :
+2023-05-22 16:04:07,781: INFO:   1 : 36NXG
+2023-05-22 16:04:07,781: INFO:   2 : 36NYG
+2023-05-22 16:04:07,781: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 16:04:07,794: INFO: Finished ROI tile intersection
+2023-05-22 16:04:07,794: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,794: INFO: Starting acd_integrated_raster():
+2023-05-22 16:04:07,795: INFO: ---------------------------------------------------------------
+2023-05-22 16:04:07,798: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 16:04:07,799: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 16:04:07,799: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:04:07,814: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:04:07,814: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG'
+
+2023-05-22 16:04:07,814: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:04:07,815: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:04:07,900: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:04:07 BST 2023
+\n
+21404663.master.cm.cluster
+
+2023-05-22 16:04:07,900: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 16:04:07,900: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:04:07,915: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:04:07,915: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG'
+
+2023-05-22 16:04:07,915: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:04:07,915: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:04:07,985: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:04:07 BST 2023
+\n
+21404664.master.cm.cluster
+
+2023-05-22 16:04:07,986: INFO: automation_test.py: subprocess launching completed
+2023-05-22 16:04:07,986: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 16:04:17,992: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 16:04:28,013: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 16:04:38,031: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 16:04:48,058: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 16:04:58,077: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 16:05:08,093: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 16:05:18,111: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 16:05:28,130: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 16:05:38,156: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 16:05:48,173: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 16:05:58,192: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 16:06:08,212: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 16:06:18,228: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 16:06:28,259: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 16:06:38,277: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 16:06:48,302: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 16:06:58,320: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 16:07:08,339: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 16:07:18,366: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 16:07:28,391: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 16:07:38,411: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 16:07:48,440: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 16:07:58,458: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 16:08:08,479: INFO: automation_test.py: Checking which tiles are still being processed after 230 seconds
+2023-05-22 16:08:18,496: INFO: automation_test.py: Checking which tiles are still being processed after 240 seconds
+2023-05-22 16:08:28,526: INFO: automation_test.py: Checking which tiles are still being processed after 250 seconds
+2023-05-22 16:08:38,559: INFO: automation_test.py: Checking which tiles are still being processed after 260 seconds
+2023-05-22 16:08:48,586: INFO: automation_test.py: Checking which tiles are still being processed after 270 seconds
+2023-05-22 16:08:58,612: INFO: automation_test.py: Checking which tiles are still being processed after 280 seconds
+2023-05-22 16:09:08,628: INFO: automation_test.py: Checking which tiles are still being processed after 290 seconds
+2023-05-22 16:09:18,704: INFO: automation_test.py: Checking which tiles are still being processed after 300 seconds
+2023-05-22 16:09:28,728: INFO: automation_test.py: Checking which tiles are still being processed after 310 seconds
+2023-05-22 16:09:38,754: INFO: automation_test.py: Checking which tiles are still being processed after 320 seconds
+2023-05-22 16:09:48,779: INFO: automation_test.py: Checking which tiles are still being processed after 330 seconds
+2023-05-22 16:09:58,798: INFO: automation_test.py: Checking which tiles are still being processed after 340 seconds
+2023-05-22 16:10:08,875: INFO: automation_test.py: Checking which tiles are still being processed after 350 seconds
+2023-05-22 16:10:18,902: INFO: automation_test.py: Checking which tiles are still being processed after 360 seconds
+2023-05-22 16:10:28,923: INFO: automation_test.py: Checking which tiles are still being processed after 370 seconds
+2023-05-22 16:10:38,942: INFO: automation_test.py: Checking which tiles are still being processed after 380 seconds
+2023-05-22 16:10:48,957: INFO: automation_test.py: Checking which tiles are still being processed after 390 seconds
+2023-05-22 16:10:58,982: INFO: automation_test.py: Checking which tiles are still being processed after 400 seconds
+2023-05-22 16:11:09,006: INFO: automation_test.py: Checking which tiles are still being processed after 410 seconds
+2023-05-22 16:11:19,074: INFO: automation_test.py: Checking which tiles are still being processed after 420 seconds
+2023-05-22 16:11:29,150: INFO: automation_test.py: Checking which tiles are still being processed after 430 seconds
+2023-05-22 16:11:39,173: INFO: automation_test.py: Checking which tiles are still being processed after 440 seconds
+2023-05-22 16:11:49,200: INFO: automation_test.py: Checking which tiles are still being processed after 450 seconds
+2023-05-22 16:11:59,219: INFO: automation_test.py: Checking which tiles are still being processed after 460 seconds
+2023-05-22 16:12:09,246: INFO: automation_test.py: Checking which tiles are still being processed after 470 seconds
+2023-05-22 16:12:19,265: INFO: automation_test.py: Checking which tiles are still being processed after 480 seconds
+2023-05-22 16:12:29,289: INFO: automation_test.py: Checking which tiles are still being processed after 490 seconds
+2023-05-22 16:12:39,314: INFO: automation_test.py: Checking which tiles are still being processed after 500 seconds
+2023-05-22 16:12:39,329: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 16:12:39,329: INFO: automation_test.py subprocesses completed
+2023-05-22 16:12:39,330: INFO: ---------------------------------------------------------------
+2023-05-22 16:12:39,330: INFO: Starting acd_national_filtering
+2023-05-22 16:12:39,330: INFO: ---------------------------------------------------------------
+2023-05-22 16:12:39,330: INFO: ---------------------------------------------------------------
+2023-05-22 16:12:39,330: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 16:12:39,330: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,454: INFO: ****PROCESSING START****
+2023-05-22 16:30:35,455: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,455: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 16:30:35,455: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,455: INFO: Reading in parameters defined in the Config
+2023-05-22 16:30:35,456: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,456: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,456: INFO: Starting acd_to_config_to_log()
+2023-05-22 16:30:35,456: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,456: INFO: Options:
+2023-05-22 16:30:35,456: INFO:   --do_parallel
+2023-05-22 16:30:35,456: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 16:30:35,456: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 16:30:35,456: INFO:   --do_raster
+2023-05-22 16:30:35,456: INFO:       raster pipeline enabled
+2023-05-22 16:30:35,456: INFO:   --download for change detection images
+2023-05-22 16:30:35,456: INFO:   --download_source = "scihub"
+2023-05-22 16:30:35,456: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 16:30:35,456: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 16:30:35,456: INFO: EPSG used is: 21097
+2023-05-22 16:30:35,456: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 16:30:35,456: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 16:30:35,457: INFO: 
+2023-05-22 16:30:35,457: INFO: List of class labels:
+2023-05-22 16:30:35,457: INFO:   1 : primary forest
+2023-05-22 16:30:35,457: INFO:   2 : plantation forest
+2023-05-22 16:30:35,457: INFO:   3 : bare soil
+2023-05-22 16:30:35,457: INFO:   4 : crops
+2023-05-22 16:30:35,457: INFO:   5 : grassland
+2023-05-22 16:30:35,457: INFO:   6 : open water
+2023-05-22 16:30:35,457: INFO:   7 : burn scar
+2023-05-22 16:30:35,457: INFO:   8 : cloud
+2023-05-22 16:30:35,457: INFO:   9 : cloud shadow
+2023-05-22 16:30:35,457: INFO:   10 : haze
+2023-05-22 16:30:35,457: INFO:   11 : sparse woodland
+2023-05-22 16:30:35,457: INFO:   12 : dense woodland
+2023-05-22 16:30:35,457: INFO:   13 : artificial
+2023-05-22 16:30:35,457: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 16:30:35,458: INFO:                     to any of the classes: [3]
+2023-05-22 16:30:35,458: INFO: ------------------------------------------------------------
+2023-05-22 16:30:35,458: INFO: Reporting Directories and Filepaths
+2023-05-22 16:30:35,458: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 16:30:35,458: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 16:30:35,458: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 16:30:35,458: INFO: Integrated Directory is   : ./integrated
+2023-05-22 16:30:35,458: INFO: ROI Directory is   : ./roi
+2023-05-22 16:30:35,458: INFO: Geometry Directory is   : ./geometry
+2023-05-22 16:30:35,458: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 16:30:35,458: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 16:30:35,458: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 16:30:35,458: INFO: -------------------------------------------
+2023-05-22 16:30:35,458: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,458: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 16:30:35,458: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,745: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 16:30:35,745: INFO: These tiles are  :
+2023-05-22 16:30:35,745: INFO:   1 : 36NXG
+2023-05-22 16:30:35,745: INFO:   2 : 36NYG
+2023-05-22 16:30:35,745: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 16:30:35,750: INFO: Finished ROI tile intersection
+2023-05-22 16:30:35,750: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,750: INFO: Starting acd_integrated_raster():
+2023-05-22 16:30:35,750: INFO: ---------------------------------------------------------------
+2023-05-22 16:30:35,753: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 16:30:35,753: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 16:30:35,754: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:30:35,769: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:30:35,769: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG'
+
+2023-05-22 16:30:35,769: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:30:35,769: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:30:35,896: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:30:35 BST 2023
+\n
+21404672.master.cm.cluster
+
+2023-05-22 16:30:35,896: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 16:30:35,897: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:30:35,911: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:30:35,911: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG'
+
+2023-05-22 16:30:35,911: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:30:35,911: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:30:35,978: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:30:35 BST 2023
+\n
+21404673.master.cm.cluster
+
+2023-05-22 16:30:35,979: INFO: automation_test.py: subprocess launching completed
+2023-05-22 16:30:35,979: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 16:30:45,981: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 16:30:56,008: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 16:31:06,034: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 16:31:16,060: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 16:31:26,082: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 16:31:36,113: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 16:31:46,135: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 16:31:56,152: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 16:32:06,173: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 16:32:16,208: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 16:32:26,236: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 16:32:36,261: INFO: automation_test.py: Checking which tiles are still being processed after 110 seconds
+2023-05-22 16:32:46,291: INFO: automation_test.py: Checking which tiles are still being processed after 120 seconds
+2023-05-22 16:32:56,315: INFO: automation_test.py: Checking which tiles are still being processed after 130 seconds
+2023-05-22 16:33:06,342: INFO: automation_test.py: Checking which tiles are still being processed after 140 seconds
+2023-05-22 16:33:16,367: INFO: automation_test.py: Checking which tiles are still being processed after 150 seconds
+2023-05-22 16:33:26,391: INFO: automation_test.py: Checking which tiles are still being processed after 160 seconds
+2023-05-22 16:33:36,417: INFO: automation_test.py: Checking which tiles are still being processed after 170 seconds
+2023-05-22 16:33:46,445: INFO: automation_test.py: Checking which tiles are still being processed after 180 seconds
+2023-05-22 16:33:56,471: INFO: automation_test.py: Checking which tiles are still being processed after 190 seconds
+2023-05-22 16:34:06,492: INFO: automation_test.py: Checking which tiles are still being processed after 200 seconds
+2023-05-22 16:34:16,522: INFO: automation_test.py: Checking which tiles are still being processed after 210 seconds
+2023-05-22 16:34:26,543: INFO: automation_test.py: Checking which tiles are still being processed after 220 seconds
+2023-05-22 16:34:32,092: INFO: ****PROCESSING START****
+2023-05-22 16:34:32,092: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,093: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-22 16:34:32,093: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,093: INFO: Reading in parameters defined in the Config
+2023-05-22 16:34:32,093: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,093: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,093: INFO: Starting acd_to_config_to_log()
+2023-05-22 16:34:32,093: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,093: INFO: Options:
+2023-05-22 16:34:32,093: INFO:   --do_parallel
+2023-05-22 16:34:32,093: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-22 16:34:32,093: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-22 16:34:32,093: INFO:   --do_raster
+2023-05-22 16:34:32,093: INFO:       raster pipeline enabled
+2023-05-22 16:34:32,093: INFO:   --download for change detection images
+2023-05-22 16:34:32,093: INFO:   --download_source = "scihub"
+2023-05-22 16:34:32,093: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-22 16:34:32,093: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-22 16:34:32,094: INFO: EPSG used is: 21097
+2023-05-22 16:34:32,094: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-22 16:34:32,094: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-22 16:34:32,094: INFO: 
+2023-05-22 16:34:32,094: INFO: List of class labels:
+2023-05-22 16:34:32,094: INFO:   1 : primary forest
+2023-05-22 16:34:32,094: INFO:   2 : plantation forest
+2023-05-22 16:34:32,094: INFO:   3 : bare soil
+2023-05-22 16:34:32,094: INFO:   4 : crops
+2023-05-22 16:34:32,094: INFO:   5 : grassland
+2023-05-22 16:34:32,094: INFO:   6 : open water
+2023-05-22 16:34:32,094: INFO:   7 : burn scar
+2023-05-22 16:34:32,094: INFO:   8 : cloud
+2023-05-22 16:34:32,094: INFO:   9 : cloud shadow
+2023-05-22 16:34:32,094: INFO:   10 : haze
+2023-05-22 16:34:32,095: INFO:   11 : sparse woodland
+2023-05-22 16:34:32,095: INFO:   12 : dense woodland
+2023-05-22 16:34:32,095: INFO:   13 : artificial
+2023-05-22 16:34:32,095: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-22 16:34:32,095: INFO:                     to any of the classes: [3]
+2023-05-22 16:34:32,095: INFO: ------------------------------------------------------------
+2023-05-22 16:34:32,095: INFO: Reporting Directories and Filepaths
+2023-05-22 16:34:32,095: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/Ivan/kenya_software_testing/
+2023-05-22 16:34:32,095: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1
+2023-05-22 16:34:32,095: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-22 16:34:32,095: INFO: Integrated Directory is   : ./integrated
+2023-05-22 16:34:32,095: INFO: ROI Directory is   : ./roi
+2023-05-22 16:34:32,095: INFO: Geometry Directory is   : ./geometry
+2023-05-22 16:34:32,095: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-22 16:34:32,095: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-22 16:34:32,095: INFO: The Conda Environment which was provided in .ini file is :  pyeo_env
+2023-05-22 16:34:32,096: INFO: -------------------------------------------
+2023-05-22 16:34:32,096: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,096: INFO: Starting acd_roi_tile_intersection()
+2023-05-22 16:34:32,096: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,346: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-22 16:34:32,346: INFO: These tiles are  :
+2023-05-22 16:34:32,347: INFO:   1 : 36NXG
+2023-05-22 16:34:32,347: INFO:   2 : 36NYG
+2023-05-22 16:34:32,347: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-22 16:34:32,366: INFO: Finished ROI tile intersection
+2023-05-22 16:34:32,366: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,366: INFO: Starting acd_integrated_raster():
+2023-05-22 16:34:32,367: INFO: ---------------------------------------------------------------
+2023-05-22 16:34:32,371: ERROR: ./credentials/credentials.ini does not exist, did you write the correct filepath in pyeo_1.ini?
+2023-05-22 16:34:32,371: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-22 16:34:32,372: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:34:32,391: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:34:32,391: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG'
+
+2023-05-22 16:34:32,391: INFO: qsub_launch_string='qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:34:32,391: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NXG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:34:32,467: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:34:32 BST 2023
+\n
+21404676.master.cm.cluster
+
+2023-05-22 16:34:32,468: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-22 16:34:32,468: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-22 16:34:32,484: INFO: automation_test.py: Preparing to launch tile processing of tile {tile_name}
+2023-05-22 16:34:32,484: INFO: python_launch_string='cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG'
+
+2023-05-22 16:34:32,484: INFO: qsub_launch_string='qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-22 16:34:32,484: INFO: shell_command_string="/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation; module load python; source activate /home/i/ir81/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/i/ir81/Sen2Cor-02.09.00-Linux64; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/_random_duration_test_program.py /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_o.txt -e /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/36NYG_e.txt -l walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'"
+
+2023-05-22 16:34:32,551: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1/apps/automation/automate_launch.sh on:  Mon 22 May 16:34:32 BST 2023
+\n
+21404677.master.cm.cluster
+
+2023-05-22 16:34:32,551: INFO: automation_test.py: subprocess launching completed
+2023-05-22 16:34:32,552: INFO: automation_test.py: subprocess monitoring started
+2023-05-22 16:34:42,558: INFO: automation_test.py: Checking which tiles are still being processed after 0 seconds
+2023-05-22 16:34:52,582: INFO: automation_test.py: Checking which tiles are still being processed after 10 seconds
+2023-05-22 16:35:02,609: INFO: automation_test.py: Checking which tiles are still being processed after 20 seconds
+2023-05-22 16:35:12,679: INFO: automation_test.py: Checking which tiles are still being processed after 30 seconds
+2023-05-22 16:35:22,702: INFO: automation_test.py: Checking which tiles are still being processed after 40 seconds
+2023-05-22 16:35:32,729: INFO: automation_test.py: Checking which tiles are still being processed after 50 seconds
+2023-05-22 16:35:42,749: INFO: automation_test.py: Checking which tiles are still being processed after 60 seconds
+2023-05-22 16:35:52,773: INFO: automation_test.py: Checking which tiles are still being processed after 70 seconds
+2023-05-22 16:36:02,800: INFO: automation_test.py: Checking which tiles are still being processed after 80 seconds
+2023-05-22 16:36:13,052: INFO: automation_test.py: Checking which tiles are still being processed after 90 seconds
+2023-05-22 16:36:23,078: INFO: automation_test.py: Checking which tiles are still being processed after 100 seconds
+2023-05-22 16:36:23,096: INFO: All tiles have been processed.. continuing to next pipeline stage
+2023-05-22 16:36:23,096: INFO: automation_test.py subprocesses completed
+2023-05-22 16:36:23,096: INFO: ---------------------------------------------------------------
+2023-05-22 16:36:23,097: INFO: Starting acd_national_filtering
+2023-05-22 16:36:23,097: INFO: ---------------------------------------------------------------
+2023-05-22 16:36:23,097: INFO: ---------------------------------------------------------------
+2023-05-22 16:36:23,097: INFO: ---                  INTEGRATED PROCESSING END              ---
+2023-05-22 16:36:23,097: INFO: ---------------------------------------------------------------

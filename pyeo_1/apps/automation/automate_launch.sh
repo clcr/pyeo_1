@@ -53,7 +53,7 @@ qsub_launch_string=$2
 
 # qsub_parameter_string = qsub -N $tile -o $wd/qsub_processing_logs/$tile\_o.txt -e $wd/qsub_processing_logs/$tile\_e.txt -l walltime=0:23:59:00,nodes=1:ppn=16,vmem=64Gb"
 
-echo "python_launch_string" | $qsub_launch_string
+echo $python_launch_string | $qsub_launch_string
 
 
 # echo "Process launched via qsub:"
