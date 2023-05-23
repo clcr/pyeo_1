@@ -519,7 +519,7 @@ def acd_integrated_raster(config_dict: dict, log: logging.Logger, tilelist_filep
         # except:
             # log.error(f"Could not complete ACD Raster Processes for Tile: {tile[0]}")
 
-
+    # if parallel, monitor parallel processes once all have been launched
     if config_dict["do_parallel"]:
         log.info('automation_test.py: subprocess launching completed')
         log.info('automation_test.py: subprocess monitoring started')
