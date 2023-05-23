@@ -5,6 +5,7 @@
 *.swp
 log/national_vector_test.txt
 credentials/credentials.ini
+tmp*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

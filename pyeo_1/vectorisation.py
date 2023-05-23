@@ -1,3 +1,5 @@
+import logging
+
 def band_naming(band: int, log):
     """
     This function provides a variable name (string) based on the input integer.
@@ -62,7 +64,7 @@ def band_naming(band: int, log):
     return band_name
 
 
-def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name):
+def vectorise_from_band(change_report_path: str, band: int, log: logging.Logger, conda_env_name: str):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -98,7 +100,7 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
     # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
-
+    log.info(f"what is change_report_path  :  {change_report_path}")
     # let GDAL use Python to raise Exceptions, instead of printing to sys.stdout
     gdal.UseExceptions()
 
@@ -162,7 +164,7 @@ def vectorise_from_band(change_report_path: str, band: int, log, conda_env_name)
     return out_filename
 
 
-def clean_zero_nodata_vectorised_band(vectorised_band_path: str, log, conda_env_name: str):
+def clean_zero_nodata_vectorised_band(vectorised_band_path: str, log: logging.Logger, conda_env_name: str):
     """
 
     This function removes 0s and nodata values from the vectorised bands.
@@ -686,108 +688,3 @@ def merge_and_calculate_spatial(
 
     return
 
-
-def vector_report_generation(
-    raster_change_report_path: str,
-    write_csv: bool,
-    write_shapefile: bool,
-    write_pkl: bool,
-    log,
-    epsg: int,
-    level_1_boundaries_path: str,
-    conda_env_name: str,
-    delete_intermediates: bool,
-):
-    """
-
-    This function calls all the individual functions necessary to create a vectorised change report.
-
-    Parameters
-    ---------------
-
-    raster_change_report : str
-        path to the report raster
-
-    conda_env_name : str
-        string of the name of the conda environment, used to permit interchangeable use of GDAL and geopandas' installations.
-
-
-    Returns
-    ----------------
-    None
-
-    """
-
-    change_report_path = raster_change_report_path
-    tileid = change_report_path.split("/")[-1].split("_")[
-        2
-    ]  # I should take tileid from .ini but this is quicker for now (12/04/2023)
-
-    log.info("--" * 20)
-    log.info(f"Starting Vectorisation of the Change Report Raster of Tile: {tileid}")
-    log.info("--" * 20)
-
-    # 22 minutes
-    path_vectorised_binary = vectorise_from_band(
-        change_report_path=change_report_path,
-        band=15,
-        log=log,
-        conda_env_name=conda_env_name,
-    )
-    # was band=6
-
-    path_vectorised_binary_filtered = clean_zero_nodata_vectorised_band(
-        vectorised_band_path=path_vectorised_binary,
-        log=log,
-        conda_env_name=conda_env_name,
-    )
-
-    rb_ndetections_zstats_df = zonal_statistics(
-        raster_path=change_report_path,
-        shapefile_path=path_vectorised_binary_filtered,
-        report_band=5,
-        log=log,
-        conda_env_name=conda_env_name,
-    )
-    # was band=2
-
-    rb_confidence_zstats_df = zonal_statistics(
-        raster_path=change_report_path,
-        shapefile_path=path_vectorised_binary_filtered,
-        report_band=9,
-        log=log,
-        conda_env_name=conda_env_name,
-    )
-    # was band=5
-
-    rb_first_changedate_zstats_df = zonal_statistics(
-        raster_path=change_report_path,
-        shapefile_path=path_vectorised_binary_filtered,
-        report_band=4,
-        log=log,
-        conda_env_name=conda_env_name,
-    )
-    # was band=7
-    # table joins, area, lat lon, county
-    merge_and_calculate_spatial(
-        rb_ndetections_zstats_df=rb_ndetections_zstats_df,
-        rb_confidence_zstats_df=rb_confidence_zstats_df,
-        rb_first_changedate_zstats_df=rb_first_changedate_zstats_df,
-        path_to_vectorised_binary_filtered=path_vectorised_binary_filtered,
-        write_csv=write_csv,
-        write_shapefile=write_shapefile,
-        write_pkl=write_pkl,
-        delete_intermediates=delete_intermediates,
-        change_report_path=change_report_path,
-        log=log,
-        epsg=epsg,
-        level_1_boundaries_path=level_1_boundaries_path,
-        tileid=tileid,
-        conda_env_name=conda_env_name,
-    )
-
-    log.info("---------------------------------------------------------------")
-    log.info("Vectorisation of the Change Report Raster complete")
-    log.info("---------------------------------------------------------------")
-
-    return

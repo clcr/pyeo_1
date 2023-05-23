@@ -1,23 +1,26 @@
 [![DOI](https://zenodo.org/badge/126246599.svg)](https://zenodo.org/badge/latestdoi/126246599)
 
-# pyeo_1
-Python for Earth Observation.
+# PyEO
+Python for Earth Observation (PyEO)
 
-This is designed to provide a set of portable, extensible and modular Python scripts for machine learning in earth observation and GIS,
-including downloading, preprocessing, creation of base layers, classification and validation.
+PyEO is designed to provide a set of portable, extensible and modular Python scripts for machine learning in earth observation and GIS,
+including downloading, preprocessing, creation of baseline composites, classification and validation.
 
-Full documentation at https://clcr.github.io/pyeo/build/html/index.html
+Full documentation is available at https://clcr.github.io/pyeo/build/html/index.html
 
-Example notebooks are at https://github.com/clcr/pyeo_training_materials
+Example notebooks are available at:
+- https://github.com/clcr/pyeo_training_materials
+- ./notebooks
 
 ## Requirements
-Package management is performed by Conda, for instructions on how to install, refer to: https://docs.conda.io/en/latest/.  
+Package management is performed by Conda, for instructions on how to install Conda, please refer to: https://docs.conda.io/en/latest/.  
 *Note: Conda can be installed as part of Anaconda https://www.anaconda.com/*
 
 From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space Ecosystem (COP DSE). In the meantime, if you wish to download from Scihub, you will need a Scihub account: https://scihub.copernicus.eu/
-To use COP DSE, you will need an account: https://dataspace.copernicus.eu
 
-For processing of Sentinel-2 L1Cs, you will need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/, but this is installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.
+To use COP DSE, you will need a separate account: https://dataspace.copernicus.eu
+
+For processing of Sentinel-2 L1Cs, you will also need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/. This installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.
 
 ## Installation on SEPAL
 
