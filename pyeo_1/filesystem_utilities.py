@@ -99,7 +99,10 @@ def init_log_acd(log_path, logger_name):
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger.info("****PROCESSING START****")
+    logger.info("---------------------------------------------------------------")
+    logger.info("                    ****PROCESSING START****")
+    logger.info("---------------------------------------------------------------")
+
 
     return logger
 

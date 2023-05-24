@@ -696,7 +696,7 @@ def acd_integrated_vectorisation(
     if len(sorted_filepaths) == 0:
         log.error("there are no change reports to vectorise, here are some pointers:")
         log.error(
-            "    Ensure the raster processing pipeline has successfully ran and completed "
+            "    Ensure the raster processing pipeline has successfully run and completed "
         )
         log.error("    Ensure tile_dir has been specified correctly in pyeo_1.ini")
         log.error("Now exiting the vector pipeline")
