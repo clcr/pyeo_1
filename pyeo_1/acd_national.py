@@ -84,6 +84,12 @@ def automatic_change_detection_national(config_path):
         if config_dict["counties_of_interest"]:
             acd_national_filtering(log=acd_log, config_dict=config_dict)
 
+    if config_dict["do_qgis"]:
+        acd_log.info("---------------------------------------------------------------")
+        acd_log.info("Starting QGIS Project Automation")
+        acd_log.info("---------------------------------------------------------------")
+        
+
     if config_dict["do_distribution"]:
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_national_distribution()")
@@ -954,35 +960,21 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 
     return
 
-    # def acd_national_dataframe_to_shapefile():
-    #     """
+    def acd_national_qgis_bookmark_generation():
+        """
 
-    #     This function:
-    #         - converts an event DataFrame stored in a .pkl format to a shapefile suitable for importing in QGIS
+        This function:
+           - Generates a QGIS Project file using pyQGIS
+           - Generates QGIS Spatial Bookmarks (.xml) from a filtered dataframe for import into QGIS
+           - Import Vectorised Change Report
+           - Import ROI (with Names)
+           - Import Country Boundaries
+           - Import County Boundaries
+           - Import Sentinel-2 Tile Boundaries
 
-    #     """
-    #     pass
 
-    # def acd_national_dataframe_to_csv():
-    #     """
-
-    #     This function:
-    #         - converts an event DataFrame stored in a .pkl format to a csv for Excel or a text editor
-
-    #     """
-    #     pass
-
-    # def acd_national_qgis_bookmark_generation():
-    #     """
-
-    #     This function:
-    #        - Generates a QGIS Project file using pyQGIS
-    #        - Generates QGIS Spatial Bookmarks (.xml) from a filtered dataframe for import into QGIS
-    #        - Import report.tif
-    #        - Import ROI
-
-    #     """
-    #     pass
+        """
+        
 
     # def acd_national_manual_validation():
     #     """

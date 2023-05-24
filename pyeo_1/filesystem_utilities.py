@@ -290,6 +290,8 @@ def config_path_to_config_dict(config_path: str):
         "vector_processing_parameters", "do_distribution"
     )
 
+    config_dict["do_qgis"] = config.getboolean("vector_processing_parameters", "do_qgis")
+
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 
     return config_dict
