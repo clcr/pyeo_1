@@ -103,9 +103,10 @@ def init_log_acd(log_path, logger_name):
 
     return logger
 
+
 def conda_check(config_path: str):
     """
-    
+
     This function takes the path to the config (pyeo_1.ini) and checks whether the conda environment exists.
 
     Parameters
@@ -120,7 +121,7 @@ def conda_check(config_path: str):
     True/False (bool)
 
     """
-    
+
     conda_config = configparser.ConfigParser(allow_no_value=True)
     conda_config.read(config_path)
 
@@ -132,7 +133,6 @@ def conda_check(config_path: str):
         return True
     else:
         return False
-
 
 
 def config_path_to_config_dict(config_path: str):
@@ -164,7 +164,9 @@ def config_path_to_config_dict(config_path: str):
     config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
     config_dict["wall_time_hours"] = int(config["run_mode"]["wall_time_hours"])
     config_dict["watch_time_hours"] = int(config["run_mode"]["watch_time_hours"])
-    config_dict["watch_period_seconds"] = int(config["run_mode"]["watch_period_seconds"])
+    config_dict["watch_period_seconds"] = int(
+        config["run_mode"]["watch_period_seconds"]
+    )
 
     config_dict["do_raster"] = config.getboolean(
         "raster_processing_parameters", "do_raster"
@@ -290,7 +292,9 @@ def config_path_to_config_dict(config_path: str):
         "vector_processing_parameters", "do_distribution"
     )
 
-    config_dict["do_qgis"] = config.getboolean("vector_processing_parameters", "do_qgis")
+    config_dict["do_qgis"] = config.getboolean(
+        "vector_processing_parameters", "do_qgis"
+    )
 
     config_dict["credentials_path"] = config["environment"]["credentials_path"]
 

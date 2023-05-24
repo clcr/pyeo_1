@@ -88,7 +88,6 @@ def automatic_change_detection_national(config_path):
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting QGIS Project Automation")
         acd_log.info("---------------------------------------------------------------")
-        
 
     if config_dict["do_distribution"]:
         acd_log.info("---------------------------------------------------------------")
@@ -156,7 +155,7 @@ def acd_initialisation(config_path):
     )
 
     # check conda directory exists
-    #conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
+    # conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
@@ -305,7 +304,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"Path to the Administrative Boundaries used in the Change Report Vectorisation   : {config_dict['level_1_boundaries_path']}"
     )
     log.info(f"Path to Sen2Cor is   : {config_dict['sen2cor_path']}")
-    
+
     log.info(
         f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
@@ -482,7 +481,7 @@ def acd_integrated_raster(
             ]  # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  #
 
             conda_directory = config_dict["conda_directory"]
-            #conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
+            # conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
             conda_environment_name = config_dict["conda_env_name"]  # 'pyeo_env'  #
             conda_environment_path = os.path.join(
                 conda_directory, conda_environment_name
@@ -496,7 +495,7 @@ def acd_integrated_raster(
             watch_period_seconds = config_dict["watch_period_seconds"]
             qsub_processor_options = config_dict["qsub_processor_options"]
 
-            #qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
+            # qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
 
             qsub_options = f"walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
@@ -556,7 +555,7 @@ def acd_integrated_raster(
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
         # monitoring_cycles = 24 * 60  # 24 hours
         # monitoring_period_seconds = 60
-        
+
         # monitoring_period_seconds = watch_time_hours * 60 * 60
         watch_cycles = int((watch_time_hours * 60 * 60) / watch_period_seconds)
 
@@ -974,7 +973,6 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 
 
         """
-        
 
     # def acd_national_manual_validation():
     #     """
