@@ -487,12 +487,12 @@ def acd_integrated_raster(
             python_executable = "pyeo_1/apps/acd_national/acd_by_tile_raster.py"  # 'apps/automation/_random_duration_test_program.py'  #
             wall_time_hours = config_dict["wall_time_hours"]
             watch_time_hours = config_dict["watch_time_hours"]
-            watch_period_minutes = config_dict["watch_period_minutes"]
+            watch_period_seconds = config_dict["watch_period_seconds"]
             qsub_processor_options = config_dict["qsub_processor_options"]
 
-            qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
+            #qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
 
-            # qsub_options = f"walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+            qsub_options = f"walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
             # config_filename = 'pyeo_1.ini'
             # config_path = os.path.join(config_directory, config_filename)
@@ -501,6 +501,7 @@ def acd_integrated_raster(
             )
 
             tile_name = tile[0]
+            new_line = "\n"
 
             log.info(
                 f"automation_test.py: Checking if tile {tile_name} is already being processed and, if so, deleting current process to avoid possible conflicts"
@@ -527,7 +528,6 @@ def acd_integrated_raster(
             qsub_launch_string = f'qsub -N {tile_name} -o {os.path.join(data_directory, tile_name + "_o.txt")} -e {os.path.join(data_directory, tile_name + "_e.txt")} -l {qsub_options}'
             shell_command_string = f"{automation_script_path} '{python_launch_string}' '{qsub_launch_string}'"
 
-            new_line = "\n"
             log.info(f"python_launch_string: {python_launch_string}{new_line}")
             log.info(f"qsub_launch_string: {qsub_launch_string}{new_line}")
             log.info(f"shell_command_string: {shell_command_string}{new_line}")
@@ -550,15 +550,15 @@ def acd_integrated_raster(
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
         # monitoring_cycles = 24 * 60  # 24 hours
         # monitoring_period_seconds = 60
-
-        monitoring_cycles = wall_time_hours
-        monitoring_period_seconds = watch_period_minutes
+        
+        # monitoring_period_seconds = watch_time_hours * 60 * 60
+        watch_cycles = int((watch_time_hours * 60 * 60) / watch_period_seconds)
 
         end_monitoring = False
-        for i in range(monitoring_cycles):
-            time.sleep(monitoring_period_seconds)
+        for i in range(watch_cycles):
+            time.sleep(watch_period_seconds)
             log.info(
-                f"automation_test.py: Checking which tiles are still being processed after {i * monitoring_period_seconds} seconds"
+                f"automation_test.py: Checking which tiles are still being processed after {i * watch_period_seconds} seconds"
             )
 
             df = qstat_to_dataframe()
