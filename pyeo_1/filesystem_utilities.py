@@ -23,7 +23,6 @@ import glob
 import logging
 import numpy as np
 import os
-from pathlib import Path
 import pandas as pd
 import re
 import shutil
@@ -128,9 +127,9 @@ def conda_check(config_path: str):
     conda_config = configparser.ConfigParser(allow_no_value=True)
     conda_config.read(config_path)
 
+    conda_directory = conda_config["environment"]["conda_directory"]
     conda_env_name = conda_config["environment"]["conda_env_name"]
-    home = str(Path.home())
-    conda_directory = f"{home}/miniconda3/envs/{conda_env_name}"
+    conda_directory = f"{conda_directory}{os.sep}{conda_env_name}"
 
     if os.path.exists(conda_directory):
         return True
