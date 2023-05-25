@@ -1456,11 +1456,11 @@ def acd_by_tile_raster(config_path: str, tile: str):
         # find change patterns in the stack of classification images
 
         for index, image in enumerate(class_image_paths):
-            log.info("")
-            log.info("")
-            log.info(f"  printing index, image   : {index}, {image}")
-            log.info("")
-            log.info("")
+            tile_log.info("")
+            tile_log.info("")
+            tile_log.info(f"  printing index, image   : {index}, {image}")
+            tile_log.info("")
+            tile_log.info("")
             before_timestamp = filesystem_utilities.get_change_detection_dates(
                 os.path.basename(latest_class_composite_path)
             )[0]

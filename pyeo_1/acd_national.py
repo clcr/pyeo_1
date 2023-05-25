@@ -492,7 +492,7 @@ def acd_integrated_raster(
 
             #qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
 
-            qsub_options = f"walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
+            qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
             # config_filename = 'pyeo_1.ini'
             # config_path = os.path.join(config_directory, config_filename)
