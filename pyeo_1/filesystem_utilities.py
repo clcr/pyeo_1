@@ -23,7 +23,6 @@ import glob
 import logging
 import numpy as np
 import os
-from pathlib import Path
 import pandas as pd
 import re
 import shutil
@@ -99,13 +98,17 @@ def init_log_acd(log_path, logger_name):
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger.info("****PROCESSING START****")
+    logger.info("---------------------------------------------------------------")
+    logger.info("                    ****PROCESSING START****")
+    logger.info("---------------------------------------------------------------")
+
 
     return logger
 
+
 def conda_check(config_path: str):
     """
-    
+
     This function takes the path to the config (pyeo_1.ini) and checks whether the conda environment exists.
 
     Parameters
@@ -120,19 +123,18 @@ def conda_check(config_path: str):
     True/False (bool)
 
     """
-    
+
     conda_config = configparser.ConfigParser(allow_no_value=True)
     conda_config.read(config_path)
 
+    conda_directory = conda_config["environment"]["conda_directory"]
     conda_env_name = conda_config["environment"]["conda_env_name"]
-    home = str(Path.home())
-    conda_directory = f"{home}/miniconda3/envs/{conda_env_name}"
+    conda_directory = f"{conda_directory}{os.sep}{conda_env_name}"
 
     if os.path.exists(conda_directory):
         return True
     else:
         return False
-
 
 
 def config_path_to_config_dict(config_path: str):
@@ -164,7 +166,9 @@ def config_path_to_config_dict(config_path: str):
     config_dict["do_parallel"] = config.getboolean("run_mode", "do_parallel")
     config_dict["wall_time_hours"] = int(config["run_mode"]["wall_time_hours"])
     config_dict["watch_time_hours"] = int(config["run_mode"]["watch_time_hours"])
-    config_dict["watch_period_seconds"] = int(config["run_mode"]["watch_period_seconds"])
+    config_dict["watch_period_seconds"] = int(
+        config["run_mode"]["watch_period_seconds"]
+    )
 
     config_dict["do_raster"] = config.getboolean(
         "raster_processing_parameters", "do_raster"

@@ -98,19 +98,19 @@ def automatic_change_detection_national(config_path):
     # This is the end of the function
 
 
-def acd_composite_update():
-    """
-    This function updates the composite to a new specified start and end date.
+# def acd_composite_update():
+#     """
+#     This function updates the composite to a new specified start and end date.
 
-    We could potentially streamline the composite update process by:
+#     We could potentially streamline the composite update process by:
 
-        - Move out of date change images to the composite folder
+#         - Move out of date change images to the composite folder
 
-            - "Out of Date" = time period parameter e.g. every 3 months
+#             - "Out of Date" = time period parameter e.g. every 3 months
 
-        - rebuild composite based on whichever .tiffs are within the composite folder.
+#         - rebuild composite based on whichever .tiffs are within the composite folder.
 
-    """
+#     """
 
 
 ############################
@@ -150,7 +150,9 @@ def acd_initialisation(config_path):
     )
 
     # check conda directory exists
-    #conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
+    # conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
+    # if not conda_boolean:
+    #     log.error(f"Conda Dire")
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
@@ -299,7 +301,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"Path to the Administrative Boundaries used in the Change Report Vectorisation   : {config_dict['level_1_boundaries_path']}"
     )
     log.info(f"Path to Sen2Cor is   : {config_dict['sen2cor_path']}")
-    
+
     log.info(
         f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
@@ -476,7 +478,7 @@ def acd_integrated_raster(
             ]  # '/home/i/ir81/Sen2Cor-02.09.00-Linux64'  #
 
             conda_directory = config_dict["conda_directory"]
-            #conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
+            # conda_environment_directory = "/home/i/ir81/miniconda3/envs"  # config_dict["conda_env_directory"] (NOTE: Doesn't exist in ini file yet)
             conda_environment_name = config_dict["conda_env_name"]  # 'pyeo_env'  #
             conda_environment_path = os.path.join(
                 conda_directory, conda_environment_name
@@ -490,7 +492,7 @@ def acd_integrated_raster(
             watch_period_seconds = config_dict["watch_period_seconds"]
             qsub_processor_options = config_dict["qsub_processor_options"]
 
-            #qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
+            # qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"
 
             qsub_options = f"walltime=00:{wall_time_hours}:00:00,{qsub_processor_options}"  # 'walltime=00:00:02:00,nodes=1:ppn=16,vmem=64Gb'
             # config_directory = '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1' # '/data/clcr/shared/IMPRESS/Ivan/pyeo_1/pyeo_1/pyeo_1'
@@ -550,7 +552,7 @@ def acd_integrated_raster(
         # TODO Set maximum_monitoring_period_raster to greater than walltime ( > maximum expected processing time for a tile)
         # monitoring_cycles = 24 * 60  # 24 hours
         # monitoring_period_seconds = 60
-        
+
         # monitoring_period_seconds = watch_time_hours * 60 * 60
         watch_cycles = int((watch_time_hours * 60 * 60) / watch_period_seconds)
 
@@ -691,7 +693,7 @@ def acd_integrated_vectorisation(
     if len(sorted_filepaths) == 0:
         log.error("there are no change reports to vectorise, here are some pointers:")
         log.error(
-            "    Ensure the raster processing pipeline has successfully ran and completed "
+            "    Ensure the raster processing pipeline has successfully run and completed "
         )
         log.error("    Ensure tile_dir has been specified correctly in pyeo_1.ini")
         log.error("Now exiting the vector pipeline")
@@ -954,35 +956,19 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 
     return
 
-    # def acd_national_dataframe_to_shapefile():
-    #     """
-
-    #     This function:
-    #         - converts an event DataFrame stored in a .pkl format to a shapefile suitable for importing in QGIS
-
-    #     """
-    #     pass
-
-    # def acd_national_dataframe_to_csv():
-    #     """
-
-    #     This function:
-    #         - converts an event DataFrame stored in a .pkl format to a csv for Excel or a text editor
-
-    #     """
-    #     pass
-
-    # def acd_national_qgis_bookmark_generation():
     #     """
 
     #     This function:
     #        - Generates a QGIS Project file using pyQGIS
     #        - Generates QGIS Spatial Bookmarks (.xml) from a filtered dataframe for import into QGIS
-    #        - Import report.tif
-    #        - Import ROI
+    #        - Import Vectorised Change Report
+    #        - Import ROI (with Names)
+    #        - Import Country Boundaries
+    #        - Import County Boundaries
+    #        - Import Sentinel-2 Tile Boundaries
+
 
     #     """
-    #     pass
 
     # def acd_national_manual_validation():
     #     """
@@ -1061,15 +1047,3 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 #     log.error("failed to initialise log")
 
 #     pass
-
-# def acd_per_tile_vector():
-#     """
-
-#     This function:
-#         - Vectorises the change report raster
-
-#         - Adds two additional columns to allocate and record to support acd_national_manual_validation
-
-#             - "assesor" and "decision"
-
-#     """
