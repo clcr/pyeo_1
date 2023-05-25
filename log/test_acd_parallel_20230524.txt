@@ -2675,3 +2675,12 @@ Name: 1, dtype: object
 2023-05-25 18:09:11,472: INFO: automation_test.py: Checking which tiles are still being processed after 1380 seconds
 2023-05-25 18:09:11,575: INFO: Tile 36NXG still running pid: 21425230, status; Q 
 2023-05-25 18:09:11,575: INFO: Tile 36NYG still running pid: 21425231, status; Q 
+2023-05-25 18:10:11,635: INFO: automation_test.py: Checking which tiles are still being processed after 1440 seconds
+2023-05-25 18:10:11,741: INFO: Tile 36NXG still running pid: 21425230, status; Q 
+2023-05-25 18:10:11,742: INFO: Tile 36NYG still running pid: 21425231, status; Q 
+2023-05-25 18:11:11,791: INFO: automation_test.py: Checking which tiles are still being processed after 1500 seconds
+2023-05-25 18:11:11,892: INFO: Tile 36NXG still running pid: 21425230, status; Q 
+2023-05-25 18:11:11,893: INFO: Tile 36NYG still running pid: 21425231, status; Q 
+2023-05-25 18:12:11,950: INFO: automation_test.py: Checking which tiles are still being processed after 1560 seconds
+2023-05-25 18:12:12,063: INFO: Tile 36NXG still running pid: 21425230, status; Q 
+2023-05-25 18:12:12,064: INFO: Tile 36NYG still running pid: 21425231, status; Q 
