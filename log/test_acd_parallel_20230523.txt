@@ -1785,3 +1785,99 @@ Deleting job: 21409920
 2023-05-24 14:14:18,010: INFO: Tile 36NYG still running pid: 21409923, status; R 
 2023-05-24 14:15:18,067: INFO: automation_test.py: Checking which tiles are still being processed after 4620 seconds
 2023-05-24 14:15:18,096: INFO: Tile 36NYG still running pid: 21409923, status; R 
+2023-05-24 22:22:05,186: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,475: INFO:                     ****PROCESSING START****
+2023-05-24 22:22:05,476: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,476: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,476: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-24 22:22:05,476: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,476: INFO: Reading in parameters defined in the Config
+2023-05-24 22:22:05,476: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,476: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,476: INFO: Starting acd_to_config_to_log()
+2023-05-24 22:22:05,477: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,477: INFO: Options:
+2023-05-24 22:22:05,477: INFO:   --do_parallel
+2023-05-24 22:22:05,477: INFO:         running in parallel mode, parallel functions will be enabled where available
+2023-05-24 22:22:05,477: INFO:   --dev Running in development mode, choosing development versions of functions where available
+2023-05-24 22:22:05,477: INFO:   --do_raster
+2023-05-24 22:22:05,478: INFO:       raster pipeline enabled
+2023-05-24 22:22:05,478: INFO:   --build_composite for baseline composite
+2023-05-24 22:22:05,478: INFO:   --download_source = "scihub"
+2023-05-24 22:22:05,478: INFO:          composite start date  : 20230101
+2023-05-24 22:22:05,478: INFO:          composite end date  : 20230414
+2023-05-24 22:22:05,478: INFO:   --quicklooks to create image quicklooks
+2023-05-24 22:22:05,478: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-24 22:22:05,478: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-24 22:22:05,478: INFO: EPSG used is: 21097
+2023-05-24 22:22:05,478: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-24 22:22:05,478: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-24 22:22:05,479: INFO: 
+2023-05-24 22:22:05,479: INFO: List of class labels:
+2023-05-24 22:22:05,479: INFO:   1 : primary forest
+2023-05-24 22:22:05,479: INFO:   2 : plantation forest
+2023-05-24 22:22:05,479: INFO:   3 : bare soil
+2023-05-24 22:22:05,479: INFO:   4 : crops
+2023-05-24 22:22:05,479: INFO:   5 : grassland
+2023-05-24 22:22:05,479: INFO:   6 : open water
+2023-05-24 22:22:05,479: INFO:   7 : burn scar
+2023-05-24 22:22:05,479: INFO:   8 : cloud
+2023-05-24 22:22:05,480: INFO:   9 : cloud shadow
+2023-05-24 22:22:05,480: INFO:   10 : haze
+2023-05-24 22:22:05,480: INFO:   11 : sparse woodland
+2023-05-24 22:22:05,480: INFO:   12 : dense woodland
+2023-05-24 22:22:05,480: INFO:   13 : artificial
+2023-05-24 22:22:05,480: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-24 22:22:05,480: INFO:                     to any of the classes: [3]
+2023-05-24 22:22:05,480: INFO: ------------------------------------------------------------
+2023-05-24 22:22:05,480: INFO: Reporting Directories and Filepaths
+2023-05-24 22:22:05,480: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-24 22:22:05,480: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-24 22:22:05,481: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-24 22:22:05,481: INFO: Integrated Directory is   : ./integrated
+2023-05-24 22:22:05,481: INFO: ROI Directory is   : ./roi
+2023-05-24 22:22:05,481: INFO: Geometry Directory is   : ./geometry
+2023-05-24 22:22:05,481: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-24 22:22:05,481: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-24 22:22:05,481: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-24 22:22:05,481: INFO: -------------------------------------------
+2023-05-24 22:22:05,481: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,481: INFO: Starting acd_roi_tile_intersection()
+2023-05-24 22:22:05,482: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,810: INFO: The provided ROI intersects with 2 Sentinel-2 tiles
+2023-05-24 22:22:05,811: INFO: These tiles are  :
+2023-05-24 22:22:05,811: INFO:   1 : 36NXG
+2023-05-24 22:22:05,811: INFO:   2 : 36NYG
+2023-05-24 22:22:05,811: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-24 22:22:05,819: INFO: Finished ROI tile intersection
+2023-05-24 22:22:05,819: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,819: INFO: Starting acd_integrated_raster():
+2023-05-24 22:22:05,819: INFO: ---------------------------------------------------------------
+2023-05-24 22:22:05,910: INFO: Starting ACD Raster Processes for Tile :  36NXG
+2023-05-24 22:22:05,910: INFO: automation_test.py: Checking if tile 36NXG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-24 22:22:05,927: INFO: automation_test.py: Preparing to launch tile processing of tile 36NXG
+2023-05-24 22:22:05,927: INFO: python_launch_string: cd /data/clcr/shared/IMPRESS/matt/testing_tiles/; module load python; source activate /home/m/mp730/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/acd_national/acd_by_tile_raster.py pyeo_1.ini 36NXG
+
+2023-05-24 22:22:05,927: INFO: qsub_launch_string: qsub -N 36NXG -o /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG_o.txt -e /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG_e.txt -l walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb
+
+2023-05-24 22:22:05,927: INFO: shell_command_string: /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/matt/testing_tiles/; module load python; source activate /home/m/mp730/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/acd_national/acd_by_tile_raster.py pyeo_1.ini 36NXG' 'qsub -N 36NXG -o /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG_o.txt -e /data/clcr/shared/IMPRESS/matt/testing_tiles/36NXG_e.txt -l walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-24 22:22:06,137: INFO:  Subprocess launched for tile 36NXG, return value: Executing /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/automation/automate_launch.sh on:  Wed 24 May 22:22:06 BST 2023
+\n
+21410074.master.cm.cluster
+
+2023-05-24 22:22:06,138: INFO: Starting ACD Raster Processes for Tile :  36NYG
+2023-05-24 22:22:06,138: INFO: automation_test.py: Checking if tile 36NYG is already being processed and, if so, deleting current process to avoid possible conflicts
+2023-05-24 22:22:06,151: INFO: automation_test.py: Preparing to launch tile processing of tile 36NYG
+2023-05-24 22:22:06,151: INFO: python_launch_string: cd /data/clcr/shared/IMPRESS/matt/testing_tiles/; module load python; source activate /home/m/mp730/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/acd_national/acd_by_tile_raster.py pyeo_1.ini 36NYG
+
+2023-05-24 22:22:06,151: INFO: qsub_launch_string: qsub -N 36NYG -o /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG_o.txt -e /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG_e.txt -l walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb
+
+2023-05-24 22:22:06,151: INFO: shell_command_string: /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/automation/automate_launch.sh 'cd /data/clcr/shared/IMPRESS/matt/testing_tiles/; module load python; source activate /home/m/mp730/miniconda3/envs/pyeo_env; SEN2COR_HOME=/home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process; export SEN2COR_HOME; python /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/acd_national/acd_by_tile_raster.py pyeo_1.ini 36NYG' 'qsub -N 36NYG -o /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG_o.txt -e /data/clcr/shared/IMPRESS/matt/testing_tiles/36NYG_e.txt -l walltime=00:24:00:00,nodes=1:ppn=16,vmem=64Gb'
+
+2023-05-24 22:22:06,244: INFO:  Subprocess launched for tile 36NYG, return value: Executing /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/automation/automate_launch.sh on:  Wed 24 May 22:22:06 BST 2023
+\n
+21410075.master.cm.cluster
+
+2023-05-24 22:22:06,244: INFO: automation_test.py: subprocess launching completed
+2023-05-24 22:22:06,245: INFO: automation_test.py: subprocess monitoring started

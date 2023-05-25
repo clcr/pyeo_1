@@ -98,19 +98,19 @@ def automatic_change_detection_national(config_path):
     # This is the end of the function
 
 
-def acd_composite_update():
-    """
-    This function updates the composite to a new specified start and end date.
+# def acd_composite_update():
+#     """
+#     This function updates the composite to a new specified start and end date.
 
-    We could potentially streamline the composite update process by:
+#     We could potentially streamline the composite update process by:
 
-        - Move out of date change images to the composite folder
+#         - Move out of date change images to the composite folder
 
-            - "Out of Date" = time period parameter e.g. every 3 months
+#             - "Out of Date" = time period parameter e.g. every 3 months
 
-        - rebuild composite based on whichever .tiffs are within the composite folder.
+#         - rebuild composite based on whichever .tiffs are within the composite folder.
 
-    """
+#     """
 
 
 ############################
@@ -151,6 +151,8 @@ def acd_initialisation(config_path):
 
     # check conda directory exists
     # conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
+    # if not conda_boolean:
+    #     log.error(f"Conda Dire")
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
@@ -1045,15 +1047,3 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
 #     log.error("failed to initialise log")
 
 #     pass
-
-# def acd_per_tile_vector():
-#     """
-
-#     This function:
-#         - Vectorises the change report raster
-
-#         - Adds two additional columns to allocate and record to support acd_national_manual_validation
-
-#             - "assesor" and "decision"
-
-#     """
