@@ -5,6 +5,7 @@ import logging
 import configparser
 import json
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import glob
 
@@ -13,6 +14,17 @@ from pyeo_1 import raster_manipulation
 from pyeo_1 import queries_and_downloads
 from pyeo_1 import classification
 from pyeo_1 import acd_national
+from pyeo_1.apps.image_acquisition.opensearch_queries_and_processing import (
+    get_access_token,
+    get_s2_tile_centroids,
+    build_request_string,
+    query_by_polygon,
+    filter_valid_size_s2_products,
+    stratify_products_by_orbit_number,
+    download_product,
+    check_product_exists,
+    unzip_downloaded_product,
+)
 from tempfile import TemporaryDirectory
 
 
@@ -127,28 +139,15 @@ def acd_by_tile_raster(config_path: str, tile: str):
     do_download_from_dataspace = config_dict["do_download_from_dataspace"]
     
     credentials_path = config_dict["credentials_path"]
+    if not os.path.exists(credentials_path):
+        tile_log.error(f"the credentials path does not exist  :{credentials_path}")
+        tile_log.error("exiting raster pipeline")
+        sys.exit(1)
 
     conf = configparser.ConfigParser(allow_no_value=True)
     conf.read(credentials_path)
     credentials_dict = {}
     # credentials_dict is made because functions further in the pipeline want a dictionary
-
-    if os.path.exists(credentials_path) and do_download_from_scihub:
-        download_source = "scihub"
-        credentials_dict["sent_2"] = {}
-        credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
-        credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
-        sen_user = credentials_dict["sent_2"]["user"]
-        sen_pass = credentials_dict["sent_2"]["pass"]
-
-    if os.path.exists(credentials_path) and do_download_from_dataspace:
-    
-        download_source = "dataspace"
-        credentials_dict["sent_2"] = {}
-        credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
-        credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
-        sen_user = credentials_dict["sent_2"]["user"]
-        sen_pass = credentials_dict["sent_2"]["pass"]
 
     # ------------------------------------------------------------------------
     # Step 1: Create an initial cloud-free median composite from Sentinel-2 as a baseline map
@@ -161,27 +160,91 @@ def acd_by_tile_raster(config_path: str, tile: str):
         )
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
-        try:
-            composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
-                tile_root_dir,
-                composite_start_date,
-                composite_end_date,
-                conf=credentials_dict,
-                cloud_cover=cloud_cover,
-                tile_id=tile,
-                producttype=None,  # "S2MSI2A" or "S2MSI1C"
-            )
-        except Exception as error:
-            tile_log.error(
-                f"check_for_s2_data_by_date failed, got this error :  {error}"
-            )
 
+        # if do_download_from_dataspace:
+            
+        #     download_source = "dataspace"
+        #     credentials_dict["sent_2"] = {}
+        #     credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
+        #     credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
+        #     sen_user = credentials_dict["sent_2"]["user"]
+        #     sen_pass = credentials_dict["sent_2"]["pass"]
+
+        #     try:
+        #         tiles_geom_path = "/data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/geometry/kenya_s2_tiles.shp"
+        #         tiles_geom = gpd.read_file(tiles_geom_path)
+        #     except FileNotFoundError:
+        #         tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
+
+        #     tile_geom = tiles_geom[tiles_geom["Name"] == tile]
+        #     tile_geom = tile_geom.to_crs(epsg=4326)
+        #     geometry = tile_geom["geometry"].iloc[0]
+        #     geometry = geometry.representative_point()
+        #     try:
+        #         dataspace_composite_products_all = query_by_polygon(
+        #             max_cloud_cover=cloud_cover,
+        #             start_date="2023-01-01",
+        #             end_date="2023-05-20",
+        #             area_of_interest=geometry,
+        #             max_records=100
+        #         )
+        #     except Exception as error:
+        #         tile_log.error(f"query_by_polygon received this error: {error}")
+
+        #     tile_log.info(f"dataspace dataframe columns")
+        #     tile_log.info(f"{dataspace_composite_products_all.columns}")
+
+        if do_download_from_scihub:
+            download_source = "scihub"
+            credentials_dict["sent_2"] = {}
+            credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
+            credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
+            sen_user = credentials_dict["sent_2"]["user"]
+            sen_pass = credentials_dict["sent_2"]["pass"]
+
+            tile_log.info("scihub branch reached")
+            try:
+                composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
+                    tile_root_dir,
+                    composite_start_date,
+                    composite_end_date,
+                    conf=credentials_dict,
+                    cloud_cover=cloud_cover,
+                    tile_id=tile,
+                    producttype=None,  # "S2MSI2A" or "S2MSI1C"
+                )
+            except Exception as error:
+                tile_log.error(
+                    f"check_for_s2_data_by_date failed, got this error :  {error}"
+                )
+        
         tile_log.info(
             "--> Found {} L1C and L2A products for the composite:".format(
                 len(composite_products_all)
             )
         )
+        # tile_log.info(f"what does composite products all look like")
+        #tile_log.info(composite_products_all)
         df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+
+        # tile_log.info("uuid is below")
+        # tile_log.info(df_all["uuid"])
+        # tile_log.info("df_all[title] is below, index 0 is a title")
+        for i in df_all["title"].iloc[0]:
+            tile_log.info(f"length of title: {len(i)}")
+            for j in i:
+                tile_log.info(j)
+        # tile_log.info(df_all["title"])
+
+        # tile_log.info("title is below, is index 1 a title")
+        # tile_log.info(df_all["title"].iloc[0].split(" ")[1])
+
+        # tile_log.info("scihub dataframe columns")
+        # tile_log.info(df_all.columns)
+
+        ##########
+        # df_all for both scihub and dataspace are the same columns, same types, same scales and formats
+
 
         # check granule sizes on the server
         df_all["size"] = (
@@ -190,11 +253,16 @@ def acd_by_tile_raster(config_path: str, tile: str):
             .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
         )
         df = df_all.query("size >= " + str(faulty_granule_threshold))
+        tile_log.info(f"what is df  : {df}")
+
+        #sys.exit(1)
+
         tile_log.info(
             "Removed {} faulty scenes <{}MB in size from the list:".format(
                 len(df_all) - len(df), faulty_granule_threshold
             )
         )
+        # find < threshold sizes, report to log
         df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
         for r in range(len(df_faulty)):
             tile_log.info(
@@ -228,6 +296,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                             : int(max_image_number / len(rel_orbits))
                         ]
                     )
+                # keeps least cloudy n (max image number)
                 l1c_products = l1c_products[l1c_products["uuid"].isin(uuids)]
                 tile_log.info(
                     "    {} L1C products remain:".format(l1c_products.shape[0])
@@ -338,6 +407,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                         search_term
                     )
                 )
+                #if do_download_from_scihub:
                 matching_l2a_products = queries_and_downloads._file_api_query(
                     user=sen_user,
                     passwd=sen_pass,
@@ -347,7 +417,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     cloud=cloud_cover,
                     producttype="S2MSI2A",
                 )
-
+                    
                 matching_l2a_products_df = pd.DataFrame.from_dict(
                     matching_l2a_products, orient="index"
                 )
@@ -366,6 +436,9 @@ def acd_by_tile_raster(config_path: str, tile: str):
                             matching_l2a_products_df.iloc[0, :]["title"]
                         )
                     )
+                    tile_log.info(f"what is r: {r}")
+                    tile_log.info(f"what is l1c_products?  : {l1c_products}")
+                    tile_log.info(f"what is l1c_products.index[r]  : {l1c_products.index[r]}")
                     drop.append(l1c_products.index[r])
                     add.append(matching_l2a_products_df.iloc[0, :])
                 if len(matching_l2a_products_df) == 0:
@@ -400,13 +473,14 @@ def acd_by_tile_raster(config_path: str, tile: str):
                         )
                         drop.append(l1c_products.index[r])
                         add.append(matching_l2a_products_df.iloc[0, :])
-            if len(drop) > 0:
-                l1c_products = l1c_products.drop(index=drop)
-            if len(add) > 0:
-                # l2a_products = l2a_products.append(add)
-                add = pd.DataFrame(add)
-                l2a_products = pd.concat([l2a_products, add])
+                if len(drop) > 0:
+                    l1c_products = l1c_products.drop(index=drop)
+                if len(add) > 0:
+                    # l2a_products = l2a_products.append(add)
+                    add = pd.DataFrame(add)
+                    l2a_products = pd.concat([l2a_products, add])
 
+            # here, dataspace and scihub derived l1c_products and l2a_products lists are the "same"
             l2a_products = l2a_products.drop_duplicates(subset="title")
             tile_log.info(
                 "    {} L1C products remaining for download".format(
@@ -419,6 +493,9 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 )
             )
 
+        ######### above is querying etc etc. etc.
+
+        ######## below is downloading
         # if L1C products remain after matching for L2As, then download the unmatched L1Cs
         if l1c_products.shape[0] > 0:
             tile_log.info("Downloading Sentinel-2 L1C products.")
@@ -427,6 +504,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 l1c_products,
                 composite_l1_image_dir,
                 composite_l2_image_dir,
+                # source could accept "dataspace"
                 source="scihub",
                 user=sen_user,
                 passwd=sen_pass,

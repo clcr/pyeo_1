@@ -3,6 +3,7 @@ title = "SEPAL PyEO Image Acquisition Configuration File"
 [authentication] # Copernicus DataSpace service authentication
 username = "ir81@le.ac.uk"
 password = "impressION2023!"
+refresh_token = ""
 
 [sentinel2_properties]
 start_date = "2023-05-01" # YYYY-MM-DD

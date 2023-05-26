@@ -10,11 +10,11 @@ import requests
 import toml
 from tqdm import tqdm
 
-CONFIG = toml.load(os.path.abspath("config/image_acquisition_config.toml"))
+CONFIG = toml.load("/data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/pyeo_1/apps/image_acquisition/config/image_acquisition_config.toml")
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
-    filename=f"pyeo_run_{datetime.now().strftime('%d-%b-%Y(%H:%M:%S.%f)')}.log",
+    filename=f"pyeo_run.log",
     level=logging.INFO,
     datefmt="%Y-%m-%d %H:%M:%S",
 )
