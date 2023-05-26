@@ -123,31 +123,32 @@ def acd_by_tile_raster(config_path: str, tile: str):
     from_classes = config_dict["from_classes"]
     to_classes = config_dict["to_classes"]
 
-    # download_source = config_dict["download_source"]
-    # monkey patch b/c config_dict version gets rejected yet is a string that is "scihub"
-    download_source = "scihub"
-
-    # check and read in credentials for downloading Sentinel-2 data
+    do_download_from_scihub = config_dict["do_download_from_scihub"]
+    do_download_from_dataspace = config_dict["do_download_from_dataspace"]
+    
     credentials_path = config_dict["credentials_path"]
-    if os.path.exists(credentials_path):
-        try:
-            conf = configparser.ConfigParser(allow_no_value=True)
-            conf.read(credentials_path)
-            credentials_dict = {}
-            credentials_dict["sent_2"] = {}
-            credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
-            credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
-        except:
-            tile_log.error(f"Could not open {credentials_path}")
-    else:
-        tile_log.error(
-            f"{credentials_path} does not exist, did you write the correct filepath in pyeo_1.ini?"
-        )
-        tile_log.error("exiting process as no valid credentials path supplied")
-        sys.exit(1)
 
-    sen_user = credentials_dict["sent_2"]["user"]
-    sen_pass = credentials_dict["sent_2"]["pass"]
+    conf = configparser.ConfigParser(allow_no_value=True)
+    conf.read(credentials_path)
+    credentials_dict = {}
+    # credentials_dict is made because functions further in the pipeline want a dictionary
+
+    if os.path.exists(credentials_path) and do_download_from_scihub:
+        download_source = "scihub"
+        credentials_dict["sent_2"] = {}
+        credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
+        credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
+        sen_user = credentials_dict["sent_2"]["user"]
+        sen_pass = credentials_dict["sent_2"]["pass"]
+
+    if os.path.exists(credentials_path) and do_download_from_dataspace:
+    
+        download_source = "dataspace"
+        credentials_dict["sent_2"] = {}
+        credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
+        credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
+        sen_user = credentials_dict["sent_2"]["user"]
+        sen_pass = credentials_dict["sent_2"]["pass"]
 
     # ------------------------------------------------------------------------
     # Step 1: Create an initial cloud-free median composite from Sentinel-2 as a baseline map
@@ -165,7 +166,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 tile_root_dir,
                 composite_start_date,
                 composite_end_date,
-                credentials_dict,
+                conf=credentials_dict,
                 cloud_cover=cloud_cover,
                 tile_id=tile,
                 producttype=None,  # "S2MSI2A" or "S2MSI1C"
