@@ -219,6 +219,7 @@ def config_path_to_config_dict(config_path: str):
         "download_source"
     ]
 
+    # print(config["raster_processing_parameters"]["band_names"])
     config_dict["bands"] = json.loads(
         config["raster_processing_parameters"]["band_names"]
     )

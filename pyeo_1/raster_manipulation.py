@@ -3141,7 +3141,8 @@ def apply_processing_baseline_offset_correction_to_tiff_file_directory(
             log.info(
                 f"Offset already applied - file marked as: {get_processing_baseline(f)}"
             )
-        if get_processing_baseline(f) in ["0400", "0509"]:
+        print(f'int(get_processing_baseline(f)[1:]): {int(get_processing_baseline(f)[1:])}')
+        if (int(get_processing_baseline(f)[1:]) >= 400): # in ["0400", "0509"]:
             in_raster_path = os.path.join(in_tif_directory, f)
             print(f"Offsetting file: {f}")
             log.info(f"Offsetting file: {f}")
@@ -3177,12 +3178,21 @@ def apply_processing_baseline_offset_correction_to_tiff_file_directory(
             # Simple offset of all image bands
             out_temporary_raster_array[...] = (
                 np.clip(
-                    in_raster_array[bands_to_offset_index, :, :],
+                    in_raster_array[:, :, :],
                     (-1 * BOA_ADD_OFFSET),
                     dtype_max,
                 )
                 + BOA_ADD_OFFSET
             )
+
+            #out_temporary_raster_array[...] = (
+            #   np.clip(
+            #        in_raster_array[bands_to_offset_index, :, :],
+            #        (-1 * BOA_ADD_OFFSET),
+            #        dtype_max,
+            #    )
+            #    + BOA_ADD_OFFSET
+            #)
 
             # Untested: Improvement to offset just selected bands by label - for band specific offsetting if required
             # out_raster_array[...] = in_raster_array[...]  # Copy over all data
@@ -3315,6 +3325,10 @@ def stack_sentinel_2_bands(
 
     band_paths = [get_sen_2_band_path(safe_dir, band, out_resolution) for band in bands]
 
+    for band_path in band_paths:
+        print(f'Image Resolution: {band_path}')
+
+
     # Move every image NOT in the requested resolution to resample_dir and resample
     with TemporaryDirectory(dir=os.getcwd()) as resample_dir:
         # log.info("Making temp dir {}".format(resample_dir))
@@ -3437,6 +3451,7 @@ def get_sen_2_band_path(safe_dir, band, resolution=None):
     else:
         res_string = ""
 
+
     if get_safe_product_type(safe_dir) == "MSIL1C":
         filepattern = "_" + band + ".jp2"
         band_paths = get_filenames(safe_dir, filepattern, "IMG_DATA")
@@ -3475,13 +3490,25 @@ def get_sen_2_band_path(safe_dir, band, resolution=None):
             band_paths = []
             for res in ["10m", "20m", "60m"]:
                 filepattern = "_" + band + "_" + res + ".jp2"
-                band_paths.append(get_filenames(safe_dir, filepattern, res_string))
+
+                # I.R. 20230527 Pattern for directory matching corrected
+                #band_paths.append(get_filenames(safe_dir, filepattern, res_string))
+                band_paths.append(get_filenames(safe_dir, filepattern, res))
+
                 # band_glob = "GRANULE/*/IMG_DATA/R*/*_{}_*.*".format(band)
                 # band_glob = os.path.join(safe_dir, band_glob)
                 # band_paths = glob.glob(band_glob)
-            band_path = sorted(band_paths)[
-                0
-            ]  # Sorting alphabetically gives the highest resolution first
+
+            # I.R. 20230527 Empty lists removed
+            print(f'{band_paths=}')     
+            band_paths_sorted = sorted(band_paths)
+            print(f'{band_paths_sorted=}')
+            band_paths_sorted_noempty = [x for x in band_paths_sorted if x != []]     
+            print(f'{band_paths_sorted_noempty=}')
+
+            # I.R. 20230527 Corrected to return a path string (as assumed above and by rest of code base). Previously returned a single element list containing the string.
+            band_path = band_paths_sorted_noempty[0][0]  # Sorting alphabetically gives the highest resolution first
+            print(f'{band_path=}')     
             if band_path == []:
                 raise FileNotFoundError(
                     "Band {} not found for safe file {}".format(band, safe_dir)
