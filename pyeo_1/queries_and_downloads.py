@@ -1268,6 +1268,8 @@ def download_s2_data_from_df(
         # elif source == 'google':
         #    download_from_google_cloud([identifier], out_folder=out_path)
         elif source == "scihub":
+            log.info("is this even reached?")
+            log.info(f"what even is an index  :{index}")
             e = download_from_scihub(index, out_path, user, passwd)
             if e == 1:
                 log.warning(
