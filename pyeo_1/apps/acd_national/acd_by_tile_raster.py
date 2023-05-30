@@ -218,22 +218,22 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     f"check_for_s2_data_by_date failed, got this error :  {error}"
                 )
         
-        tile_log.info(
-            "--> Found {} L1C and L2A products for the composite:".format(
-                len(composite_products_all)
+            tile_log.info(
+                "--> Found {} L1C and L2A products for the composite:".format(
+                    len(composite_products_all)
+                )
             )
-        )
-        # tile_log.info(f"what does composite products all look like")
-        #tile_log.info(composite_products_all)
-        df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+            # tile_log.info(f"what does composite products all look like")
+            #tile_log.info(composite_products_all)
+            df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
 
         # tile_log.info("uuid is below")
         # tile_log.info(df_all["uuid"])
         # tile_log.info("df_all[title] is below, index 0 is a title")
-        for i in df_all["title"].iloc[0]:
-            tile_log.info(f"length of title: {len(i)}")
-            for j in i:
-                tile_log.info(j)
+        # for i in df_all["title"].iloc[0]:
+        #     tile_log.info(f"length of title: {len(i)}")
+        #     for j in i:
+        #         tile_log.info(j)
         # tile_log.info(df_all["title"])
 
         # tile_log.info("title is below, is index 1 a title")
@@ -246,30 +246,28 @@ def acd_by_tile_raster(config_path: str, tile: str):
         # df_all for both scihub and dataspace are the same columns, same types, same scales and formats
 
 
-        # check granule sizes on the server
-        df_all["size"] = (
-            df_all["size"]
-            .str.split(" ")
-            .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
-        )
-        df = df_all.query("size >= " + str(faulty_granule_threshold))
-        tile_log.info(f"what is df  : {df}")
-
-        #sys.exit(1)
-
-        tile_log.info(
-            "Removed {} faulty scenes <{}MB in size from the list:".format(
-                len(df_all) - len(df), faulty_granule_threshold
+            # check granule sizes on the server
+            df_all["size"] = (
+                df_all["size"]
+                .str.split(" ")
+                .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
             )
-        )
-        # find < threshold sizes, report to log
-        df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
-        for r in range(len(df_faulty)):
+            df = df_all.query("size >= " + str(faulty_granule_threshold))
+            tile_log.info(f"what is df  : {df}")
+
             tile_log.info(
-                "   {} MB: {}".format(
-                    df_faulty.iloc[r, :]["size"], df_faulty.iloc[r, :]["title"]
+                "Removed {} faulty scenes <{}MB in size from the list:".format(
+                    len(df_all) - len(df), faulty_granule_threshold
                 )
             )
+            # find < threshold sizes, report to log
+            df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
+            for r in range(len(df_faulty)):
+                tile_log.info(
+                    "   {} MB: {}".format(
+                        df_faulty.iloc[r, :]["size"], df_faulty.iloc[r, :]["title"]
+                    )
+                )
 
         l1c_products = df[df.processinglevel == "Level-1C"]
         l2a_products = df[df.processinglevel == "Level-2A"]
