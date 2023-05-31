@@ -86,7 +86,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path="/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt",#os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"), #"/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt"
         logger_name=f"pyeo_1_tile_{tile}_log",
     )
 
@@ -135,9 +135,13 @@ def acd_by_tile_raster(config_path: str, tile: str):
     from_classes = config_dict["from_classes"]
     to_classes = config_dict["to_classes"]
 
-    do_download_from_scihub = config_dict["do_download_from_scihub"]
-    do_download_from_dataspace = config_dict["do_download_from_dataspace"]
-    
+    # do_download_from_scihub = config_dict["do_download_from_scihub"]
+    # do_download_from_dataspace = config_dict["do_download_from_dataspace"]
+    download_source = config_dict["download_source"]
+    tile_log.info("download source prints next:")
+    tile_log.info(download_source)
+    if download_source == "scihub":
+        tile_log.info("scihub is the download source")
     credentials_path = config_dict["credentials_path"]
     if not os.path.exists(credentials_path):
         tile_log.error(f"the credentials path does not exist  :{credentials_path}")
@@ -161,9 +165,10 @@ def acd_by_tile_raster(config_path: str, tile: str):
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
 
-        if do_download_from_dataspace:
-            
-            download_source = "dataspace"
+        if download_source == "dataspace":
+            tile_log.info("dataspace if branch reached")
+
+            sys.exit(1)
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
             credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
@@ -222,8 +227,8 @@ def acd_by_tile_raster(config_path: str, tile: str):
             tile_log.info(f"dataspace dataframe columns")
             tile_log.info(f"{dataspace_composite_products_all.columns}")
 
-        if do_download_from_scihub:
-            download_source = "scihub"
+        sys.exit(1)
+        if download_source == "scihub":
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
             credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]

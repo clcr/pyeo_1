@@ -206,15 +206,15 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info("  --do_all")
         if config_dict["build_composite"]:
             log.info("  --build_composite for baseline composite")
-            # log.info("  --download_source = {}".format(config_dict["download_source"]))
+            log.info("  --download_source = {}".format(config_dict["download_source"]))
             log.info(f"         composite start date  : {config_dict['start_date']}")
             log.info(f"         composite end date  : {config_dict['end_date']}")
         if config_dict["do_download"]:
             log.info("  --download for change detection images")
-            # if not config_dict["build_composite"]:
-                # log.info(
-                #     "  --download_source = {}".format(config_dict["download_source"])
-                # )
+            if not config_dict["build_composite"]:
+                log.info(
+                    "  --download_source = {}".format(config_dict["download_source"])
+                )
         if config_dict["do_classify"]:
             log.info(
                 "  --classify to apply the random forest model and create classification layers"
