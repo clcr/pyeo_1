@@ -86,7 +86,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
+        log_path="/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt",#os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
         logger_name=f"pyeo_1_tile_{tile}_log",
     )
 
@@ -161,38 +161,66 @@ def acd_by_tile_raster(config_path: str, tile: str):
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
 
-        # if do_download_from_dataspace:
+        if do_download_from_dataspace:
             
-        #     download_source = "dataspace"
-        #     credentials_dict["sent_2"] = {}
-        #     credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
-        #     credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
-        #     sen_user = credentials_dict["sent_2"]["user"]
-        #     sen_pass = credentials_dict["sent_2"]["pass"]
+            download_source = "dataspace"
+            credentials_dict["sent_2"] = {}
+            credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
+            credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
+            sen_user = credentials_dict["sent_2"]["user"]
+            sen_pass = credentials_dict["sent_2"]["pass"]
 
-        #     try:
-        #         tiles_geom_path = "/data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/geometry/kenya_s2_tiles.shp"
-        #         tiles_geom = gpd.read_file(tiles_geom_path)
-        #     except FileNotFoundError:
-        #         tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
+            try:
+                tiles_geom_path = "/data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/geometry/kenya_s2_tiles.shp"
+                tiles_geom = gpd.read_file(tiles_geom_path)
+            except FileNotFoundError:
+                tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
 
-        #     tile_geom = tiles_geom[tiles_geom["Name"] == tile]
-        #     tile_geom = tile_geom.to_crs(epsg=4326)
-        #     geometry = tile_geom["geometry"].iloc[0]
-        #     geometry = geometry.representative_point()
-        #     try:
-        #         dataspace_composite_products_all = query_by_polygon(
-        #             max_cloud_cover=cloud_cover,
-        #             start_date="2023-01-01",
-        #             end_date="2023-05-20",
-        #             area_of_interest=geometry,
-        #             max_records=100
-        #         )
-        #     except Exception as error:
-        #         tile_log.error(f"query_by_polygon received this error: {error}")
+            tile_geom = tiles_geom[tiles_geom["Name"] == tile]
+            tile_geom = tile_geom.to_crs(epsg=4326)
+            geometry = tile_geom["geometry"].iloc[0]
+            geometry = geometry.representative_point()
 
-        #     tile_log.info(f"dataspace dataframe columns")
-        #     tile_log.info(f"{dataspace_composite_products_all.columns}")
+            try:
+                dataspace_composite_products_all = query_by_polygon(
+                    max_cloud_cover=cloud_cover,
+                    start_date="2023-01-01", # ToDo: remember to change this to read from ini file
+                    end_date="2023-05-20", # ToDo: remember to change this to read from ini file
+                    area_of_interest=geometry,
+                    max_records=100
+                )
+                
+                titles = dataspace_composite_products_all["title"].tolist()
+                sizes = list()
+                uuids = list()
+                for elem in dataspace_composite_products_all.itertuples(index=False):
+                    sizes.append(elem[-2]["download"]["size"])
+                    uuids.append(elem[-2]["download"]["url"].split("/")[-1])
+                
+                relative_orbit_numbers = dataspace_composite_products_all["relativeOrbitNumber"].tolist()
+                processing_levels = dataspace_composite_products_all["processingLevel"].tolist()
+                cloud_covers = dataspace_composite_products_all["cloudCover"].tolist()
+                begin_positions = dataspace_composite_products_all["startDate"].tolist()
+                statuses = dataspace_composite_products_all["status"].tolist()
+
+                scihub_compatible_df = pd.DataFrame({"title": titles,
+                                                    "size": sizes,
+                                                    "beginposition": begin_positions,
+                                                    "relativeorbitnumber": relative_orbit_numbers,
+                                                    "cloudcoverpercentage": cloud_covers,
+                                                    "processinglevel": processing_levels,
+                                                    "uuid": uuids,
+                                                    "status": statuses})
+
+                # check granule sizes on the server
+                scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: float(x) * 1e-6)
+                scihub_compatible_df = scihub_compatible_df.query("size >= " + str(faulty_granule_threshold))
+
+            except Exception as error:
+                tile_log.error(f"query_by_polygon received this error: {error}")
+        
+            tile_log.info(f"dataspace dataframe columns")
+            tile_log.info(f"{dataspace_composite_products_all.columns}")
 
         if do_download_from_scihub:
             download_source = "scihub"
@@ -203,6 +231,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
             sen_pass = credentials_dict["sent_2"]["pass"]
 
             tile_log.info("scihub branch reached")
+
             try:
                 composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
                     tile_root_dir,
@@ -213,38 +242,36 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     tile_id=tile,
                     producttype=None,  # "S2MSI2A" or "S2MSI1C"
                 )
+
             except Exception as error:
                 tile_log.error(
                     f"check_for_s2_data_by_date failed, got this error :  {error}"
                 )
         
-            tile_log.info(
-                "--> Found {} L1C and L2A products for the composite:".format(
-                    len(composite_products_all)
-                )
+        tile_log.info(
+            "--> Found {} L1C and L2A products for the composite:".format(
+                len(composite_products_all)
             )
-            # tile_log.info(f"what does composite products all look like")
-            #tile_log.info(composite_products_all)
-    df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+        )
+        tile_log.info(f"what does composite products all look like")
+        tile_log.info(composite_products_all)
 
-    # tile_log.info("uuid is below")
-    # tile_log.info(df_all["uuid"])
-    # tile_log.info("df_all[title] is below, index 0 is a title")
-    # for i in df_all["title"].iloc[0]:
-    #     tile_log.info(f"length of title: {len(i)}")
-    #     for j in i:
-    #         tile_log.info(j)
-    # tile_log.info(df_all["title"])
+        df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
 
-    # tile_log.info("title is below, is index 1 a title")
-    # tile_log.info(df_all["title"].iloc[0].split(" ")[1])
+        tile_log.info("uuid is below")
+        tile_log.info(df_all["uuid"])
+        tile_log.info("df_all[title] is below, index 0 is a title")
+        for i in df_all["title"].iloc[0]:
+            tile_log.info(f"length of title: {len(i)}")
+            for j in i:
+                tile_log.info(j)
+        tile_log.info(df_all["title"])
 
-    # tile_log.info("scihub dataframe columns")
-    # tile_log.info(df_all.columns)
+        tile_log.info("title is below, is index 1 a title")
+        tile_log.info(df_all["title"].iloc[0].split(" ")[1])
 
-
-
-
+        tile_log.info("scihub dataframe columns")
+        tile_log.info(df_all.columns)
 
 
     #####################
