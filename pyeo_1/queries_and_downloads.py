@@ -1253,6 +1253,8 @@ def download_s2_data_from_df(
             log.error("{} is not a Sentinel 2 product".format(identifier))
             raise BadDataSourceExpection
         out_path = os.path.dirname(out_path)
+        log.info("ATTENTION")
+        log.info("IS THIS L1C DOWNLOAD BRANCH BEING REACHED?")
         log.info("Downloading {} from {} to {}".format(identifier, source, out_path))
         if source == "aws":
             if try_scihub_on_fail:
@@ -1268,8 +1270,10 @@ def download_s2_data_from_df(
         # elif source == 'google':
         #    download_from_google_cloud([identifier], out_folder=out_path)
         elif source == "scihub":
-            log.info("is this even reached?")
-            log.info(f"what even is an index  :{index}")
+            # is index really an uuid?
+            log.info("ATTENTION")
+            log.info("IS THIS L1C BRANCH EVER REACHED?")
+            log.info(f"what is index? : {index}")
             e = download_from_scihub(index, out_path, user, passwd)
             if e == 1:
                 log.warning(

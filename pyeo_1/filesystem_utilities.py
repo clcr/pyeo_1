@@ -175,6 +175,11 @@ def config_path_to_config_dict(config_path: str):
     )
     config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
     config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
+
+    config_dict["do_download_from_scihub"] = config.getboolean("raster_processing_parameters", "do_download_from_scihub")
+
+    config_dict["do_download_from_dataspace"] = config.getboolean("raster_processing_parameters", "do_download_from_dataspace")
+    
     config_dict["do_classify"] = config.getboolean(
         "raster_processing_parameters", "do_classify"
     )
@@ -215,9 +220,9 @@ def config_path_to_config_dict(config_path: str):
         config["forest_sentinel"]["cloud_certainty_threshold"]
     )
     config_dict["model_path"] = config["forest_sentinel"]["model"]
-    config_dict["download_source"] = config["raster_processing_parameters"][
-        "download_source"
-    ]
+    # config_dict["download_source"] = config["raster_processing_parameters"][
+    #     "download_source"
+    # ]
 
     config_dict["bands"] = json.loads(
         config["raster_processing_parameters"]["band_names"]
