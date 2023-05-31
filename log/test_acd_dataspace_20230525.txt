@@ -9525,3 +9525,398 @@
 2023-05-31 17:30:22,736: INFO: Starting acd_integrated_raster():
 2023-05-31 17:30:22,737: INFO: ---------------------------------------------------------------
 2023-05-31 17:30:22,740: INFO: Starting ACD Raster Processes for Tile :  36MXE
+2023-05-31 17:38:24,946: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,946: INFO:                     ****PROCESSING START****
+2023-05-31 17:38:24,946: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,946: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,946: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-31 17:38:24,947: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,947: INFO: Reading in parameters defined in the Config
+2023-05-31 17:38:24,947: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,947: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,947: INFO: Starting acd_to_config_to_log()
+2023-05-31 17:38:24,947: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,947: INFO: Options:
+2023-05-31 17:38:24,947: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-31 17:38:24,947: INFO:   --do_raster
+2023-05-31 17:38:24,948: INFO:       raster pipeline enabled
+2023-05-31 17:38:24,948: INFO:   --build_composite for baseline composite
+2023-05-31 17:38:24,948: INFO:   --download_source = dataspace
+2023-05-31 17:38:24,948: INFO:          composite start date  : 20230101
+2023-05-31 17:38:24,948: INFO:          composite end date  : 20230527
+2023-05-31 17:38:24,948: INFO:   --quicklooks to create image quicklooks
+2023-05-31 17:38:24,948: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-31 17:38:24,948: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-31 17:38:24,948: INFO:   --do_vectorise
+2023-05-31 17:38:24,949: INFO:       raster change reports will be vectorised
+2023-05-31 17:38:24,949: INFO:   --do_integrate
+2023-05-31 17:38:24,949: INFO:       vectorised reports will be merged together
+2023-05-31 17:38:24,949: INFO:   --counties_of_interest
+2023-05-31 17:38:24,949: INFO:         Counties to filter the national geodataframe:
+2023-05-31 17:38:24,949: INFO:         0  :  Gwasi
+2023-05-31 17:38:24,949: INFO:         1  :  Lambwe
+2023-05-31 17:38:24,949: INFO:         2  :  Kotim Range
+2023-05-31 17:38:24,949: INFO:   --minimum_area_to_report_m2
+2023-05-31 17:38:24,950: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-31 17:38:24,950: INFO: EPSG used is: 21097
+2023-05-31 17:38:24,950: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-31 17:38:24,950: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-31 17:38:24,950: INFO: 
+2023-05-31 17:38:24,950: INFO: List of class labels:
+2023-05-31 17:38:24,950: INFO:   1 : primary forest
+2023-05-31 17:38:24,950: INFO:   2 : plantation forest
+2023-05-31 17:38:24,950: INFO:   3 : bare soil
+2023-05-31 17:38:24,951: INFO:   4 : crops
+2023-05-31 17:38:24,951: INFO:   5 : grassland
+2023-05-31 17:38:24,951: INFO:   6 : open water
+2023-05-31 17:38:24,951: INFO:   7 : burn scar
+2023-05-31 17:38:24,951: INFO:   8 : cloud
+2023-05-31 17:38:24,951: INFO:   9 : cloud shadow
+2023-05-31 17:38:24,951: INFO:   10 : haze
+2023-05-31 17:38:24,951: INFO:   11 : sparse woodland
+2023-05-31 17:38:24,951: INFO:   12 : dense woodland
+2023-05-31 17:38:24,952: INFO:   13 : artificial
+2023-05-31 17:38:24,952: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-31 17:38:24,952: INFO:                     to any of the classes: [3]
+2023-05-31 17:38:24,952: INFO: ------------------------------------------------------------
+2023-05-31 17:38:24,952: INFO: Reporting Directories and Filepaths
+2023-05-31 17:38:24,952: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-31 17:38:24,952: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-31 17:38:24,952: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-31 17:38:24,952: INFO: Integrated Directory is   : ./integrated
+2023-05-31 17:38:24,953: INFO: ROI Directory is   : ./roi
+2023-05-31 17:38:24,953: INFO: Geometry Directory is   : ./geometry
+2023-05-31 17:38:24,953: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-31 17:38:24,953: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-31 17:38:24,953: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-31 17:38:24,953: INFO: -------------------------------------------
+2023-05-31 17:38:24,953: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:24,953: INFO: Starting acd_roi_tile_intersection()
+2023-05-31 17:38:24,953: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:25,131: INFO: The provided ROI intersects with 3 Sentinel-2 tiles
+2023-05-31 17:38:25,131: INFO: These tiles are  :
+2023-05-31 17:38:25,131: INFO:   1 : 36MXE
+2023-05-31 17:38:25,131: INFO:   2 : 36MZE
+2023-05-31 17:38:25,131: INFO:   3 : 37NCA
+2023-05-31 17:38:25,131: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-31 17:38:25,171: INFO: Finished ROI tile intersection
+2023-05-31 17:38:25,171: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:25,171: INFO: Starting acd_integrated_raster():
+2023-05-31 17:38:25,172: INFO: ---------------------------------------------------------------
+2023-05-31 17:38:25,176: INFO: Starting ACD Raster Processes for Tile :  36MXE
+2023-05-31 17:39:30,023: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,023: INFO:                     ****PROCESSING START****
+2023-05-31 17:39:30,023: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,023: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,023: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-31 17:39:30,023: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,024: INFO: Reading in parameters defined in the Config
+2023-05-31 17:39:30,024: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,024: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,024: INFO: Starting acd_to_config_to_log()
+2023-05-31 17:39:30,024: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,024: INFO: Options:
+2023-05-31 17:39:30,024: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-31 17:39:30,024: INFO:   --do_raster
+2023-05-31 17:39:30,024: INFO:       raster pipeline enabled
+2023-05-31 17:39:30,025: INFO:   --build_composite for baseline composite
+2023-05-31 17:39:30,025: INFO:   --download_source = dataspace
+2023-05-31 17:39:30,025: INFO:          composite start date  : 20230101
+2023-05-31 17:39:30,025: INFO:          composite end date  : 20230527
+2023-05-31 17:39:30,025: INFO:   --quicklooks to create image quicklooks
+2023-05-31 17:39:30,025: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-31 17:39:30,025: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-31 17:39:30,025: INFO:   --do_vectorise
+2023-05-31 17:39:30,025: INFO:       raster change reports will be vectorised
+2023-05-31 17:39:30,026: INFO:   --do_integrate
+2023-05-31 17:39:30,026: INFO:       vectorised reports will be merged together
+2023-05-31 17:39:30,026: INFO:   --counties_of_interest
+2023-05-31 17:39:30,026: INFO:         Counties to filter the national geodataframe:
+2023-05-31 17:39:30,026: INFO:         0  :  Gwasi
+2023-05-31 17:39:30,026: INFO:         1  :  Lambwe
+2023-05-31 17:39:30,026: INFO:         2  :  Kotim Range
+2023-05-31 17:39:30,026: INFO:   --minimum_area_to_report_m2
+2023-05-31 17:39:30,026: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-31 17:39:30,027: INFO: EPSG used is: 21097
+2023-05-31 17:39:30,027: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-31 17:39:30,027: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-31 17:39:30,027: INFO: 
+2023-05-31 17:39:30,027: INFO: List of class labels:
+2023-05-31 17:39:30,027: INFO:   1 : primary forest
+2023-05-31 17:39:30,027: INFO:   2 : plantation forest
+2023-05-31 17:39:30,027: INFO:   3 : bare soil
+2023-05-31 17:39:30,027: INFO:   4 : crops
+2023-05-31 17:39:30,028: INFO:   5 : grassland
+2023-05-31 17:39:30,028: INFO:   6 : open water
+2023-05-31 17:39:30,028: INFO:   7 : burn scar
+2023-05-31 17:39:30,028: INFO:   8 : cloud
+2023-05-31 17:39:30,028: INFO:   9 : cloud shadow
+2023-05-31 17:39:30,028: INFO:   10 : haze
+2023-05-31 17:39:30,028: INFO:   11 : sparse woodland
+2023-05-31 17:39:30,028: INFO:   12 : dense woodland
+2023-05-31 17:39:30,028: INFO:   13 : artificial
+2023-05-31 17:39:30,029: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-31 17:39:30,029: INFO:                     to any of the classes: [3]
+2023-05-31 17:39:30,029: INFO: ------------------------------------------------------------
+2023-05-31 17:39:30,029: INFO: Reporting Directories and Filepaths
+2023-05-31 17:39:30,029: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-31 17:39:30,029: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-31 17:39:30,029: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-31 17:39:30,029: INFO: Integrated Directory is   : ./integrated
+2023-05-31 17:39:30,029: INFO: ROI Directory is   : ./roi
+2023-05-31 17:39:30,030: INFO: Geometry Directory is   : ./geometry
+2023-05-31 17:39:30,030: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-31 17:39:30,030: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-31 17:39:30,030: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-31 17:39:30,030: INFO: -------------------------------------------
+2023-05-31 17:39:30,030: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,030: INFO: Starting acd_roi_tile_intersection()
+2023-05-31 17:39:30,030: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,320: INFO: The provided ROI intersects with 3 Sentinel-2 tiles
+2023-05-31 17:39:30,320: INFO: These tiles are  :
+2023-05-31 17:39:30,321: INFO:   1 : 36MXE
+2023-05-31 17:39:30,321: INFO:   2 : 36MZE
+2023-05-31 17:39:30,321: INFO:   3 : 37NCA
+2023-05-31 17:39:30,321: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-31 17:39:30,325: INFO: Finished ROI tile intersection
+2023-05-31 17:39:30,326: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,326: INFO: Starting acd_integrated_raster():
+2023-05-31 17:39:30,326: INFO: ---------------------------------------------------------------
+2023-05-31 17:39:30,330: INFO: Starting ACD Raster Processes for Tile :  36MXE
+2023-05-31 17:40:43,758: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,775: INFO:                     ****PROCESSING START****
+2023-05-31 17:40:43,775: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,775: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,775: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-31 17:40:43,775: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,775: INFO: Reading in parameters defined in the Config
+2023-05-31 17:40:43,776: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,776: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,776: INFO: Starting acd_to_config_to_log()
+2023-05-31 17:40:43,776: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,776: INFO: Options:
+2023-05-31 17:40:43,776: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-31 17:40:43,776: INFO:   --do_raster
+2023-05-31 17:40:43,776: INFO:       raster pipeline enabled
+2023-05-31 17:40:43,776: INFO:   --build_composite for baseline composite
+2023-05-31 17:40:43,777: INFO:   --download_source = scihub
+2023-05-31 17:40:43,777: INFO:          composite start date  : 20230101
+2023-05-31 17:40:43,777: INFO:          composite end date  : 20230527
+2023-05-31 17:40:43,777: INFO:   --quicklooks to create image quicklooks
+2023-05-31 17:40:43,777: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-31 17:40:43,777: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-31 17:40:43,777: INFO:   --do_vectorise
+2023-05-31 17:40:43,777: INFO:       raster change reports will be vectorised
+2023-05-31 17:40:43,777: INFO:   --do_integrate
+2023-05-31 17:40:43,777: INFO:       vectorised reports will be merged together
+2023-05-31 17:40:43,778: INFO:   --counties_of_interest
+2023-05-31 17:40:43,778: INFO:         Counties to filter the national geodataframe:
+2023-05-31 17:40:43,778: INFO:         0  :  Gwasi
+2023-05-31 17:40:43,778: INFO:         1  :  Lambwe
+2023-05-31 17:40:43,778: INFO:         2  :  Kotim Range
+2023-05-31 17:40:43,778: INFO:   --minimum_area_to_report_m2
+2023-05-31 17:40:43,778: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-31 17:40:43,778: INFO: EPSG used is: 21097
+2023-05-31 17:40:43,778: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-31 17:40:43,779: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-31 17:40:43,779: INFO: 
+2023-05-31 17:40:43,779: INFO: List of class labels:
+2023-05-31 17:40:43,779: INFO:   1 : primary forest
+2023-05-31 17:40:43,779: INFO:   2 : plantation forest
+2023-05-31 17:40:43,779: INFO:   3 : bare soil
+2023-05-31 17:40:43,779: INFO:   4 : crops
+2023-05-31 17:40:43,779: INFO:   5 : grassland
+2023-05-31 17:40:43,779: INFO:   6 : open water
+2023-05-31 17:40:43,780: INFO:   7 : burn scar
+2023-05-31 17:40:43,780: INFO:   8 : cloud
+2023-05-31 17:40:43,780: INFO:   9 : cloud shadow
+2023-05-31 17:40:43,780: INFO:   10 : haze
+2023-05-31 17:40:43,780: INFO:   11 : sparse woodland
+2023-05-31 17:40:43,780: INFO:   12 : dense woodland
+2023-05-31 17:40:43,780: INFO:   13 : artificial
+2023-05-31 17:40:43,780: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-31 17:40:43,780: INFO:                     to any of the classes: [3]
+2023-05-31 17:40:43,780: INFO: ------------------------------------------------------------
+2023-05-31 17:40:43,781: INFO: Reporting Directories and Filepaths
+2023-05-31 17:40:43,781: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-31 17:40:43,781: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-31 17:40:43,781: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-31 17:40:43,781: INFO: Integrated Directory is   : ./integrated
+2023-05-31 17:40:43,781: INFO: ROI Directory is   : ./roi
+2023-05-31 17:40:43,781: INFO: Geometry Directory is   : ./geometry
+2023-05-31 17:40:43,781: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-31 17:40:43,781: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-31 17:40:43,782: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-31 17:40:43,782: INFO: -------------------------------------------
+2023-05-31 17:40:43,782: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:43,782: INFO: Starting acd_roi_tile_intersection()
+2023-05-31 17:40:43,782: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:44,023: INFO: The provided ROI intersects with 3 Sentinel-2 tiles
+2023-05-31 17:40:44,023: INFO: These tiles are  :
+2023-05-31 17:40:44,023: INFO:   1 : 36MXE
+2023-05-31 17:40:44,023: INFO:   2 : 36MZE
+2023-05-31 17:40:44,023: INFO:   3 : 37NCA
+2023-05-31 17:40:44,023: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-31 17:40:44,045: INFO: Finished ROI tile intersection
+2023-05-31 17:40:44,045: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:44,045: INFO: Starting acd_integrated_raster():
+2023-05-31 17:40:44,045: INFO: ---------------------------------------------------------------
+2023-05-31 17:40:44,118: INFO: Starting ACD Raster Processes for Tile :  36MXE
+2023-05-31 17:42:07,511: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,511: INFO:                     ****PROCESSING START****
+2023-05-31 17:42:07,511: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,511: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,511: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-31 17:42:07,511: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,512: INFO: Reading in parameters defined in the Config
+2023-05-31 17:42:07,512: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,512: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,512: INFO: Starting acd_to_config_to_log()
+2023-05-31 17:42:07,512: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,512: INFO: Options:
+2023-05-31 17:42:07,512: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-31 17:42:07,512: INFO:   --do_raster
+2023-05-31 17:42:07,512: INFO:       raster pipeline enabled
+2023-05-31 17:42:07,512: INFO:   --build_composite for baseline composite
+2023-05-31 17:42:07,513: INFO:   --download_source = scihub
+2023-05-31 17:42:07,513: INFO:          composite start date  : 20230101
+2023-05-31 17:42:07,513: INFO:          composite end date  : 20230527
+2023-05-31 17:42:07,513: INFO:   --quicklooks to create image quicklooks
+2023-05-31 17:42:07,513: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-31 17:42:07,513: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-31 17:42:07,513: INFO:   --do_vectorise
+2023-05-31 17:42:07,513: INFO:       raster change reports will be vectorised
+2023-05-31 17:42:07,513: INFO:   --do_integrate
+2023-05-31 17:42:07,514: INFO:       vectorised reports will be merged together
+2023-05-31 17:42:07,514: INFO:   --counties_of_interest
+2023-05-31 17:42:07,514: INFO:         Counties to filter the national geodataframe:
+2023-05-31 17:42:07,514: INFO:         0  :  Gwasi
+2023-05-31 17:42:07,514: INFO:         1  :  Lambwe
+2023-05-31 17:42:07,514: INFO:         2  :  Kotim Range
+2023-05-31 17:42:07,514: INFO:   --minimum_area_to_report_m2
+2023-05-31 17:42:07,514: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-31 17:42:07,514: INFO: EPSG used is: 21097
+2023-05-31 17:42:07,515: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-31 17:42:07,515: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-31 17:42:07,515: INFO: 
+2023-05-31 17:42:07,515: INFO: List of class labels:
+2023-05-31 17:42:07,515: INFO:   1 : primary forest
+2023-05-31 17:42:07,515: INFO:   2 : plantation forest
+2023-05-31 17:42:07,515: INFO:   3 : bare soil
+2023-05-31 17:42:07,515: INFO:   4 : crops
+2023-05-31 17:42:07,515: INFO:   5 : grassland
+2023-05-31 17:42:07,516: INFO:   6 : open water
+2023-05-31 17:42:07,516: INFO:   7 : burn scar
+2023-05-31 17:42:07,516: INFO:   8 : cloud
+2023-05-31 17:42:07,516: INFO:   9 : cloud shadow
+2023-05-31 17:42:07,516: INFO:   10 : haze
+2023-05-31 17:42:07,516: INFO:   11 : sparse woodland
+2023-05-31 17:42:07,516: INFO:   12 : dense woodland
+2023-05-31 17:42:07,516: INFO:   13 : artificial
+2023-05-31 17:42:07,516: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-31 17:42:07,517: INFO:                     to any of the classes: [3]
+2023-05-31 17:42:07,517: INFO: ------------------------------------------------------------
+2023-05-31 17:42:07,517: INFO: Reporting Directories and Filepaths
+2023-05-31 17:42:07,517: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-31 17:42:07,517: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-31 17:42:07,517: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-31 17:42:07,517: INFO: Integrated Directory is   : ./integrated
+2023-05-31 17:42:07,517: INFO: ROI Directory is   : ./roi
+2023-05-31 17:42:07,517: INFO: Geometry Directory is   : ./geometry
+2023-05-31 17:42:07,518: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-31 17:42:07,518: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-31 17:42:07,518: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-31 17:42:07,518: INFO: -------------------------------------------
+2023-05-31 17:42:07,518: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,518: INFO: Starting acd_roi_tile_intersection()
+2023-05-31 17:42:07,518: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,691: INFO: The provided ROI intersects with 3 Sentinel-2 tiles
+2023-05-31 17:42:07,691: INFO: These tiles are  :
+2023-05-31 17:42:07,691: INFO:   1 : 36MXE
+2023-05-31 17:42:07,691: INFO:   2 : 36MZE
+2023-05-31 17:42:07,691: INFO:   3 : 37NCA
+2023-05-31 17:42:07,691: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-31 17:42:07,706: INFO: Finished ROI tile intersection
+2023-05-31 17:42:07,707: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,707: INFO: Starting acd_integrated_raster():
+2023-05-31 17:42:07,707: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:07,711: INFO: Starting ACD Raster Processes for Tile :  36MXE
+2023-05-31 17:42:52,465: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,466: INFO:                     ****PROCESSING START****
+2023-05-31 17:42:52,466: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,466: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,466: INFO: ---                  INTEGRATED PROCESSING START            ---
+2023-05-31 17:42:52,466: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,466: INFO: Reading in parameters defined in the Config
+2023-05-31 17:42:52,466: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,466: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,467: INFO: Starting acd_to_config_to_log()
+2023-05-31 17:42:52,467: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,467: INFO: Options:
+2023-05-31 17:42:52,467: INFO:   Running in production mode, avoiding any development versions of functions.
+2023-05-31 17:42:52,467: INFO:   --do_raster
+2023-05-31 17:42:52,467: INFO:       raster pipeline enabled
+2023-05-31 17:42:52,467: INFO:   --build_composite for baseline composite
+2023-05-31 17:42:52,467: INFO:   --download_source = scihub
+2023-05-31 17:42:52,467: INFO:          composite start date  : 20230101
+2023-05-31 17:42:52,468: INFO:          composite end date  : 20230527
+2023-05-31 17:42:52,468: INFO:   --quicklooks to create image quicklooks
+2023-05-31 17:42:52,468: INFO:   --do_delete_existing_vector , when vectorising the change report rasters, 
+2023-05-31 17:42:52,468: INFO:             existing vectors files will be deleted and new vector files created.
+2023-05-31 17:42:52,468: INFO:   --do_vectorise
+2023-05-31 17:42:52,468: INFO:       raster change reports will be vectorised
+2023-05-31 17:42:52,468: INFO:   --do_integrate
+2023-05-31 17:42:52,468: INFO:       vectorised reports will be merged together
+2023-05-31 17:42:52,468: INFO:   --counties_of_interest
+2023-05-31 17:42:52,469: INFO:         Counties to filter the national geodataframe:
+2023-05-31 17:42:52,469: INFO:         0  :  Gwasi
+2023-05-31 17:42:52,469: INFO:         1  :  Lambwe
+2023-05-31 17:42:52,469: INFO:         2  :  Kotim Range
+2023-05-31 17:42:52,469: INFO:   --minimum_area_to_report_m2
+2023-05-31 17:42:52,469: INFO:        Only Change Detections > 120 metres squared will be reported
+2023-05-31 17:42:52,469: INFO: EPSG used is: 21097
+2023-05-31 17:42:52,469: INFO: List of image bands: ['B02', 'B03', 'B04', 'B08']
+2023-05-31 17:42:52,469: INFO: Model used: /data/clcr/shared/IMPRESS/Ivan/kenya_national_prod/models/model_36MYE_20230505_no_haze/model_36MYE_Unoptimised_20230505_no_haze.pkl
+2023-05-31 17:42:52,470: INFO: 
+2023-05-31 17:42:52,470: INFO: List of class labels:
+2023-05-31 17:42:52,470: INFO:   1 : primary forest
+2023-05-31 17:42:52,470: INFO:   2 : plantation forest
+2023-05-31 17:42:52,470: INFO:   3 : bare soil
+2023-05-31 17:42:52,470: INFO:   4 : crops
+2023-05-31 17:42:52,470: INFO:   5 : grassland
+2023-05-31 17:42:52,470: INFO:   6 : open water
+2023-05-31 17:42:52,471: INFO:   7 : burn scar
+2023-05-31 17:42:52,471: INFO:   8 : cloud
+2023-05-31 17:42:52,471: INFO:   9 : cloud shadow
+2023-05-31 17:42:52,471: INFO:   10 : haze
+2023-05-31 17:42:52,471: INFO:   11 : sparse woodland
+2023-05-31 17:42:52,471: INFO:   12 : dense woodland
+2023-05-31 17:42:52,471: INFO:   13 : artificial
+2023-05-31 17:42:52,471: INFO: Detecting changes from any of the classes: [1, 2]
+2023-05-31 17:42:52,471: INFO:                     to any of the classes: [3]
+2023-05-31 17:42:52,472: INFO: ------------------------------------------------------------
+2023-05-31 17:42:52,472: INFO: Reporting Directories and Filepaths
+2023-05-31 17:42:52,472: INFO: Tile Directory is   : /data/clcr/shared/IMPRESS/matt/testing_tiles/
+2023-05-31 17:42:52,472: INFO: Working Directory is   : /data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production
+2023-05-31 17:42:52,472: INFO: The following directories are relative to the working directory, i.e. stored underneath:
+2023-05-31 17:42:52,472: INFO: Integrated Directory is   : ./integrated
+2023-05-31 17:42:52,472: INFO: ROI Directory is   : ./roi
+2023-05-31 17:42:52,472: INFO: Geometry Directory is   : ./geometry
+2023-05-31 17:42:52,473: INFO: Path to the Administrative Boundaries used in the Change Report Vectorisation   : ./geometry/gadm41_KEN_1.json
+2023-05-31 17:42:52,473: INFO: Path to Sen2Cor is   : /home/m/mp730/Downloads/Sen2Cor-02.11.00-Linux64/bin/L2A_Process
+2023-05-31 17:42:52,473: INFO: The Conda Environment specified in .ini file is :  pyeo_env
+2023-05-31 17:42:52,473: INFO: -------------------------------------------
+2023-05-31 17:42:52,473: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,473: INFO: Starting acd_roi_tile_intersection()
+2023-05-31 17:42:52,473: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,656: INFO: The provided ROI intersects with 3 Sentinel-2 tiles
+2023-05-31 17:42:52,656: INFO: These tiles are  :
+2023-05-31 17:42:52,656: INFO:   1 : 36MXE
+2023-05-31 17:42:52,656: INFO:   2 : 36MZE
+2023-05-31 17:42:52,656: INFO:   3 : 37NCA
+2023-05-31 17:42:52,657: INFO: Writing Sentinel-2 tiles that intersect with the provided ROI to  : ./roi/tilelist.csv
+2023-05-31 17:42:52,667: INFO: Finished ROI tile intersection
+2023-05-31 17:42:52,667: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,667: INFO: Starting acd_integrated_raster():
+2023-05-31 17:42:52,667: INFO: ---------------------------------------------------------------
+2023-05-31 17:42:52,672: INFO: Starting ACD Raster Processes for Tile :  36MXE

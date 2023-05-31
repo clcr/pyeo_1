@@ -166,9 +166,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
         tile_log.info("Searching for images for initial composite.")
 
         if download_source == "dataspace":
-            tile_log.info("dataspace if branch reached")
 
-            sys.exit(1)
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
             credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
@@ -220,6 +218,8 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 # check granule sizes on the server
                 scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: float(x) * 1e-6)
                 scihub_compatible_df = scihub_compatible_df.query("size >= " + str(faulty_granule_threshold))
+                # reassign to match the scihub variable
+                df_all = scihub_compatible_df
 
             except Exception as error:
                 tile_log.error(f"query_by_polygon received this error: {error}")
@@ -227,15 +227,13 @@ def acd_by_tile_raster(config_path: str, tile: str):
             tile_log.info(f"dataspace dataframe columns")
             tile_log.info(f"{dataspace_composite_products_all.columns}")
 
-        sys.exit(1)
         if download_source == "scihub":
+
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
             credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
             sen_user = credentials_dict["sent_2"]["user"]
             sen_pass = credentials_dict["sent_2"]["pass"]
-
-            tile_log.info("scihub branch reached")
 
             try:
                 composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
@@ -253,36 +251,25 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     f"check_for_s2_data_by_date failed, got this error :  {error}"
                 )
         
-        tile_log.info(
-            "--> Found {} L1C and L2A products for the composite:".format(
-                len(composite_products_all)
+            tile_log.info(
+                "--> Found {} L1C and L2A products for the composite:".format(
+                    len(composite_products_all)
+                )
             )
-        )
-        tile_log.info(f"what does composite products all look like")
-        tile_log.info(composite_products_all)
 
-        df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
-
-        tile_log.info("uuid is below")
-        tile_log.info(df_all["uuid"])
-        tile_log.info("df_all[title] is below, index 0 is a title")
-        for i in df_all["title"].iloc[0]:
-            tile_log.info(f"length of title: {len(i)}")
-            for j in i:
-                tile_log.info(j)
-        tile_log.info(df_all["title"])
-
-        tile_log.info("title is below, is index 1 a title")
-        tile_log.info(df_all["title"].iloc[0].split(" ")[1])
-
-        tile_log.info("scihub dataframe columns")
+            df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+            tile_log.info(df_all["size"][0:4])
+        # rejoin the main call from if download_source == "scihub" branch
+        tile_log.info("df_all columns")
         tile_log.info(df_all.columns)
+        tile_log.info(df_all.head(1))
 
 
     #####################
     # df_all for both scihub and dataspace need to be the same columns, same types, same scales and formats
     #####################
 
+    sys.exit(1)
 
     # check granule sizes on the server
     df_all["size"] = (
