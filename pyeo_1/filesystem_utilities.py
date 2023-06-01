@@ -17,22 +17,20 @@ Function reference
 -------------
 """
 
+import configparser
 import datetime
 import datetime as dt
 import glob
+import json
 import logging
-import numpy as np
 import os
-import pandas as pd
 import re
 import shutil
-import configparser
-import json
 
-from pyeo_1.exceptions import CreateNewStacksException
-
-
+import numpy as np
+import pandas as pd
 import pyeo_1.windows_compatability
+from pyeo_1.exceptions import CreateNewStacksException
 
 # Set up logging on import
 log = logging.getLogger("pyeo_1")

@@ -1,17 +1,18 @@
 import configparser
+import glob
+import logging
 import os
 import subprocess
 import sys
-import glob
-import logging
+import time
 from pathlib import Path
-from pyeo_1 import filesystem_utilities
-from pyeo_1.apps.acd_national import acd_by_tile_raster
-from pyeo_1.apps.acd_national import acd_by_tile_vectorisation
+from tempfile import TemporaryDirectory
+
 import geopandas as gpd
 import pandas as pd
-from tempfile import TemporaryDirectory
-import time
+from pyeo_1 import filesystem_utilities
+from pyeo_1.apps.acd_national import (acd_by_tile_raster,
+                                      acd_by_tile_vectorisation)
 
 
 # acd_national is the top-level function which controls the raster and vector processes for pyeo_1
@@ -390,8 +391,11 @@ def acd_roi_tile_intersection(config_dict, log):
 
 
 def acd_integrated_raster(
-    config_dict: dict, log: logging.Logger, tilelist_filepath: str, config_path: str
-):
+    config_dict: dict, 
+    log: logging.Logger,
+    tilelist_filepath: str,
+    config_path: str
+) -> None:
     """
 
     This function:

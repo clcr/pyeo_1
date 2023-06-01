@@ -1,34 +1,22 @@
+import configparser
+import glob
+import json
+import logging
 import os
 import sys
 from pathlib import Path
-import logging
-import configparser
-import json
-import pandas as pd
-import geopandas as gpd
-import numpy as np
-import glob
-
-from pyeo_1 import filesystem_utilities
-from pyeo_1 import raster_manipulation
-from pyeo_1 import queries_and_downloads
-from pyeo_1 import classification
-from pyeo_1 import acd_national
-from pyeo_1.apps.image_acquisition.opensearch_queries_and_processing import (
-    get_access_token,
-    get_s2_tile_centroids,
-    build_request_string,
-    query_by_polygon,
-    filter_valid_size_s2_products,
-    stratify_products_by_orbit_number,
-    download_product,
-    check_product_exists,
-    unzip_downloaded_product,
-)
 from tempfile import TemporaryDirectory
 
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+from pyeo_1 import (acd_national, classification, filesystem_utilities,
+                    queries_and_downloads, raster_manipulation)
 
-def acd_by_tile_raster(config_path: str, tile: str):
+
+def acd_by_tile_raster(config_path: str,
+                       tile: str
+                       ) -> None:
     """
 
     This function:
@@ -185,7 +173,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
             geometry = geometry.representative_point()
 
             try:
-                dataspace_composite_products_all = query_by_polygon(
+                dataspace_composite_products_all = queries_and_downloads.query_dataspace_by_polygon(
                     max_cloud_cover=cloud_cover,
                     start_date="2023-01-01", # ToDo: remember to change this to read from ini file
                     end_date="2023-05-20", # ToDo: remember to change this to read from ini file
