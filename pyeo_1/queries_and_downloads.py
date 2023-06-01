@@ -68,6 +68,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+from tqdm import tqdm
 import zipfile
 from multiprocessing.dummy import Pool
 from tempfile import TemporaryDirectory
@@ -145,7 +146,7 @@ def query_dataspace_by_polygon(
 
     """
 
-    request_string = build_request_string(
+    request_string = build_dataspace_request_string(
         max_cloud_cover=max_cloud_cover,
         start_date=start_date,
         end_date=end_date,
@@ -160,7 +161,7 @@ def query_dataspace_by_polygon(
     return response_dataframe
 
 
-def build_request_string(
+def build_dataspace_request_string(
     max_cloud_cover: int,
     start_date: str,
     end_date: str,
@@ -197,6 +198,41 @@ def build_request_string(
 
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
+
+
+def download_dataspace_product(product_uuid: str, auth_token: str, product_name: str) -> None:
+    """
+    This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
+
+    Parameters
+    ----------
+    product_uuid: UUID of the product to download
+    auth_token: Authentication bearer token
+    product_name: Name of the product
+
+    Returns
+    -------
+
+    """
+
+    response = requests.get(
+        f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value",
+        headers={"Authorization": f"Bearer {auth_token}"},
+        stream=True,
+    )
+
+    total_size_in_bytes = int(response.headers.get("Content-Length", 0))
+    block_size = 1024
+    progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+
+    with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
+        for data in response.iter_content(block_size):
+            download.write(data)
+            progress_bar.update(len(data))
+
+    progress_bar.close()
+
+    return
 
 # I.R.
 # def _rest_query(user, passwd, footprint_wkt, start_date, end_date, cloud=100, start_row=0, filename=None):

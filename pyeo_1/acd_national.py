@@ -212,10 +212,12 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info(f"         composite end date  : {config_dict['end_date']}")
         if config_dict["do_download"]:
             log.info("  --download for change detection images")
-            if not config_dict["build_composite"]:
-                log.info(
-                    "  --download_source = {}".format(config_dict["download_source"])
-                )
+            log.info(
+                "  --download_source = {}".format(config_dict["download_source"])
+            )
+            log.info(
+                f"  Faulty Granule Threshold  : {config_dict['faulty_granule_threshold']}"
+            )
         if config_dict["do_classify"]:
             log.info(
                 "  --classify to apply the random forest model and create classification layers"
@@ -307,6 +309,8 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
     log.info("-------------------------------------------")
+    log.info("-------------------------------------------")
+
     # log.info("Streaming config parameters to log file for reference")
     # # todo: for everything in config_dict, log the parameter
     # for each_section in config.sections():

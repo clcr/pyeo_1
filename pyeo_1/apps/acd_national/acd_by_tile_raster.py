@@ -123,13 +123,15 @@ def acd_by_tile_raster(config_path: str,
     from_classes = config_dict["from_classes"]
     to_classes = config_dict["to_classes"]
 
-    # do_download_from_scihub = config_dict["do_download_from_scihub"]
-    # do_download_from_dataspace = config_dict["do_download_from_dataspace"]
     download_source = config_dict["download_source"]
-    tile_log.info("download source prints next:")
-    tile_log.info(download_source)
     if download_source == "scihub":
-        tile_log.info("scihub is the download source")
+        tile_log.info("scihub API is the download source")
+    if download_source == "dataspace":
+        tile_log.info("dataspace API is the download source")
+
+    tile_log.info(f"Faulty Granule Threshold is set to   : {config_dict['faulty_granule_threshold']}")
+    tile_log.info("    Files below this threshold will not be downloaded")
+        
     credentials_path = config_dict["credentials_path"]
     if not os.path.exists(credentials_path):
         tile_log.error(f"the credentials path does not exist  :{credentials_path}")
@@ -180,40 +182,38 @@ def acd_by_tile_raster(config_path: str,
                     area_of_interest=geometry,
                     max_records=100
                 )
-                
-                titles = dataspace_composite_products_all["title"].tolist()
-                sizes = list()
-                uuids = list()
-                for elem in dataspace_composite_products_all.itertuples(index=False):
-                    sizes.append(elem[-2]["download"]["size"])
-                    uuids.append(elem[-2]["download"]["url"].split("/")[-1])
-                
-                relative_orbit_numbers = dataspace_composite_products_all["relativeOrbitNumber"].tolist()
-                processing_levels = dataspace_composite_products_all["processingLevel"].tolist()
-                cloud_covers = dataspace_composite_products_all["cloudCover"].tolist()
-                begin_positions = dataspace_composite_products_all["startDate"].tolist()
-                statuses = dataspace_composite_products_all["status"].tolist()
-
-                scihub_compatible_df = pd.DataFrame({"title": titles,
-                                                    "size": sizes,
-                                                    "beginposition": begin_positions,
-                                                    "relativeorbitnumber": relative_orbit_numbers,
-                                                    "cloudcoverpercentage": cloud_covers,
-                                                    "processinglevel": processing_levels,
-                                                    "uuid": uuids,
-                                                    "status": statuses})
-
-                # check granule sizes on the server
-                scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: float(x) * 1e-6)
-                scihub_compatible_df = scihub_compatible_df.query("size >= " + str(faulty_granule_threshold))
-                # reassign to match the scihub variable
-                df_all = scihub_compatible_df
-
             except Exception as error:
                 tile_log.error(f"query_by_polygon received this error: {error}")
-        
-            tile_log.info(f"dataspace dataframe columns")
-            tile_log.info(f"{dataspace_composite_products_all.columns}")
+                
+            titles = dataspace_composite_products_all["title"].tolist()
+            sizes = list()
+            uuids = list()
+            for elem in dataspace_composite_products_all.itertuples(index=False):
+                sizes.append(elem[-2]["download"]["size"])
+                uuids.append(elem[-2]["download"]["url"].split("/")[-1])
+            
+
+            relative_orbit_numbers = dataspace_composite_products_all["relativeOrbitNumber"].tolist()
+            processing_levels = dataspace_composite_products_all["processingLevel"].tolist()
+            transformed_levels = ['Level-1C' if level == 'S2MSI1C' else 'Level-2A' for level in processing_levels]
+            cloud_covers = dataspace_composite_products_all["cloudCover"].tolist()
+            begin_positions = dataspace_composite_products_all["startDate"].tolist()
+            statuses = dataspace_composite_products_all["status"].tolist()
+
+            scihub_compatible_df = pd.DataFrame({"title": titles,
+                                                "size": sizes,
+                                                "beginposition": begin_positions,
+                                                "relativeorbitnumber": relative_orbit_numbers,
+                                                "cloudcoverpercentage": cloud_covers,
+                                                "processinglevel": transformed_levels,
+                                                "uuid": uuids,
+                                                "status": statuses})
+
+            # check granule sizes on the server
+            scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: round(float(x) * 1e-6, 2))
+            # reassign to match the scihub variable
+            df_all = scihub_compatible_df
+
 
         if download_source == "scihub":
 
@@ -246,27 +246,16 @@ def acd_by_tile_raster(config_path: str,
             )
 
             df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
-            tile_log.info(df_all["size"][0:4])
-        # rejoin the main call from if download_source == "scihub" branch
-        tile_log.info("df_all columns")
-        tile_log.info(df_all.columns)
-        tile_log.info(df_all.head(1))
 
+            # check granule sizes on the server
+            df_all["size"] = (
+                df_all["size"]
+                .str.split(" ")
+                .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
+            )
 
-    #####################
-    # df_all for both scihub and dataspace need to be the same columns, same types, same scales and formats
-    #####################
-
-    sys.exit(1)
-
-    # check granule sizes on the server
-    df_all["size"] = (
-        df_all["size"]
-        .str.split(" ")
-        .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
-    )
+    # here the main call (from if download_source == "scihub" branch) is resumed
     df = df_all.query("size >= " + str(faulty_granule_threshold))
-    tile_log.info(f"what is df  : {df}")
 
     tile_log.info(
         "Removed {} faulty scenes <{}MB in size from the list:".format(
@@ -287,6 +276,7 @@ def acd_by_tile_raster(config_path: str,
     tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
     tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
 
+    
     rel_orbits = np.unique(l1c_products["relativeorbitnumber"])
     if len(rel_orbits) > 0:
         if l1c_products.shape[0] > max_image_number / len(rel_orbits):
@@ -315,6 +305,7 @@ def acd_by_tile_raster(config_path: str,
             for product in l1c_products["title"]:
                 tile_log.info("       {}".format(product))
 
+
     rel_orbits = np.unique(l2a_products["relativeorbitnumber"])
     if len(rel_orbits) > 0:
         if l2a_products.shape[0] > max_image_number / len(rel_orbits):
@@ -342,6 +333,7 @@ def acd_by_tile_raster(config_path: str,
             for product in l2a_products["title"]:
                 tile_log.info("       {}".format(product))
 
+
     if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
         tile_log.info(
             "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
@@ -359,121 +351,90 @@ def acd_by_tile_raster(config_path: str,
         tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
     df = None
 
-    # Search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
-    if l1c_products.shape[0] > 0:
-        tile_log.info(
-            "Checking for already downloaded and zipped L1C or L2A products and"
-        )
-        tile_log.info("  availability of matching L2A products for download.")
-        n = len(l1c_products)
-        drop = []
-        add = []
-        for r in range(n):
-            id = l1c_products.iloc[r, :]["title"]
-            search_term = (
-                id.split("_")[2]
-                + "_"
-                + id.split("_")[3]
-                + "_"
-                + id.split("_")[4]
-                + "_"
-                + id.split("_")[5]
-            )
+    
+    # Search the local directories, composite/L2A and L1C, checking if scenes have already been downloaded and/or processed whilst checking their dir sizes
+    if download_source == "scihub":
+        if l1c_products.shape[0] > 0:
             tile_log.info(
-                "Searching locally for file names containing: {}.".format(
-                    search_term
+                "Checking for already downloaded and zipped L1C or L2A products and"
+            )
+            tile_log.info("  availability of matching L2A products for download.")
+            n = len(l1c_products)
+            drop = []
+            add = []
+            for r in range(n):
+                id = l1c_products.iloc[r, :]["title"]
+                search_term = (
+                    id.split("_")[2]
+                    + "_"
+                    + id.split("_")[3]
+                    + "_"
+                    + id.split("_")[4]
+                    + "_"
+                    + id.split("_")[5]
                 )
-            )
-            file_list = (
-                [
-                    os.path.join(composite_l1_image_dir, f)
-                    for f in os.listdir(composite_l1_image_dir)
-                ]
-                + [
-                    os.path.join(composite_l2_image_dir, f)
-                    for f in os.listdir(composite_l2_image_dir)
-                ]
-                + [
-                    os.path.join(composite_l2_masked_image_dir, f)
-                    for f in os.listdir(composite_l2_masked_image_dir)
-                ]
-            )
-            for f in file_list:
-                if search_term in f:
-                    tile_log.info("  Product already downloaded: {}".format(f))
-                    drop.append(l1c_products.index[r])
-            search_term = (
-                "*"
-                + id.split("_")[2]
-                + "_"
-                + id.split("_")[3]
-                + "_"
-                + id.split("_")[4]
-                + "_"
-                + id.split("_")[5]
-                + "*"
-            )
-            tile_log.info(
-                "Searching on the data hub for files containing: {}.".format(
-                    search_term
-                )
-            )
-            #if do_download_from_scihub:
-            matching_l2a_products = queries_and_downloads._file_api_query(
-                user=sen_user,
-                passwd=sen_pass,
-                start_date=composite_start_date,
-                end_date=composite_end_date,
-                filename=search_term,
-                cloud=cloud_cover,
-                producttype="S2MSI2A",
-            )
-                
-            matching_l2a_products_df = pd.DataFrame.from_dict(
-                matching_l2a_products, orient="index"
-            )
-            # 07/03/2023: Matt - Applied Ali's fix for converting product size to MB to compare against faulty_grandule_threshold
-            if (
-                len(matching_l2a_products_df) == 1
-                and [
-                    float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
-                    for x in [matching_l2a_products_df["size"][0].split(" ")]
-                ][0]
-                > faulty_granule_threshold
-            ):
-                tile_log.info("Replacing L1C {} with L2A product:".format(id))
                 tile_log.info(
-                    "              {}".format(
-                        matching_l2a_products_df.iloc[0, :]["title"]
+                    "Searching locally for file names containing: {}.".format(
+                        search_term
                     )
                 )
-                tile_log.info(f"what is r: {r}")
-                tile_log.info(f"what is l1c_products?  : {l1c_products}")
-                tile_log.info(f"what is l1c_products.index[r]  : {l1c_products.index[r]}")
-                drop.append(l1c_products.index[r])
-                add.append(matching_l2a_products_df.iloc[0, :])
-            if len(matching_l2a_products_df) == 0:
-                pass
-            if len(matching_l2a_products_df) > 1:
-                # check granule sizes on the server
-                matching_l2a_products_df["size"] = (
-                    matching_l2a_products_df["size"]
-                    .str.split(" ")
-                    .apply(
-                        lambda x: float(x[0])
-                        * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
+                file_list = (
+                    [
+                        os.path.join(composite_l1_image_dir, f)
+                        for f in os.listdir(composite_l1_image_dir)
+                    ]
+                    + [
+                        os.path.join(composite_l2_image_dir, f)
+                        for f in os.listdir(composite_l2_image_dir)
+                    ]
+                    + [
+                        os.path.join(composite_l2_masked_image_dir, f)
+                        for f in os.listdir(composite_l2_masked_image_dir)
+                    ]
+                )
+                for f in file_list:
+                    if search_term in f:
+                        tile_log.info("  Product already downloaded: {}".format(f))
+                        drop.append(l1c_products.index[r])
+                search_term = (
+                    "*"
+                    + id.split("_")[2]
+                    + "_"
+                    + id.split("_")[3]
+                    + "_"
+                    + id.split("_")[4]
+                    + "_"
+                    + id.split("_")[5]
+                    + "*"
+                )
+
+
+                tile_log.info(
+                    "Searching on the data hub for files containing: {}.".format(
+                        search_term
                     )
                 )
-                matching_l2a_products_df = matching_l2a_products_df.query(
-                    "size >= " + str(faulty_granule_threshold)
+                #if do_download_from_scihub:
+                matching_l2a_products = queries_and_downloads._file_api_query(
+                    user=sen_user,
+                    passwd=sen_pass,
+                    start_date=composite_start_date,
+                    end_date=composite_end_date,
+                    filename=search_term,
+                    cloud=cloud_cover,
+                    producttype="S2MSI2A",
                 )
+                    
+                matching_l2a_products_df = pd.DataFrame.from_dict(
+                    matching_l2a_products, orient="index"
+                )
+                # 07/03/2023: Matt - Applied Ali's fix for converting product size to MB to compare against faulty_grandule_threshold
                 if (
-                    matching_l2a_products_df.iloc[0, :]["size"]
-                    .str.split(" ")
-                    .apply(
-                        lambda x: float(x[0])
-                        * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
-                    )
+                    len(matching_l2a_products_df) == 1
+                    and [
+                        float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
+                        for x in [matching_l2a_products_df["size"][0].split(" ")]
+                    ][0]
                     > faulty_granule_threshold
                 ):
                     tile_log.info("Replacing L1C {} with L2A product:".format(id))
@@ -482,45 +443,87 @@ def acd_by_tile_raster(config_path: str,
                             matching_l2a_products_df.iloc[0, :]["title"]
                         )
                     )
+
                     drop.append(l1c_products.index[r])
                     add.append(matching_l2a_products_df.iloc[0, :])
-        if len(drop) > 0:
-            l1c_products = l1c_products.drop(index=drop)
-        if len(add) > 0:
-            # l2a_products = l2a_products.append(add)
-            add = pd.DataFrame(add)
-            l2a_products = pd.concat([l2a_products, add])
+                if len(matching_l2a_products_df) == 0:
+                    pass
+                if len(matching_l2a_products_df) > 1:
+                    # check granule sizes on the server
+                    matching_l2a_products_df["size"] = (
+                        matching_l2a_products_df["size"]
+                        .str.split(" ")
+                        .apply(
+                            lambda x: float(x[0])
+                            * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
+                        )
+                    )
+                    matching_l2a_products_df = matching_l2a_products_df.query(
+                        "size >= " + str(faulty_granule_threshold)
+                    )
+                    if (
+                        matching_l2a_products_df.iloc[0, :]["size"]
+                        .str.split(" ")
+                        .apply(
+                            lambda x: float(x[0])
+                            * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]]
+                        )
+                        > faulty_granule_threshold
+                    ):
+                        tile_log.info("Replacing L1C {} with L2A product:".format(id))
+                        tile_log.info(
+                            "              {}".format(
+                                matching_l2a_products_df.iloc[0, :]["title"]
+                            )
+                        )
+                        drop.append(l1c_products.index[r])
+                        add.append(matching_l2a_products_df.iloc[0, :])
+            if len(drop) > 0:
+                l1c_products = l1c_products.drop(index=drop)
+            if len(add) > 0:
+                # l2a_products = l2a_products.append(add)
+                add = pd.DataFrame(add)
+                l2a_products = pd.concat([l2a_products, add])
 
-        # here, dataspace and scihub derived l1c_products and l2a_products lists are the "same"
-        l2a_products = l2a_products.drop_duplicates(subset="title")
-        tile_log.info(
-            "    {} L1C products remaining for download".format(
-                l1c_products.shape[0]
-            )
+    # here, dataspace and scihub derived l1c_products and l2a_products lists are the "same"
+    l2a_products = l2a_products.drop_duplicates(subset="title")
+    tile_log.info(
+        "    {} L1C products remaining for download".format(
+            l1c_products.shape[0]
         )
-        tile_log.info(
-            "    {} L2A products remaining for download".format(
-                l2a_products.shape[0]
-            )
+    )
+    tile_log.info(
+        "    {} L2A products remaining for download".format(
+            l2a_products.shape[0]
         )
+    )
 
-    ######### above is querying etc etc. etc.
+    ######### above is querying
 
     ######## below is downloading
     # if L1C products remain after matching for L2As, then download the unmatched L1Cs
-    if l1c_pgitroducts.shape[0] > 0:
-        tile_log.info("Downloading Sentinel-2 L1C products.")
 
-        queries_and_downloads.download_s2_data_from_df(
-            l1c_products,
-            composite_l1_image_dir,
-            composite_l2_image_dir,
-            # source could accept "dataspace"
-            source="scihub",
-            user=sen_user,
-            passwd=sen_pass,
-            try_scihub_on_fail=True,
-        )
+    if l1c_products.shape[0] > 0:
+        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}")
+
+        if download_source == "scihub":
+
+            queries_and_downloads.download_s2_data_from_df(
+                l1c_products,
+                composite_l1_image_dir,
+                composite_l2_image_dir,
+                # source could accept "dataspace"
+                source="scihub",
+                user=sen_user,
+                passwd=sen_pass,
+                try_scihub_on_fail=True,
+            )
+        if download_source == "dataspace":
+
+            # dataspace equivalent
+
+            print("hello")
+
         tile_log.info("Atmospheric correction with sen2cor.")
         raster_manipulation.atmospheric_correction(
             composite_l1_image_dir,
@@ -529,7 +532,7 @@ def acd_by_tile_raster(config_path: str,
             delete_unprocessed_image=False,
             log=tile_log,
         )
-    tile_log.info(f"download source is   {download_source}")
+
     if l2a_products.shape[0] > 0:
         tile_log.info("Downloading Sentinel-2 L2A products.")
         queries_and_downloads.download_s2_data(
