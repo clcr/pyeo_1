@@ -1,17 +1,18 @@
 import configparser
+import glob
+import logging
 import os
 import subprocess
 import sys
-import glob
-import logging
+import time
 from pathlib import Path
-from pyeo_1 import filesystem_utilities
-from pyeo_1.apps.acd_national import acd_by_tile_raster
-from pyeo_1.apps.acd_national import acd_by_tile_vectorisation
+from tempfile import TemporaryDirectory
+
 import geopandas as gpd
 import pandas as pd
-from tempfile import TemporaryDirectory
-import time
+from pyeo_1 import filesystem_utilities
+from pyeo_1.apps.acd_national import (acd_by_tile_raster,
+                                      acd_by_tile_vectorisation)
 
 
 # acd_national is the top-level function which controls the raster and vector processes for pyeo_1
@@ -44,8 +45,12 @@ def automatic_change_detection_national(config_path):
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_roi_tile_intersection()")
     acd_log.info("---------------------------------------------------------------")
+
+    tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
+
     if config_dict["do_tile_intersection"]:
         tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
+
 
     if config_dict["do_raster"] and config_dict["do_tile_intersection"]:
         acd_log.info("---------------------------------------------------------------")
@@ -210,15 +215,17 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info("  --do_all")
         if config_dict["build_composite"]:
             log.info("  --build_composite for baseline composite")
-            # log.info("  --download_source = {}".format(config_dict["download_source"]))
+            log.info("  --download_source = {}".format(config_dict["download_source"]))
             log.info(f"         composite start date  : {config_dict['start_date']}")
             log.info(f"         composite end date  : {config_dict['end_date']}")
         if config_dict["do_download"]:
             log.info("  --download for change detection images")
-            # if not config_dict["build_composite"]:
-                # log.info(
-                #     "  --download_source = {}".format(config_dict["download_source"])
-                # )
+            log.info(
+                "  --download_source = {}".format(config_dict["download_source"])
+            )
+            log.info(
+                f"  Faulty Granule Threshold  : {config_dict['faulty_granule_threshold']}"
+            )
         if config_dict["do_classify"]:
             log.info(
                 "  --classify to apply the random forest model and create classification layers"
@@ -310,6 +317,8 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
     log.info("-------------------------------------------")
+    log.info("-------------------------------------------")
+
     # log.info("Streaming config parameters to log file for reference")
     # # todo: for everything in config_dict, log the parameter
     # for each_section in config.sections():
@@ -394,8 +403,11 @@ def acd_roi_tile_intersection(config_dict, log):
 
 
 def acd_integrated_raster(
-    config_dict: dict, log: logging.Logger, tilelist_filepath: str, config_path: str
-):
+    config_dict: dict, 
+    log: logging.Logger,
+    tilelist_filepath: str,
+    config_path: str
+) -> None:
     """
 
     This function:

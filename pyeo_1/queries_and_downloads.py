@@ -7,7 +7,7 @@ Key functions
 -------------
 :py:func:`check_for_s2_data_by_date` Queries the Sentinel 2 archive for products between two dates
 :py:func:`download_s2_data` Downloads Sentinel 2 data from Scihub by default
-
+:py:func: `query_dataspace_by_polygon` Queries the New Copernicus Dataspace API for products between two dates, that conform to the Area of Interest and maximum cloud cover supplied.
 
 SAFE files
 ----------
@@ -68,45 +68,40 @@ import shutil
 import subprocess
 import sys
 import tarfile
+from tqdm import tqdm
 import zipfile
 from multiprocessing.dummy import Pool
-from urllib.parse import urlencode
-import numpy as np
-from bs4 import (
-    BeautifulSoup,
-)  # I didn't really want to use BS, but I can't see a choice.
 from tempfile import TemporaryDirectory
+from urllib.parse import urlencode
 from xml.etree import ElementTree
 
-# I.R. ogr, osr now incorporated in osgeo
-# import ogr, osr
-from osgeo import osr, ogr
+import numpy as np
+import pandas as pd
+import pyeo_1.filesystem_utilities as fu
+import pyeo_1.windows_compatability
 import requests
 import tenacity
 from botocore.exceptions import ClientError
+from bs4 import \
+    BeautifulSoup  # I didn't really want to use BS, but I can't see a choice.
+
+from osgeo import ogr, osr
+from pyeo_1.coordinate_manipulation import (get_vector_projection,
+                                            reproject_vector)
+from pyeo_1.exceptions import (BadDataSourceExpection,
+                               InvalidDateFormatException,
+                               InvalidGeometryFormatException,
+                               NoL2DataAvailableException, TooManyRequests)
+from pyeo_1.filesystem_utilities import (check_for_invalid_l1_data,
+                                         check_for_invalid_l2_data,
+                                         get_sen_2_image_tile)
 from requests import Request
 from sentinelhub import download_safe_format
 from sentinelsat import SentinelAPI, geojson_to_wkt, read_geojson
-import tenacity
-
-from pyeo_1.filesystem_utilities import (
-    check_for_invalid_l2_data,
-    check_for_invalid_l1_data,
-    get_sen_2_image_tile,
-)
-import pyeo_1.filesystem_utilities as fu
-from pyeo_1.coordinate_manipulation import reproject_vector, get_vector_projection
-from pyeo_1.exceptions import (
-    NoL2DataAvailableException,
-    BadDataSourceExpection,
-    TooManyRequests,
-    InvalidGeometryFormatException,
-    InvalidDateFormatException,
-)
 
 log = logging.getLogger("pyeo_1")
 
-import pyeo_1.windows_compatability
+
 
 try:
     from google.cloud import storage
@@ -117,6 +112,175 @@ api_url = "https://scihub.copernicus.eu/dhus/"
 rest_url = "https://apihub.copernicus.eu/apihub/search"
 # api_url = "https://apihub.copernicus.eu/apihub/"
 
+# dataspace constants
+DATASPACE_API_ROOT = "http://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel2/search.json"
+DATASPACE_DOWNLOAD_URL = "https://catalogue.dataspace.copernicus.eu/odata/v1/Products"
+DATASPACE_REFRESH_TOKEN_URL = "https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token"
+
+def query_dataspace_by_polygon(
+    max_cloud_cover: int,
+    start_date: str,
+    end_date: str,
+    area_of_interest: str,
+    max_records: int,
+) -> pd.DataFrame:
+    """
+    This function returns a DataFrame of available Sentinel-2 imagery from the Copernicus Dataspace API.
+
+    Parameters
+    ----------
+    max_cloud_cover : int
+        Maximum Cloud Cover
+    start_date : str
+        Start date of the images to query from in (YYYY-MM-DD) format
+    end_date : str
+        End date of the images to query from in (YYYY-MM-DD) format
+    area_of_interest : str
+        Region of interest centroid in WKT format
+    max_records : int
+        Maximum records to return
+
+
+    Returns
+    -------
+
+    """
+
+    request_string = build_dataspace_request_string(
+        max_cloud_cover=max_cloud_cover,
+        start_date=start_date,
+        end_date=end_date,
+        area_of_interest=area_of_interest,
+        max_records=max_records,
+    )
+
+    response = requests.get(request_string).json()["features"]
+
+    response_dataframe = pd.DataFrame.from_dict(response)
+    response_dataframe = pd.DataFrame.from_records(response_dataframe["properties"])
+    return response_dataframe
+
+
+def build_dataspace_request_string(
+    max_cloud_cover: int,
+    start_date: str,
+    end_date: str,
+    area_of_interest: str,
+    max_records: int,
+) -> str:
+    """
+    This function builds the API product request string based on given properties and constraints.
+
+    Parameters
+    ----------
+    max_cloud_cover : int
+        Maximum cloud cover to allow in the queried products
+    start_date : str
+        Starting date of the observations (YYYY-MM-DD format)
+    end_date : str
+        Ending date of the observations (YYYY-MM-DD format)
+    area_of_interest : str
+        Area of interest geometry as a string in WKT format
+    max_records : int
+        Maximum number of products to show per query (queries with very high numbers may not complete in time)
+
+    Returns
+    -------
+    request_string : str
+        API Request String
+
+    """
+    cloud_cover_props = f"cloudCover=[0,{max_cloud_cover}]"
+    start_date_props = f"startDate={start_date}"
+    end_date_props = f"completionDate={end_date}"
+    geometry_props = f"geometry={area_of_interest}"
+    max_records_props = f"maxRecords={max_records}"
+
+    request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
+    return request_string
+
+def download_s2_data_from_dataspace(product_df: pd.DataFrame,
+                                    l1c_directory: str,
+                                    l2a_directory: str
+                                    ) -> None:
+    """
+    
+    This is a function docstring. TODO fill in docs
+
+    Parameters
+    ----------
+
+    product_df : pd.DataFrame
+        A Pandas DataFrame containing the products to download. 
+        
+    l1c_directory : str
+        The path to the L1C download directory.
+    
+    l2a_directory : str
+        The path to the L2A download directory.
+
+    Returns
+    ----------
+    None
+
+    """
+
+    # if L1C have been passed, download to the l1c_directory
+    # if product_df[0]["processinglevel"] == "Level-1C":
+    #     for product in product_df.itertuples(index=False):
+        
+            # download_dataspace_product(
+            #     product_uuid=product.uuid,
+            #     auth_token=auth_token,
+            #     product_name=product.title,
+            #     safe_directory=
+            # )
+
+    # return
+
+
+def download_dataspace_product(product_uuid: str,
+                               auth_token: str,
+                               product_name: str,
+                               safe_directory: str,
+                               ) -> None:
+    """
+    This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
+
+    Parameters
+    ----------
+    product_uuid : str
+        UUID of the product to download
+    auth_token : str
+        Authentication bearer token
+    product_name : str
+        Name of the product
+    safe_directory : str
+        The directory (path) to write the SAFE files to
+
+    Returns
+    -------
+    None
+    """
+
+    response = requests.get(
+        f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value",
+        headers={"Authorization": f"Bearer {auth_token}"},
+        stream=True,
+    )
+
+    total_size_in_bytes = int(response.headers.get("Content-Length", 0))
+    block_size = 1024
+    progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+
+    with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
+        for data in response.iter_content(block_size):
+            download.write(data)
+            progress_bar.update(len(data))
+
+    progress_bar.close()
+
+    return
 
 # I.R.
 # def _rest_query(user, passwd, footprint_wkt, start_date, end_date, cloud=100, start_row=0, filename=None):

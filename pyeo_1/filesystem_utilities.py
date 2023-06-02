@@ -17,22 +17,20 @@ Function reference
 -------------
 """
 
+import configparser
 import datetime
 import datetime as dt
 import glob
+import json
 import logging
-import numpy as np
 import os
-import pandas as pd
 import re
 import shutil
-import configparser
-import json
 
-from pyeo_1.exceptions import CreateNewStacksException
-
-
+import numpy as np
+import pandas as pd
 import pyeo_1.windows_compatability
+from pyeo_1.exceptions import CreateNewStacksException
 
 # Set up logging on import
 log = logging.getLogger("pyeo_1")
@@ -178,9 +176,9 @@ def config_path_to_config_dict(config_path: str):
     config_dict["do_dev"] = config.getboolean("raster_processing_parameters", "do_dev")
     config_dict["do_all"] = config.getboolean("raster_processing_parameters", "do_all")
 
-    config_dict["do_download_from_scihub"] = config.getboolean("raster_processing_parameters", "do_download_from_scihub")
+    # config_dict["do_download_from_scihub"] = config.getboolean("raster_processing_parameters", "do_download_from_scihub")
 
-    config_dict["do_download_from_dataspace"] = config.getboolean("raster_processing_parameters", "do_download_from_dataspace")
+    # config_dict["do_download_from_dataspace"] = config.getboolean("raster_processing_parameters", "do_download_from_dataspace")
     
     config_dict["do_classify"] = config.getboolean(
         "raster_processing_parameters", "do_classify"
@@ -222,9 +220,9 @@ def config_path_to_config_dict(config_path: str):
         config["forest_sentinel"]["cloud_certainty_threshold"]
     )
     config_dict["model_path"] = config["forest_sentinel"]["model"]
-    # config_dict["download_source"] = config["raster_processing_parameters"][
-    #     "download_source"
-    # ]
+    config_dict["download_source"] = config["raster_processing_parameters"][
+        "download_source"
+    ]
 
     config_dict["bands"] = json.loads(
         config["raster_processing_parameters"]["band_names"]
