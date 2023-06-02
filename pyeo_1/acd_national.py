@@ -48,7 +48,11 @@ def automatic_change_detection_national(config_path):
 
     tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
 
-    if config_dict["do_raster"]:
+    if config_dict["do_tile_intersection"]:
+        tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
+
+
+    if config_dict["do_raster"] and config_dict["do_tile_intersection"]:
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_raster():")
         acd_log.info("---------------------------------------------------------------")
@@ -56,7 +60,7 @@ def automatic_change_detection_national(config_path):
         acd_integrated_raster(config_dict, acd_log, tilelist_filepath, config_path)
 
     # and skip already existing vectors
-    if config_dict["do_vectorise"]:
+    if config_dict["do_vectorise"] and config_dict["do_tile_intersection"] :
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_vectorisation()")
         acd_log.info("  vectorising each change report raster, by tile")
@@ -201,6 +205,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         log.info(
             "  Running in production mode, avoiding any development versions of functions."
         )
+    if config_dict["do_tile_intersection"]:
+        log.info("  -do_tile_intersection")
+        log.info("      Sentinel-2 tile intersection with ROI enabled")
     if config_dict["do_raster"]:
         log.info("  --do_raster")
         log.info("      raster pipeline enabled")
@@ -436,6 +443,7 @@ def acd_integrated_raster(
         log.error(
             f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand"
         )
+        sys.exit(1)
 
     # check and read in credentials for downloading Sentinel-2 data
     credentials_path = config_dict["credentials_path"]

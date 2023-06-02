@@ -168,6 +168,8 @@ def config_path_to_config_dict(config_path: str):
         config["run_mode"]["watch_period_seconds"]
     )
 
+    config_dict["do_tile_intersection"] = config.getboolean("raster_processing_parameters", "do_tile_intersection")
+
     config_dict["do_raster"] = config.getboolean(
         "raster_processing_parameters", "do_raster"
     )
