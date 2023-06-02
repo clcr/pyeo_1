@@ -198,23 +198,25 @@ def build_dataspace_request_string(
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
 
-def get_access_token(refresh: bool = False,
-                     dataspace_username: str,
-                     dataspace_password: str) -> str:
+def get_access_token(dataspace_username: str,
+                     dataspace_password: str,
+                     refresh: bool = False) -> str:
     """
 
     This function creates an access token to use during download for verification purposes.
 
     Parameters
     ----------
-    refresh : bool
-        Refreshes an old access token, Default false - returns new access token
 
     dataspace_username : str
         The username registered with the Copernicus Open Access Dataspace
 
     dataspace_password : str
         The password registered with the Copernicus Open Access Dataspace
+
+    refresh : bool
+        Refreshes an old access token, Default false - returns new access token
+
 
     Returns
     -------
@@ -288,9 +290,9 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
     """
 
     auth_token = get_access_token(
-        refresh=False,
         dataspace_username=dataspace_username,
-        dataspace_password=dataspace_password
+        dataspace_password=dataspace_password,
+        refresh=False,
         )
 
     for product in product_df.itertuples(index=False):
