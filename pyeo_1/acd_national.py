@@ -45,6 +45,7 @@ def automatic_change_detection_national(config_path):
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_roi_tile_intersection()")
     acd_log.info("---------------------------------------------------------------")
+
     tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
 
     if config_dict["do_raster"]:

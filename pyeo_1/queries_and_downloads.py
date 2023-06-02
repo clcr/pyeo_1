@@ -199,20 +199,68 @@ def build_dataspace_request_string(
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
 
+def download_s2_data_from_dataspace(product_df: pd.DataFrame,
+                                    l1c_directory: str,
+                                    l2a_directory: str
+                                    ) -> None:
+    """
+    
+    This is a function docstring. TODO fill in docs
 
-def download_dataspace_product(product_uuid: str, auth_token: str, product_name: str) -> None:
+    Parameters
+    ----------
+
+    product_df : pd.DataFrame
+        A Pandas DataFrame containing the products to download. 
+        
+    l1c_directory : str
+        The path to the L1C download directory.
+    
+    l2a_directory : str
+        The path to the L2A download directory.
+
+    Returns
+    ----------
+    None
+
+    """
+
+    # if L1C have been passed, download to the l1c_directory
+    if product_df[0]["processinglevel"] == "Level-1C":
+        for product in product_df.itertuples(index=False):
+        
+            download_dataspace_product(
+                product_uuid=product.uuid,
+                auth_token=auth_token,
+                product_name=product.title,
+                safe_directory=
+            )
+
+    return
+
+
+def download_dataspace_product(product_uuid: str,
+                               auth_token: str,
+                               product_name: str,
+                               safe_directory: str,
+                               ) -> None:
     """
     This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
 
     Parameters
     ----------
-    product_uuid: UUID of the product to download
-    auth_token: Authentication bearer token
-    product_name: Name of the product
+    product_uuid : str
+        UUID of the product to download
+    auth_token : str
+        Authentication bearer token
+    product_name : str
+        Name of the product
+    safe_directory : str
+        The directory (path) to write the SAFE files to
 
     Returns
     -------
-
+    None
     """
 
     response = requests.get(

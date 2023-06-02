@@ -414,7 +414,6 @@ def acd_by_tile_raster(config_path: str,
                         search_term
                     )
                 )
-                #if do_download_from_scihub:
                 matching_l2a_products = queries_and_downloads._file_api_query(
                     user=sen_user,
                     passwd=sen_pass,
@@ -498,6 +497,10 @@ def acd_by_tile_raster(config_path: str,
         )
     )
 
+    tile_log.info(l1c_products.head(1))
+    tile_log.info(l1c_products.columns)
+
+    sys.exit(1)
     ######### above is querying
 
     ######## below is downloading
@@ -512,7 +515,6 @@ def acd_by_tile_raster(config_path: str,
                 l1c_products,
                 composite_l1_image_dir,
                 composite_l2_image_dir,
-                # source could accept "dataspace"
                 source="scihub",
                 user=sen_user,
                 passwd=sen_pass,
@@ -520,9 +522,11 @@ def acd_by_tile_raster(config_path: str,
             )
         if download_source == "dataspace":
 
-            # dataspace equivalent
-
-            print("hello")
+            queries_and_downloads.download_s2_data_from_dataspace(
+                product_df=l1c_products,
+                l1c_directory=composite_l1_image_dir,
+                l2a_directory=composite_l2_image_dir
+            )
 
         tile_log.info("Atmospheric correction with sen2cor.")
         raster_manipulation.atmospheric_correction(
