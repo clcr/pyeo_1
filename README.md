@@ -62,6 +62,7 @@ git clone https://github.com/clcr/pyeo_1.git
 To install `pyeo_1`, put the following commands into **Bash** (Linux), **Terminal** (Mac) or the **Anaconda Prompt** (Windows)
 
 ```bash
+conda install -c conda-forge git
 git clone https://github.com/clcr/pyeo_1.git
 cd pyeo_1
 conda env create --file environment.yml --name pyeo_env
