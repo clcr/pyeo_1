@@ -3,6 +3,7 @@ import glob
 import json
 import logging
 import os
+import shutil
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -521,7 +522,10 @@ def acd_by_tile_raster(config_path: str,
             queries_and_downloads.download_s2_data_from_dataspace(
                 product_df=l1c_products,
                 l1c_directory=composite_l1_image_dir,
-                l2a_directory=composite_l2_image_dir
+                l2a_directory=composite_l2_image_dir,
+                dataspace_username=sen_user,
+                dataspace_password=sen_pass,
+                log=tile_log
             )
 
         tile_log.info("Atmospheric correction with sen2cor.")

@@ -160,7 +160,6 @@ def query_dataspace_by_polygon(
     response_dataframe = pd.DataFrame.from_records(response_dataframe["properties"])
     return response_dataframe
 
-
 def build_dataspace_request_string(
     max_cloud_cover: int,
     start_date: str,
@@ -199,13 +198,67 @@ def build_dataspace_request_string(
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
 
+def get_access_token(refresh: bool = False,
+                     dataspace_username: str,
+                     dataspace_password: str) -> str:
+    """
+
+    This function creates an access token to use during download for verification purposes.
+
+    Parameters
+    ----------
+    refresh : bool
+        Refreshes an old access token, Default false - returns new access token
+
+    dataspace_username : str
+        The username registered with the Copernicus Open Access Dataspace
+
+    dataspace_password : str
+        The password registered with the Copernicus Open Access Dataspace
+
+    Returns
+    -------
+
+
+    """
+    REFRESH_TOKEN = ""
+
+    if refresh:
+        payload = {
+            "grant_type": "refresh_token",
+            "refresh_token": REFRESH_TOKEN,
+            "client_id": "cdse-public",
+        }
+
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        response = requests.post(DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers)
+    else:
+        payload = {
+            "grant_type": "password",
+            "username": dataspace_username,
+            "password": dataspace_password,
+            "client_id": "cdse-public",
+        }
+
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        response = requests.post(
+            DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers
+        ).json()
+
+    return response["access_token"]
+
 def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                                     l1c_directory: str,
-                                    l2a_directory: str
+                                    l2a_directory: str,
+                                    dataspace_username: str,
+                                    dataspace_password: str,
+                                    log: logging.Logger
                                     ) -> None:
     """
     
-    This is a function docstring. TODO fill in docs
+    This is a function wraps around `download_dataspace_product`, providing the necessary directories dependent on product type (L1C/L2A).
 
     Parameters
     ----------
@@ -218,6 +271,15 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
     
     l2a_directory : str
         The path to the L2A download directory.
+    
+    dataspace_username : str
+        The username registered with the Copernicus Open Access Dataspace.
+
+    dataspace_password : str
+        The password registered with the Copernicus Open Access Dataspace.
+
+    log : logging.Logger
+        Log object to write to.
 
     Returns
     ----------
@@ -225,18 +287,40 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 
     """
 
-    # if L1C have been passed, download to the l1c_directory
-    # if product_df[0]["processinglevel"] == "Level-1C":
-    #     for product in product_df.itertuples(index=False):
-        
-            # download_dataspace_product(
-            #     product_uuid=product.uuid,
-            #     auth_token=auth_token,
-            #     product_name=product.title,
-            #     safe_directory=
-            # )
+    auth_token = get_access_token(
+        refresh=False,
+        dataspace_username=dataspace_username,
+        dataspace_password=dataspace_password
+        )
 
-    # return
+    for product in product_df.itertuples(index=False):
+
+        # if L1C have been passed, download to the l1c_directory
+        if product.processinglevel == "Level-1C":
+            try:
+                download_dataspace_product(
+                    product_uuid=product.uuid,
+                    auth_token=auth_token,
+                    product_name=product.title,
+                    safe_directory=l1c_directory
+                )
+            except Exception as error:
+                log.error(f"Download dataspace for a L1C Product did not finish")
+                log.error(f"Received error   {error}")
+
+        # if L2A have been passed, download to the l1c_directory
+        if product.processinglevel == "Level-2A":
+            try:
+                download_dataspace_product(
+                    product_uuid=product.uuid,
+                    auth_token=auth_token,
+                    product_name=product.title,
+                    safe_directory=l2a_directory
+                )
+            except Exception as error:
+                log.error(f"Download dataspace for a L2A Product did not finish")
+                log.error(f"Received error   {error}")
+    return
 
 
 def download_dataspace_product(product_uuid: str,
@@ -273,12 +357,13 @@ def download_dataspace_product(product_uuid: str,
     block_size = 1024
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
-        for data in response.iter_content(block_size):
-            download.write(data)
-            progress_bar.update(len(data))
+    with TemporaryDirectory():
+        with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
+            for data in response.iter_content(block_size):
+                download.write(data)
+                progress_bar.update(len(data))
 
-    progress_bar.close()
+        progress_bar.close()
 
     return
 
