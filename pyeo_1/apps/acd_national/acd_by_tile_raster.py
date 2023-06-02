@@ -497,10 +497,6 @@ def acd_by_tile_raster(config_path: str,
         )
     )
 
-    tile_log.info(l1c_products.head(1))
-    tile_log.info(l1c_products.columns)
-
-    sys.exit(1)
     ######### above is querying
 
     ######## below is downloading

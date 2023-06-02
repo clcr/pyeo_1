@@ -226,17 +226,17 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
     """
 
     # if L1C have been passed, download to the l1c_directory
-    if product_df[0]["processinglevel"] == "Level-1C":
-        for product in product_df.itertuples(index=False):
+    # if product_df[0]["processinglevel"] == "Level-1C":
+    #     for product in product_df.itertuples(index=False):
         
-            download_dataspace_product(
-                product_uuid=product.uuid,
-                auth_token=auth_token,
-                product_name=product.title,
-                safe_directory=
-            )
+            # download_dataspace_product(
+            #     product_uuid=product.uuid,
+            #     auth_token=auth_token,
+            #     product_name=product.title,
+            #     safe_directory=
+            # )
 
-    return
+    # return
 
 
 def download_dataspace_product(product_uuid: str,
