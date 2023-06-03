@@ -1,0 +1,117 @@
+2023-06-01 14:21:38,639: INFO: ****PROCESSING START****
+2023-06-01 14:21:38,676: INFO: PyEO_1_Model_Training Notebook Running
+2023-06-01 14:21:38,677: INFO: - pyeo_dir set to: /data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1
+2023-06-01 14:21:38,677: INFO: - model_dir set to: ./models/model_all_bands
+2023-06-01 14:21:38,678: INFO: - log_dir set to: ./log
+2023-06-01 14:23:42,615: INFO: - out_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.csv
+2023-06-01 14:23:42,617: INFO: - training_raster_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:23:42,618: INFO: - training_shapefile_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:24:25,479: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:24:25,480: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:24:25,701: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpbq401ama/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 14:24:25,746: INFO: 12 bands in image file
+2023-06-01 14:24:25,747: INFO: 0 training pixels in shapefile
+2023-06-01 14:43:53,436: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:43:53,437: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:43:53,447: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpgvq_cfqk/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 14:43:53,486: INFO: 12 bands in image file
+2023-06-01 14:43:53,486: INFO: 0 training pixels in shapefile
+2023-06-01 14:51:08,150: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:51:08,152: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:51:08,161: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpv354k3yo/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 14:51:08,188: INFO: 12 bands in image file
+2023-06-01 14:51:08,189: INFO: 0 training pixels in shapefile
+2023-06-01 14:52:36,650: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:52:36,652: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:52:36,662: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpezyw3q78/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 14:52:36,708: INFO: 12 bands in image file
+2023-06-01 14:52:36,708: INFO: 0 training pixels in shapefile
+2023-06-01 14:56:18,479: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 14:56:18,480: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 14:56:18,489: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpmao8_skj/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 14:56:18,525: INFO: 12 bands in image file
+2023-06-01 14:56:18,525: INFO: 110260 training pixels in shapefile
+2023-06-01 15:14:04,197: INFO: Model saved at ./models/model_all_bands/AllBands_model.pkl
+2023-06-01 16:09:39,189: INFO: Feature Extraction Started:
+2023-06-01 16:11:09,666: INFO: Feature Extraction Started:
+2023-06-01 16:13:59,269: INFO: Classifying file: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 16:13:59,270: INFO: Saved model     : ./models/model_all_bands/AllBands_model.pkl
+2023-06-01 16:13:59,678: INFO: Proportion of non-missing values: 100.00%
+2023-06-01 16:13:59,693: INFO:    Number of chunks 10 Chunk size 19314 Chunk residual 0
+2023-06-01 16:13:59,693: INFO:    Classifying chunk 1 of size 19314
+2023-06-01 16:13:59,739: INFO:    Classifying chunk 2 of size 19314
+2023-06-01 16:13:59,782: INFO:    Classifying chunk 3 of size 19314
+2023-06-01 16:13:59,828: INFO:    Classifying chunk 4 of size 19314
+2023-06-01 16:13:59,880: INFO:    Classifying chunk 5 of size 19314
+2023-06-01 16:13:59,923: INFO:    Classifying chunk 6 of size 19314
+2023-06-01 16:13:59,969: INFO:    Classifying chunk 7 of size 19314
+2023-06-01 16:14:00,013: INFO:    Classifying chunk 8 of size 19314
+2023-06-01 16:14:00,054: INFO:    Classifying chunk 9 of size 19314
+2023-06-01 16:14:00,097: INFO:    Classifying chunk 10 of size 19314
+2023-06-01 16:14:00,211: INFO: Created classification image file: ./models/model_all_bands/AllBands_model.pkl_class.tif
+2023-06-01 16:18:26,871: INFO: Classified Image Visualisation Started:
+2023-06-01 16:22:19,804: INFO: Image Classification with Model Started:
+2023-06-01 16:22:19,805: INFO: Classified Image Saved: ./models/model_all_bands/AllBands_model.pkl_class.tif
+2023-06-01 16:26:47,391: INFO: File and Folder Specification Started::
+2023-06-01 16:26:47,392: INFO: - training_shape_filename set to: composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 16:26:47,393: INFO: - training_raster_filename set to: composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 16:26:47,394: INFO: - out_dir set to: ./models/model_all_bands
+2023-06-01 16:26:47,394: INFO: - model_out_filename set to: AllBands_model.pkl
+2023-06-01 16:26:47,395: INFO: - feature_out_filename set to: AllBands_model_features.csv
+2023-06-01 16:42:28,765: INFO: Image Classification with Model Started:
+2023-06-01 16:42:28,766: INFO: Classifying file: ./models/model_all_bands/composite_T36NXG_20221202T075301.tif
+2023-06-01 16:42:28,767: INFO: Saved model     : ./models/model_all_bands/AllBands_model.pkl
+2023-06-01 16:49:57,823: INFO: Proportion of non-missing values: 94.26%
+2023-06-01 17:10:30,989: INFO: ****PROCESSING START****
+2023-06-01 17:10:31,001: INFO: PyEO_1_Model_Training Notebook Started:
+2023-06-01 17:10:31,002: INFO: - conda_env_name set to: pyeo_env
+2023-06-01 17:10:31,004: INFO: - pyeo_dir set to: /data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1
+2023-06-01 17:10:31,005: INFO: - model_dir set to: ./models/model_all_bands
+2023-06-01 17:10:31,006: INFO: - log_dir set to: ./log
+2023-06-01 17:11:00,862: INFO: File and Folder Specification Started::
+2023-06-01 17:11:00,864: INFO: - training_shape_filename set to: composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 17:11:00,864: INFO: - training_raster_filename set to: composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 17:11:00,865: INFO: - out_dir set to: ./models/model_all_bands
+2023-06-01 17:11:00,865: INFO: - model_out_filename set to: AllBands_model.pkl
+2023-06-01 17:11:00,866: INFO: - feature_out_filename set to: AllBands_model_features.csv
+2023-06-01 17:11:19,407: INFO: Feature Extraction Started:
+2023-06-01 17:11:19,408: INFO: - out_path set to: ./models/model_all_bands/AllBands_model_features.csv
+2023-06-01 17:11:19,408: INFO: - training_raster_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 17:11:19,409: INFO: - training_shapefile_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 17:11:36,621: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 17:11:36,622: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 17:11:36,749: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmplnqxc0k1/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 17:11:36,796: INFO: 12 bands in image file
+2023-06-01 17:11:36,798: INFO: 110260 training pixels in shapefile
+2023-06-01 17:22:46,851: INFO: Feature Extraction Started:
+2023-06-01 17:22:46,852: INFO: - out_path set to: ./models/model_all_bands/AllBands_model_features.csv
+2023-06-01 17:22:46,853: INFO: - training_raster_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 17:22:46,853: INFO: - training_shapefile_path set to: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 17:22:47,982: INFO: Get training data from ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.tif
+2023-06-01 17:22:47,984: INFO:                    and ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_clipped.shp
+2023-06-01 17:22:48,063: INFO: Shape raster path /lustre/alice3/data/clcr/shared/IMPRESS/Ivan/20230524_PyEO_1_Test_Installation/code_folder/pyeo_1/tmpmhkllb6h/composite_T36NXG_20221202T075301_AllBands_clipped_rasterised
+2023-06-01 17:22:48,112: INFO: 12 bands in image file
+2023-06-01 17:22:48,112: INFO: 110260 training pixels in shapefile
+2023-06-01 17:22:58,555: INFO: Model Building Started:
+2023-06-01 17:23:00,199: INFO: Model saved at ./models/model_all_bands/AllBands_model.pkl
+2023-06-01 17:23:25,785: INFO: Model Performance Analysis Started:
+2023-06-01 17:24:50,120: INFO: Model Performance Analysis Started:
+2023-06-01 17:25:47,783: INFO: Image Classification with Model Started:
+2023-06-01 17:26:51,205: INFO: Image Classification with Model Started:
+2023-06-01 17:26:51,207: INFO: Classifying file: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_test_classifier.tif
+2023-06-01 17:26:51,207: INFO: Saved model     : ./models/model_all_bands/AllBands_model.pkl
+2023-06-01 17:26:51,811: INFO: Proportion of non-missing values: 100.00%
+2023-06-01 17:26:52,295: INFO:    Number of chunks 10 Chunk size 322746 Chunk residual 6
+2023-06-01 17:26:52,296: INFO:    Classifying chunk 1 of size 322746
+2023-06-01 17:26:52,638: INFO:    Classifying chunk 2 of size 322746
+2023-06-01 17:26:52,929: INFO:    Classifying chunk 3 of size 322746
+2023-06-01 17:26:53,203: INFO:    Classifying chunk 4 of size 322746
+2023-06-01 17:26:53,460: INFO:    Classifying chunk 5 of size 322746
+2023-06-01 17:26:53,748: INFO:    Classifying chunk 6 of size 322746
+2023-06-01 17:26:54,047: INFO:    Classifying chunk 7 of size 322746
+2023-06-01 17:26:54,341: INFO:    Classifying chunk 8 of size 322746
+2023-06-01 17:26:54,635: INFO:    Classifying chunk 9 of size 322746
+2023-06-01 17:26:54,936: INFO:    Classifying chunk 10 of size 322752
+2023-06-01 17:26:56,150: INFO: Created classification image file: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_test_classifier.tif_full_class.tif
+2023-06-01 17:26:56,179: INFO: Classified Image Saved: ./models/model_all_bands/composite_T36NXG_20221202T075301_AllBands_test_classifier.tif_full_class.tif
+2023-06-01 17:41:33,130: INFO: Classified Image Visualisation Started:
