@@ -249,6 +249,8 @@ def get_access_token(dataspace_username: str,
             DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers
         ).json()
 
+
+
     return response["access_token"]
 
 def download_s2_data_from_dataspace(product_df: pd.DataFrame,
@@ -360,7 +362,7 @@ def download_dataspace_product(product_uuid: str,
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
     with TemporaryDirectory():
-        with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
+        with open(f"{safe_directory}/{product_name}.zip", "wb") as download:
             for data in response.iter_content(block_size):
                 download.write(data)
                 progress_bar.update(len(data))
