@@ -527,7 +527,7 @@ def acd_by_tile_raster(config_path: str,
                 dataspace_password=sen_pass,
                 log=tile_log
             )
-
+        sys.exit(1)
         tile_log.info("Atmospheric correction with sen2cor.")
         raster_manipulation.atmospheric_correction(
             composite_l1_image_dir,

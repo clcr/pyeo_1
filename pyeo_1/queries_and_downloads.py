@@ -198,6 +198,8 @@ def build_dataspace_request_string(
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
 
+
+    
 def get_access_token(dataspace_username: str,
                      dataspace_password: str,
                      refresh: bool = False) -> str:
@@ -244,12 +246,14 @@ def get_access_token(dataspace_username: str,
         }
 
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-        response = requests.post(
-            DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers
-        ).json()
-
-
+        try:
+            response = requests.post(
+                DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers
+            ).json()
+        except Exception as e:
+            raise Exception(
+                f"Keycloak token creation failed. Reponse from the server was: {response}"
+                )
 
     return response["access_token"]
 
@@ -297,6 +301,7 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
         refresh=False,
         )
 
+
     for product in product_df.itertuples(index=False):
 
         # if L1C have been passed, download to the l1c_directory
@@ -306,24 +311,25 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                     product_uuid=product.uuid,
                     auth_token=auth_token,
                     product_name=product.title,
-                    safe_directory=l1c_directory
+                    safe_directory=l1c_directory,
+                    log=log
                 )
             except Exception as error:
                 log.error(f"Download dataspace for a L1C Product did not finish")
-                log.error(f"Received error   {error}")
+                log.error(f"Received this error :  {error}")
 
         # if L2A have been passed, download to the l1c_directory
         if product.processinglevel == "Level-2A":
-            try:
-                download_dataspace_product(
-                    product_uuid=product.uuid,
-                    auth_token=auth_token,
-                    product_name=product.title,
-                    safe_directory=l2a_directory
-                )
-            except Exception as error:
-                log.error(f"Download dataspace for a L2A Product did not finish")
-                log.error(f"Received error   {error}")
+            # try:
+            download_dataspace_product(
+                product_uuid=product.uuid,
+                auth_token=auth_token,
+                product_name=product.title,
+                safe_directory=l2a_directory
+            )
+            # except Exception as error:
+            #     log.error(f"Download dataspace for a L2A Product did not finish")
+            #     log.error(f"Received error   {error}")
     return
 
 
@@ -331,7 +337,7 @@ def download_dataspace_product(product_uuid: str,
                                auth_token: str,
                                product_name: str,
                                safe_directory: str,
-                               ) -> None:
+                               log) -> None:
     """
     This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
 
@@ -349,25 +355,46 @@ def download_dataspace_product(product_uuid: str,
     Returns
     -------
     None
+    
     """
 
-    response = requests.get(
-        f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value",
-        headers={"Authorization": f"Bearer {auth_token}"},
-        stream=True,
-    )
+    session = requests.Session()
+    session.headers.update({'Authorization': f"Bearer {auth_token}"})
+    url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
+        
+    response = session.get(url, allow_redirects=False)
 
-    total_size_in_bytes = int(response.headers.get("Content-Length", 0))
-    block_size = 1024
-    progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+    while response.status_code in (301, 302, 303, 307):
+        url = response.headers['Location']
+        response = session.get(url, allow_redirects=False)
 
-    with TemporaryDirectory():
-        with open(f"{safe_directory}/{product_name}.zip", "wb") as download:
-            for data in response.iter_content(block_size):
-                download.write(data)
-                progress_bar.update(len(data))
+    file = session.get(url, verify=False, allow_redirects=True)
 
-        progress_bar.close()
+    log.info(f"downloading to  : {safe_directory}/{product_name}.zip")
+
+    with open(f"{safe_directory}/{product_name}.zip", 'wb') as download:
+        download.write(file.content)
+
+    
+    # url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
+
+    # response = requests.get(
+    #     url=url,
+    #     headers={"Authorization": f"Bearer {auth_token}"},
+    #     stream=True,
+    # )
+
+    # total_size_in_bytes = int(response.headers.get("Content-Length", 0))
+    # block_size = 1024
+    # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+
+    # with TemporaryDirectory():
+    #     with open(f"{safe_directory}/{product_name}.zip", "wb") as download:
+    #         for data in response.iter_content(block_size):
+    #             download.write(data)
+    #             progress_bar.update(len(data))
+
+    #     progress_bar.close()
 
     return
 
@@ -1676,9 +1703,9 @@ def download_from_scihub(product_uuid, out_folder, user, passwd):
     this for further processing.
     Copernicus Open Access Hub no longer stores all products online for immediate retrieval.
     Offline products can be requested from the Long Term Archive (LTA) and should become
-    available within 24 hours. Copernicus Open Access Hub’s quota currently permits users
+    available within 24 hours. Copernicus Open Access Hub's quota currently permits users
     to request an offline product every 30 minutes.
-    A product’s availability can be checked with a regular OData query by evaluating the
+    A product's availability can be checked with a regular OData query by evaluating the
     Online property value or by using the is_online() convenience method.
     When trying to download an offline product with download() it will trigger its retrieval
     from the LTA.
