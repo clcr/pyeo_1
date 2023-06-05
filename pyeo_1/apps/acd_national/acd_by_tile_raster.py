@@ -75,12 +75,13 @@ def acd_by_tile_raster(config_path: str,
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"), #"/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt"
-        logger_name=f"pyeo_1_tile_{tile}_log",
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"),
+        logger_name="pyeo_1",
     )
 
     # print config parameters to the tile log
     acd_national.acd_config_to_log(config_dict=config_dict, log=tile_log)
+
 
     # create per tile directory variables
     tile_log.info("Creating the directory paths")
