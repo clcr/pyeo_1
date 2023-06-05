@@ -156,9 +156,12 @@ def acd_initialisation(config_path):
     )
 
     # check conda directory exists
-    # conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
-    # if not conda_boolean:
-    #     log.error(f"Conda Dire")
+    conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict)
+    if not conda_boolean:
+        log.error(f"Conda Environment Directory does not exist")
+        log.error(f"Ensure this exists")
+        log.error(f"now exiting the pipeline")
+        sys.exit(1)
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
