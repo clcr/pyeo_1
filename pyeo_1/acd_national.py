@@ -127,7 +127,7 @@ def automatic_change_detection_national(config_path):
 def acd_initialisation(config_path):
     """
 
-    This function initialises the log.txt, making the log object available
+    This function initialises the log.log, making the log object available
 
     Parameters
     ----------
@@ -351,7 +351,6 @@ def acd_roi_tile_intersection(config_dict, log):
 
     """
 
-    # specify geopandas gdal and proj installation
     conda_env_name = config_dict["conda_env_name"]
     home = str(Path.home())
     os.environ[

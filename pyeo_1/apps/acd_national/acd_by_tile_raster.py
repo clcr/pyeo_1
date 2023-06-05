@@ -3,6 +3,7 @@ import glob
 import json
 import logging
 import os
+import shutil
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -74,12 +75,13 @@ def acd_by_tile_raster(config_path: str,
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"), #"/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt"
-        logger_name=f"pyeo_1_tile_{tile}_log",
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"),
+        logger_name="pyeo_1",
     )
 
     # print config parameters to the tile log
     acd_national.acd_config_to_log(config_dict=config_dict, log=tile_log)
+
 
     # create per tile directory variables
     tile_log.info("Creating the directory paths")
@@ -503,7 +505,7 @@ def acd_by_tile_raster(config_path: str,
     # if L1C products remain after matching for L2As, then download the unmatched L1Cs
 
     if l1c_products.shape[0] > 0:
-        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}")
+        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}:")
 
         if download_source == "scihub":
 
@@ -521,9 +523,12 @@ def acd_by_tile_raster(config_path: str,
             queries_and_downloads.download_s2_data_from_dataspace(
                 product_df=l1c_products,
                 l1c_directory=composite_l1_image_dir,
-                l2a_directory=composite_l2_image_dir
+                l2a_directory=composite_l2_image_dir,
+                dataspace_username=sen_user,
+                dataspace_password=sen_pass,
+                log=tile_log
             )
-
+        sys.exit(1)
         tile_log.info("Atmospheric correction with sen2cor.")
         raster_manipulation.atmospheric_correction(
             composite_l1_image_dir,

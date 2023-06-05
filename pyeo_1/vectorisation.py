@@ -98,9 +98,9 @@ def vectorise_from_band(
     from pathlib import Path
 
     # specify gdal and proj installation, this is GDAL's
-    home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+    # home = str(Path.home())
+    # os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
+    # os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
     # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
     log.info(f"what is change_report_path  :  {change_report_path}")
@@ -195,10 +195,10 @@ def clean_zero_nodata_vectorised_band(
     from pathlib import Path
 
     # specify gdal and proj installation, here it is geopandas'
-    home = str(Path.home())
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # home = str(Path.home())
+    # os.environ[
+    #     "PROJ_LIB"
+    # ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
@@ -368,9 +368,9 @@ def zonal_statistics(
     gdal.UseExceptions()
 
     # specify gdal and proj installation, this is GDAL's
-    home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+    # home = str(Path.home())
+    # os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
+    # os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
 
     # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
 
@@ -577,13 +577,13 @@ def merge_and_calculate_spatial(
     from pyeo_1.filesystem_utilities import serial_date_to_string
 
     # specify gdal and proj installation, this is geopandas'
-    home = str(Path.home())
-    os.environ[
-        "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # home = str(Path.home())
+    # os.environ[
+    #     "GDAL_DATA"
+    # ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
+    # os.environ[
+    #     "PROJ_LIB"
+    # ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
 
     binary_dec = gpd.read_file(path_to_vectorised_binary_filtered)
 
