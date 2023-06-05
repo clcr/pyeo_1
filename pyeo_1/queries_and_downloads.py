@@ -301,35 +301,36 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
         refresh=False,
         )
 
-
-    for product in product_df.itertuples(index=False):
+    for counter, product in enumerate(product_df.itertuples(index=False)):
 
         # if L1C have been passed, download to the l1c_directory
         if product.processinglevel == "Level-1C":
+            # try:
+            log.info(f"    Downloading {counter+1} of {len(product_df)} : {product.title}")
+            download_dataspace_product(
+                product_uuid=product.uuid,
+                auth_token=auth_token,
+                product_name=product.title,
+                safe_directory=l1c_directory,
+                log=log
+            )
+
+            # except Exception as error:
+            #     log.error(f"Download dataspace for a L1C Product did not finish")
+            #     log.error(f"Received this error :  {error}")
+
+        # if L2A have been passed, download to the l1c_directory
+        if product.processinglevel == "Level-2A":
             try:
                 download_dataspace_product(
                     product_uuid=product.uuid,
                     auth_token=auth_token,
                     product_name=product.title,
-                    safe_directory=l1c_directory,
-                    log=log
+                    safe_directory=l2a_directory
                 )
             except Exception as error:
-                log.error(f"Download dataspace for a L1C Product did not finish")
-                log.error(f"Received this error :  {error}")
-
-        # if L2A have been passed, download to the l1c_directory
-        if product.processinglevel == "Level-2A":
-            # try:
-            download_dataspace_product(
-                product_uuid=product.uuid,
-                auth_token=auth_token,
-                product_name=product.title,
-                safe_directory=l2a_directory
-            )
-            # except Exception as error:
-            #     log.error(f"Download dataspace for a L2A Product did not finish")
-            #     log.error(f"Received error   {error}")
+                log.error(f"Download dataspace for a L2A Product did not finish")
+                log.error(f"Received error   {error}")
     return
 
 
@@ -370,12 +371,38 @@ def download_dataspace_product(product_uuid: str,
 
     file = session.get(url, verify=False, allow_redirects=True)
 
-    log.info(f"downloading to  : {safe_directory}/{product_name}.zip")
+    total_size_in_bytes = int(response.headers.get("Content-Length", 0))
+    block_size = 1024
+    progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    with open(f"{safe_directory}/{product_name}.zip", 'wb') as download:
-        download.write(file.content)
+    with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+        temporary_path = f"{temp_dir}/{product_name}.zip"
+        # log.info(f"        Downloading to temp_dir : {temporary_path}")
 
-    
+        with open(temporary_path, 'wb') as download:
+            for data in file.iter_content(block_size):
+                download.write(data)
+                progress_bar.update(len(data))
+        
+        progress_bar.close()
+
+        unzipped_path = os.path.splitext(temporary_path)[0]
+        log.info(f"        Unzipping")
+        # log.info(f"        {temporary_path}")
+        # log.info(f"        to: {unzipped_path}")
+        zip_ref = zipfile.ZipFile(temporary_path, "r")
+        zip_ref.extractall(unzipped_path)
+        zip_ref.close()
+        # no need to remove unzipped path because it is within temp_dir
+
+        # # restructure paths
+        within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
+        # log.info(f"        within folder path  :  {within_folder_path[0]}")
+        destination_path = f"{safe_directory}/{product_name}"
+        # log.info(f"        Moving:")
+        # log.info(f"        {within_folder_path[0]}")
+        # log.info(f"        to: {destination_path}")
+        shutil.move(src=within_folder_path[0], dst=destination_path)
     # url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
 
     # response = requests.get(

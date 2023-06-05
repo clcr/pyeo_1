@@ -504,7 +504,7 @@ def acd_by_tile_raster(config_path: str,
     # if L1C products remain after matching for L2As, then download the unmatched L1Cs
 
     if l1c_products.shape[0] > 0:
-        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}")
+        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}:")
 
         if download_source == "scihub":
 
