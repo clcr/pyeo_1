@@ -160,7 +160,6 @@ def query_dataspace_by_polygon(
     response_dataframe = pd.DataFrame.from_records(response_dataframe["properties"])
     return response_dataframe
 
-
 def build_dataspace_request_string(
     max_cloud_cover: int,
     start_date: str,
@@ -199,13 +198,75 @@ def build_dataspace_request_string(
     request_string = f"{DATASPACE_API_ROOT}?{cloud_cover_props}&{start_date_props}&{end_date_props}&{geometry_props}&{max_records_props}"
     return request_string
 
+
+    
+def get_access_token(dataspace_username: str,
+                     dataspace_password: str,
+                     refresh: bool = False) -> str:
+    """
+
+    This function creates an access token to use during download for verification purposes.
+
+    Parameters
+    ----------
+
+    dataspace_username : str
+        The username registered with the Copernicus Open Access Dataspace
+
+    dataspace_password : str
+        The password registered with the Copernicus Open Access Dataspace
+
+    refresh : bool
+        Refreshes an old access token, Default false - returns new access token
+
+
+    Returns
+    -------
+
+
+    """
+    REFRESH_TOKEN = ""
+
+    if refresh:
+        payload = {
+            "grant_type": "refresh_token",
+            "refresh_token": REFRESH_TOKEN,
+            "client_id": "cdse-public",
+        }
+
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        response = requests.post(DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers)
+    else:
+        payload = {
+            "grant_type": "password",
+            "username": dataspace_username,
+            "password": dataspace_password,
+            "client_id": "cdse-public",
+        }
+
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        try:
+            response = requests.post(
+                DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers
+            ).json()
+        except Exception as e:
+            raise Exception(
+                f"Keycloak token creation failed. Reponse from the server was: {response}"
+                )
+
+    return response["access_token"]
+
 def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                                     l1c_directory: str,
-                                    l2a_directory: str
+                                    l2a_directory: str,
+                                    dataspace_username: str,
+                                    dataspace_password: str,
+                                    log: logging.Logger
                                     ) -> None:
     """
     
-    This is a function docstring. TODO fill in docs
+    This is a function wraps around `download_dataspace_product`, providing the necessary directories dependent on product type (L1C/L2A).
 
     Parameters
     ----------
@@ -218,6 +279,15 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
     
     l2a_directory : str
         The path to the L2A download directory.
+    
+    dataspace_username : str
+        The username registered with the Copernicus Open Access Dataspace.
+
+    dataspace_password : str
+        The password registered with the Copernicus Open Access Dataspace.
+
+    log : logging.Logger
+        Log object to write to.
 
     Returns
     ----------
@@ -225,25 +295,50 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 
     """
 
-    # if L1C have been passed, download to the l1c_directory
-    # if product_df[0]["processinglevel"] == "Level-1C":
-    #     for product in product_df.itertuples(index=False):
-        
-            # download_dataspace_product(
-            #     product_uuid=product.uuid,
-            #     auth_token=auth_token,
-            #     product_name=product.title,
-            #     safe_directory=
-            # )
+    auth_token = get_access_token(
+        dataspace_username=dataspace_username,
+        dataspace_password=dataspace_password,
+        refresh=False,
+        )
 
-    # return
+    for counter, product in enumerate(product_df.itertuples(index=False)):
+
+        # if L1C have been passed, download to the l1c_directory
+        if product.processinglevel == "Level-1C":
+            # try:
+            log.info(f"    Downloading {counter+1} of {len(product_df)} : {product.title}")
+            download_dataspace_product(
+                product_uuid=product.uuid,
+                auth_token=auth_token,
+                product_name=product.title,
+                safe_directory=l1c_directory,
+                log=log
+            )
+
+            # except Exception as error:
+            #     log.error(f"Download dataspace for a L1C Product did not finish")
+            #     log.error(f"Received this error :  {error}")
+
+        # if L2A have been passed, download to the l1c_directory
+        if product.processinglevel == "Level-2A":
+            try:
+                download_dataspace_product(
+                    product_uuid=product.uuid,
+                    auth_token=auth_token,
+                    product_name=product.title,
+                    safe_directory=l2a_directory
+                )
+            except Exception as error:
+                log.error(f"Download dataspace for a L2A Product did not finish")
+                log.error(f"Received error   {error}")
+    return
 
 
 def download_dataspace_product(product_uuid: str,
                                auth_token: str,
                                product_name: str,
                                safe_directory: str,
-                               ) -> None:
+                               log) -> None:
     """
     This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
 
@@ -261,24 +356,72 @@ def download_dataspace_product(product_uuid: str,
     Returns
     -------
     None
+    
     """
 
-    response = requests.get(
-        f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value",
-        headers={"Authorization": f"Bearer {auth_token}"},
-        stream=True,
-    )
+    session = requests.Session()
+    session.headers.update({'Authorization': f"Bearer {auth_token}"})
+    url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
+        
+    response = session.get(url, allow_redirects=False)
+
+    while response.status_code in (301, 302, 303, 307):
+        url = response.headers['Location']
+        response = session.get(url, allow_redirects=False)
+
+    file = session.get(url, verify=False, allow_redirects=True)
 
     total_size_in_bytes = int(response.headers.get("Content-Length", 0))
     block_size = 1024
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    with open(f"{SAFE_DOWNLOAD_PATH}/{product_name}.zip", "wb") as download:
-        for data in response.iter_content(block_size):
-            download.write(data)
-            progress_bar.update(len(data))
+    with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+        temporary_path = f"{temp_dir}/{product_name}.zip"
+        # log.info(f"        Downloading to temp_dir : {temporary_path}")
 
-    progress_bar.close()
+        with open(temporary_path, 'wb') as download:
+            for data in file.iter_content(block_size):
+                download.write(data)
+                progress_bar.update(len(data))
+        
+        progress_bar.close()
+
+        unzipped_path = os.path.splitext(temporary_path)[0]
+        log.info(f"        Unzipping")
+        # log.info(f"        {temporary_path}")
+        # log.info(f"        to: {unzipped_path}")
+        zip_ref = zipfile.ZipFile(temporary_path, "r")
+        zip_ref.extractall(unzipped_path)
+        zip_ref.close()
+        # no need to remove unzipped path because it is within temp_dir
+
+        # # restructure paths
+        within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
+        # log.info(f"        within folder path  :  {within_folder_path[0]}")
+        destination_path = f"{safe_directory}/{product_name}"
+        # log.info(f"        Moving:")
+        # log.info(f"        {within_folder_path[0]}")
+        # log.info(f"        to: {destination_path}")
+        shutil.move(src=within_folder_path[0], dst=destination_path)
+    # url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
+
+    # response = requests.get(
+    #     url=url,
+    #     headers={"Authorization": f"Bearer {auth_token}"},
+    #     stream=True,
+    # )
+
+    # total_size_in_bytes = int(response.headers.get("Content-Length", 0))
+    # block_size = 1024
+    # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+
+    # with TemporaryDirectory():
+    #     with open(f"{safe_directory}/{product_name}.zip", "wb") as download:
+    #         for data in response.iter_content(block_size):
+    #             download.write(data)
+    #             progress_bar.update(len(data))
+
+    #     progress_bar.close()
 
     return
 
@@ -1587,9 +1730,9 @@ def download_from_scihub(product_uuid, out_folder, user, passwd):
     this for further processing.
     Copernicus Open Access Hub no longer stores all products online for immediate retrieval.
     Offline products can be requested from the Long Term Archive (LTA) and should become
-    available within 24 hours. Copernicus Open Access Hub’s quota currently permits users
+    available within 24 hours. Copernicus Open Access Hub's quota currently permits users
     to request an offline product every 30 minutes.
-    A product’s availability can be checked with a regular OData query by evaluating the
+    A product's availability can be checked with a regular OData query by evaluating the
     Online property value or by using the is_online() convenience method.
     When trying to download an offline product with download() it will trigger its retrieval
     from the LTA.
