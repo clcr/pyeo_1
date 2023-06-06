@@ -53,6 +53,9 @@ def acd_by_tile_raster(config_path: str,
 
     config_dict = filesystem_utilities.config_path_to_config_dict(config_path)
 
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+
     # wrap the whole process in a try block
     # try:
     # get path where the tiles are downloaded to
@@ -74,8 +77,9 @@ def acd_by_tile_raster(config_path: str,
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"), #"/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt"
-        logger_name=f"pyeo_1_tile_{tile}_log",
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"), #"/lustre/alice3/data/clcr/shared/IMPRESS/simon/pyeo_1/tile_log.txt"
+        logger_name=f"pyeo_1",
+        # logger_name=f"pyeo_1_tile_{tile}_log",
     )
 
     # print config parameters to the tile log
@@ -134,7 +138,7 @@ def acd_by_tile_raster(config_path: str,
         
     credentials_path = config_dict["credentials_path"]
     if not os.path.exists(credentials_path):
-        tile_log.error(f"the credentials path does not exist  :{credentials_path}")
+        tile_log.error(f"The credentials path does not exist  :{credentials_path}")
         tile_log.error("exiting raster pipeline")
         sys.exit(1)
 
@@ -156,6 +160,8 @@ def acd_by_tile_raster(config_path: str,
         tile_log.info("Searching for images for initial composite.")
 
         if download_source == "dataspace":
+
+            tile_log.info(f'Running download handler for {download_source}')
 
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
@@ -217,11 +223,15 @@ def acd_by_tile_raster(config_path: str,
 
         if download_source == "scihub":
 
+            tile_log.info(f'Running download handler for {download_source}')
+
             credentials_dict["sent_2"] = {}
             credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
             credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
             sen_user = credentials_dict["sent_2"]["user"]
             sen_pass = credentials_dict["sent_2"]["pass"]
+
+            tile_log.info(f'credentials_dict: {credentials_dict}')
 
             try:
                 composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
@@ -253,6 +263,7 @@ def acd_by_tile_raster(config_path: str,
                 .str.split(" ")
                 .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
             )
+            tile_log.info(f'df_all: {df_all.head()}')
 
     # here the main call (from if download_source == "scihub" branch) is resumed
     df = df_all.query("size >= " + str(faulty_granule_threshold))

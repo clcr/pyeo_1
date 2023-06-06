@@ -32,6 +32,9 @@ def vector_report_generation(config_path: str, tile: str):
         config_path=config_path
     )
 
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+    
     # get other parameters
     conda_env_name = config_dict["conda_env_name"]
     epsg = config_dict["epsg"]

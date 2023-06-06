@@ -164,7 +164,7 @@ def acd_initialisation(config_path):
     log.info("---                  INTEGRATED PROCESSING START            ---")
     log.info("---------------------------------------------------------------")
 
-    log.info("Reading in parameters defined in the Config")
+    log.info(f"Reading in parameters defined in: {config_path}")
     log.info("---------------------------------------------------------------")
 
     return config_dict, log
