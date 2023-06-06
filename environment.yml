@@ -264,4 +264,4 @@ dependencies:
       - typing-extensions==4.2.0
       - typing-inspect==0.7.1
       - utm==0.7.0
-prefix: /home/m/mp730/miniconda3/envs/pyeo_2
+

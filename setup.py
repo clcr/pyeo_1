@@ -4,7 +4,7 @@ import stat
 
 setup(
     name="pyeo_1",
-    version="0.1.0",
+    version="0.9.0",
     author="University of Leicester",
     author_email="hb71@le.ac.uk",
     packages=["pyeo_1", "pyeo_1.tests"],
