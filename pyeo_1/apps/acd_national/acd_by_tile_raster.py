@@ -87,20 +87,20 @@ def acd_by_tile_raster(config_path: str,
     tile_log.info("Creating the directory paths")
     tile_root_dir = individual_tile_directory_path
 
-    change_image_dir = os.path.join(tile_root_dir, r"images")
-    l1_image_dir = os.path.join(tile_root_dir, r"images/L1C")
-    l2_image_dir = os.path.join(tile_root_dir, r"images/L2A")
-    l2_masked_image_dir = os.path.join(tile_root_dir, r"images/cloud_masked")
-    categorised_image_dir = os.path.join(tile_root_dir, r"output/classified")
-    probability_image_dir = os.path.join(tile_root_dir, r"output/probabilities")
-    sieved_image_dir = os.path.join(tile_root_dir, r"output/sieved")
-    composite_dir = os.path.join(tile_root_dir, r"composite")
-    composite_l1_image_dir = os.path.join(tile_root_dir, r"composite/L1C")
-    composite_l2_image_dir = os.path.join(tile_root_dir, r"composite/L2A")
+    change_image_dir = os.path.join(tile_root_dir, "images")
+    l1_image_dir = os.path.join(tile_root_dir, f"images{os.sep}L1C")
+    l2_image_dir = os.path.join(tile_root_dir, f"images{os.sep}L2A")
+    l2_masked_image_dir = os.path.join(tile_root_dir, f"images{os.sep}cloud_masked")
+    categorised_image_dir = os.path.join(tile_root_dir, f"output{os.sep}classified")
+    probability_image_dir = os.path.join(tile_root_dir, f"output{os.sep}probabilities")
+    sieved_image_dir = os.path.join(tile_root_dir, f"output{os.sep}sieved")
+    composite_dir = os.path.join(tile_root_dir, "composite")
+    composite_l1_image_dir = os.path.join(tile_root_dir, f"composite{os.sep}L1C")
+    composite_l2_image_dir = os.path.join(tile_root_dir, f"composite{os.sep}L2A")
     composite_l2_masked_image_dir = os.path.join(
-        tile_root_dir, r"composite/cloud_masked"
+        tile_root_dir, f"composite{os.sep}cloud_masked"
     )
-    quicklook_dir = os.path.join(tile_root_dir, r"output/quicklooks")
+    quicklook_dir = os.path.join(tile_root_dir, f"output{os.sep}quicklooks")
 
     start_date = config_dict["start_date"]
     end_date = config_dict["end_date"]
@@ -503,7 +503,6 @@ def acd_by_tile_raster(config_path: str,
 
     ######## below is downloading
     # if L1C products remain after matching for L2As, then download the unmatched L1Cs
-
     if l1c_products.shape[0] > 0:
         tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}:")
 
@@ -518,6 +517,7 @@ def acd_by_tile_raster(config_path: str,
                 passwd=sen_pass,
                 try_scihub_on_fail=True,
             )
+
         if download_source == "dataspace":
 
             queries_and_downloads.download_s2_data_from_dataspace(
@@ -528,7 +528,7 @@ def acd_by_tile_raster(config_path: str,
                 dataspace_password=sen_pass,
                 log=tile_log
             )
-        sys.exit(1)
+        
         tile_log.info("Atmospheric correction with sen2cor.")
         raster_manipulation.atmospheric_correction(
             composite_l1_image_dir,
@@ -540,16 +540,29 @@ def acd_by_tile_raster(config_path: str,
 
     if l2a_products.shape[0] > 0:
         tile_log.info("Downloading Sentinel-2 L2A products.")
-        queries_and_downloads.download_s2_data(
-            l2a_products.to_dict("index"),
-            composite_l1_image_dir,
-            composite_l2_image_dir,
-            source="scihub",
-            # download_source,
-            user=sen_user,
-            passwd=sen_pass,
-            try_scihub_on_fail=True,
-        )
+
+        if download_source == "scihub":
+
+            queries_and_downloads.download_s2_data(
+                l2a_products.to_dict("index"),
+                composite_l1_image_dir,
+                composite_l2_image_dir,
+                source="scihub",
+                # download_source,
+                user=sen_user,
+                passwd=sen_pass,
+                try_scihub_on_fail=True,
+            )
+        if download_source == "dataspace":
+            
+            queries_and_downloads.download_s2_data_from_dataspace(
+                product_df=l2a_products,
+                l1c_directory=composite_l1_image_dir,
+                l2a_directory=composite_l2_image_dir,
+                dataspace_username=sen_user,
+                dataspace_password=sen_pass,
+                log=tile_log
+            )
 
     # check for incomplete L2A downloads
     incomplete_downloads, sizes = raster_manipulation.find_small_safe_dirs(
