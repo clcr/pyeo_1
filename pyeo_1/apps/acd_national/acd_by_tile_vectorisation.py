@@ -32,6 +32,9 @@ def vector_report_generation(config_path: str, tile: str):
         config_path=config_path
     )
 
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+    
     # get other parameters
     conda_env_name = config_dict["conda_env_name"]
     epsg = config_dict["epsg"]
@@ -68,14 +71,14 @@ def vector_report_generation(config_path: str, tile: str):
         change_report_path=change_report_path,
         band=15,
         log=tile_log,
-        conda_env_name=conda_env_name,
+        config_dict=config_dict
     )
     # was band=6
 
     path_vectorised_binary_filtered = vectorisation.clean_zero_nodata_vectorised_band(
         vectorised_band_path=path_vectorised_binary,
         log=tile_log,
-        conda_env_name=conda_env_name,
+        config_dict=config_dict
     )
 
     rb_ndetections_zstats_df = vectorisation.zonal_statistics(
@@ -83,8 +86,8 @@ def vector_report_generation(config_path: str, tile: str):
         shapefile_path=path_vectorised_binary_filtered,
         report_band=5,
         log=tile_log,
-        conda_env_name=conda_env_name,
-    )
+        config_dict=config_dict
+        )
     # was band=2
 
     rb_confidence_zstats_df = vectorisation.zonal_statistics(
@@ -92,7 +95,7 @@ def vector_report_generation(config_path: str, tile: str):
         shapefile_path=path_vectorised_binary_filtered,
         report_band=9,
         log=tile_log,
-        conda_env_name=conda_env_name,
+        config_dict=config_dict
     )
     # was band=5
 
@@ -101,7 +104,7 @@ def vector_report_generation(config_path: str, tile: str):
         shapefile_path=path_vectorised_binary_filtered,
         report_band=4,
         log=tile_log,
-        conda_env_name=conda_env_name,
+        config_dict=config_dict,
     )
     # was band=7
 

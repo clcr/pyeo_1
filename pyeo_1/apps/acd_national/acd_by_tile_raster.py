@@ -1,22 +1,23 @@
+import configparser
+import glob
+import json
+import logging
 import os
+import shutil
 import sys
 from pathlib import Path
-import logging
-import configparser
-import json
-import pandas as pd
-import numpy as np
-import glob
-
-from pyeo_1 import filesystem_utilities
-from pyeo_1 import raster_manipulation
-from pyeo_1 import queries_and_downloads
-from pyeo_1 import classification
-from pyeo_1 import acd_national
 from tempfile import TemporaryDirectory
 
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+from pyeo_1 import (acd_national, classification, filesystem_utilities,
+                    queries_and_downloads, raster_manipulation)
 
-def acd_by_tile_raster(config_path: str, tile: str):
+
+def acd_by_tile_raster(config_path: str,
+                       tile: str
+                       ) -> None:
     """
 
     This function:
@@ -53,6 +54,9 @@ def acd_by_tile_raster(config_path: str, tile: str):
 
     config_dict = filesystem_utilities.config_path_to_config_dict(config_path)
 
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+
     # wrap the whole process in a try block
     # try:
     # get path where the tiles are downloaded to
@@ -74,12 +78,13 @@ def acd_by_tile_raster(config_path: str, tile: str):
 
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
-        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.txt"),
-        logger_name=f"pyeo_1_tile_{tile}_log",
+        log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"),
+        logger_name="pyeo_1"
     )
 
     # print config parameters to the tile log
     acd_national.acd_config_to_log(config_dict=config_dict, log=tile_log)
+
 
     # create per tile directory variables
     tile_log.info("Creating the directory paths")
@@ -123,31 +128,25 @@ def acd_by_tile_raster(config_path: str, tile: str):
     from_classes = config_dict["from_classes"]
     to_classes = config_dict["to_classes"]
 
-    # download_source = config_dict["download_source"]
-    # monkey patch b/c config_dict version gets rejected yet is a string that is "scihub"
-    download_source = "scihub"
+    download_source = config_dict["download_source"]
+    if download_source == "scihub":
+        tile_log.info("scihub API is the download source")
+    if download_source == "dataspace":
+        tile_log.info("dataspace API is the download source")
 
-    # check and read in credentials for downloading Sentinel-2 data
+    tile_log.info(f"Faulty Granule Threshold is set to   : {config_dict['faulty_granule_threshold']}")
+    tile_log.info("    Files below this threshold will not be downloaded")
+        
     credentials_path = config_dict["credentials_path"]
-    if os.path.exists(credentials_path):
-        try:
-            conf = configparser.ConfigParser(allow_no_value=True)
-            conf.read(credentials_path)
-            credentials_dict = {}
-            credentials_dict["sent_2"] = {}
-            credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
-            credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
-        except:
-            tile_log.error(f"Could not open {credentials_path}")
-    else:
-        tile_log.error(
-            f"{credentials_path} does not exist, did you write the correct filepath in pyeo_1.ini?"
-        )
-        tile_log.error("exiting process as no valid credentials path supplied")
+    if not os.path.exists(credentials_path):
+        tile_log.error(f"The credentials path does not exist  :{credentials_path}")
+        tile_log.error("exiting raster pipeline")
         sys.exit(1)
 
-    sen_user = credentials_dict["sent_2"]["user"]
-    sen_pass = credentials_dict["sent_2"]["pass"]
+    conf = configparser.ConfigParser(allow_no_value=True)
+    conf.read(credentials_path)
+    credentials_dict = {}
+    # credentials_dict is made because functions further in the pipeline want a dictionary
 
     # ------------------------------------------------------------------------
     # Step 1: Create an initial cloud-free median composite from Sentinel-2 as a baseline map
@@ -160,125 +159,213 @@ def acd_by_tile_raster(config_path: str, tile: str):
         )
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
-        try:
-            composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
-                tile_root_dir,
-                composite_start_date,
-                composite_end_date,
-                credentials_dict,
-                cloud_cover=cloud_cover,
-                tile_id=tile,
-                producttype=None,  # "S2MSI2A" or "S2MSI1C"
-            )
-        except Exception as error:
-            tile_log.error(
-                f"check_for_s2_data_by_date failed, got this error :  {error}"
-            )
 
-        tile_log.info(
-            "--> Found {} L1C and L2A products for the composite:".format(
-                len(composite_products_all)
-            )
-        )
-        df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+        if download_source == "dataspace":
 
-        # check granule sizes on the server
-        df_all["size"] = (
-            df_all["size"]
-            .str.split(" ")
-            .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
-        )
-        df = df_all.query("size >= " + str(faulty_granule_threshold))
-        tile_log.info(
-            "Removed {} faulty scenes <{}MB in size from the list:".format(
-                len(df_all) - len(df), faulty_granule_threshold
-            )
-        )
-        df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
-        for r in range(len(df_faulty)):
+            tile_log.info(f'Running download handler for {download_source}')
+
+            credentials_dict["sent_2"] = {}
+            credentials_dict["sent_2"]["user"] = conf["dataspace"]["user"]
+            credentials_dict["sent_2"]["pass"] = conf["dataspace"]["pass"]
+            sen_user = credentials_dict["sent_2"]["user"]
+            sen_pass = credentials_dict["sent_2"]["pass"]
+
+            try:
+                tiles_geom_path = "/data/clcr/shared/IMPRESS/matt/pyeo_1/pyeo_1_production/pyeo_1_production/geometry/kenya_s2_tiles.shp"
+                tiles_geom = gpd.read_file(tiles_geom_path)
+            except FileNotFoundError:
+                tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
+
+            tile_geom = tiles_geom[tiles_geom["Name"] == tile]
+            tile_geom = tile_geom.to_crs(epsg=4326)
+            geometry = tile_geom["geometry"].iloc[0]
+            geometry = geometry.representative_point()
+
+            try:
+                dataspace_composite_products_all = queries_and_downloads.query_dataspace_by_polygon(
+                    max_cloud_cover=cloud_cover,
+                    start_date="2023-01-01", # ToDo: remember to change this to read from ini file
+                    end_date="2023-05-20", # ToDo: remember to change this to read from ini file
+                    area_of_interest=geometry,
+                    max_records=100
+                )
+            except Exception as error:
+                tile_log.error(f"query_by_polygon received this error: {error}")
+                
+            titles = dataspace_composite_products_all["title"].tolist()
+            sizes = list()
+            uuids = list()
+            for elem in dataspace_composite_products_all.itertuples(index=False):
+                sizes.append(elem[-2]["download"]["size"])
+                uuids.append(elem[-2]["download"]["url"].split("/")[-1])
+            
+
+            relative_orbit_numbers = dataspace_composite_products_all["relativeOrbitNumber"].tolist()
+            processing_levels = dataspace_composite_products_all["processingLevel"].tolist()
+            transformed_levels = ['Level-1C' if level == 'S2MSI1C' else 'Level-2A' for level in processing_levels]
+            cloud_covers = dataspace_composite_products_all["cloudCover"].tolist()
+            begin_positions = dataspace_composite_products_all["startDate"].tolist()
+            statuses = dataspace_composite_products_all["status"].tolist()
+
+            scihub_compatible_df = pd.DataFrame({"title": titles,
+                                                "size": sizes,
+                                                "beginposition": begin_positions,
+                                                "relativeorbitnumber": relative_orbit_numbers,
+                                                "cloudcoverpercentage": cloud_covers,
+                                                "processinglevel": transformed_levels,
+                                                "uuid": uuids,
+                                                "status": statuses})
+
+            # check granule sizes on the server
+            scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: round(float(x) * 1e-6, 2))
+            # reassign to match the scihub variable
+            df_all = scihub_compatible_df
+
+
+        if download_source == "scihub":
+
+            tile_log.info(f'Running download handler for {download_source}')
+
+            credentials_dict["sent_2"] = {}
+            credentials_dict["sent_2"]["user"] = conf["sent_2"]["user"]
+            credentials_dict["sent_2"]["pass"] = conf["sent_2"]["pass"]
+            sen_user = credentials_dict["sent_2"]["user"]
+            sen_pass = credentials_dict["sent_2"]["pass"]
+
+            tile_log.info(f'credentials_dict: {credentials_dict}')
+
+            try:
+                composite_products_all = queries_and_downloads.check_for_s2_data_by_date(
+                    tile_root_dir,
+                    composite_start_date,
+                    composite_end_date,
+                    conf=credentials_dict,
+                    cloud_cover=cloud_cover,
+                    tile_id=tile,
+                    producttype=None,  # "S2MSI2A" or "S2MSI1C"
+                )
+
+            except Exception as error:
+                tile_log.error(
+                    f"check_for_s2_data_by_date failed, got this error :  {error}"
+                )
+        
             tile_log.info(
-                "   {} MB: {}".format(
-                    df_faulty.iloc[r, :]["size"], df_faulty.iloc[r, :]["title"]
+                "--> Found {} L1C and L2A products for the composite:".format(
+                    len(composite_products_all)
                 )
             )
 
-        l1c_products = df[df.processinglevel == "Level-1C"]
-        l2a_products = df[df.processinglevel == "Level-2A"]
+            df_all = pd.DataFrame.from_dict(composite_products_all, orient="index")
+
+            # check granule sizes on the server
+            df_all["size"] = (
+                df_all["size"]
+                .str.split(" ")
+                .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
+            )
+            tile_log.info(f'df_all: {df_all.head()}')
+
+    # here the main call (from if download_source == "scihub" branch) is resumed
+    df = df_all.query("size >= " + str(faulty_granule_threshold))
+
+    tile_log.info(
+        "Removed {} faulty scenes <{}MB in size from the list:".format(
+            len(df_all) - len(df), faulty_granule_threshold
+        )
+    )
+    # find < threshold sizes, report to log
+    df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
+    for r in range(len(df_faulty)):
+        tile_log.info(
+            "   {} MB: {}".format(
+                df_faulty.iloc[r, :]["size"], df_faulty.iloc[r, :]["title"]
+            )
+        )
+
+    l1c_products = df[df.processinglevel == "Level-1C"]
+    l2a_products = df[df.processinglevel == "Level-2A"]
+    tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
+    tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
+
+    
+    rel_orbits = np.unique(l1c_products["relativeorbitnumber"])
+    if len(rel_orbits) > 0:
+        if l1c_products.shape[0] > max_image_number / len(rel_orbits):
+            tile_log.info(
+                "Capping the number of L1C products to {}".format(max_image_number)
+            )
+            tile_log.info(
+                "Relative orbits found covering tile: {}".format(rel_orbits)
+            )
+            uuids = []
+            for orb in rel_orbits:
+                uuids = uuids + list(
+                    l1c_products.loc[
+                        l1c_products["relativeorbitnumber"] == orb
+                    ].sort_values(by=["cloudcoverpercentage"], ascending=True)[
+                        "uuid"
+                    ][
+                        : int(max_image_number / len(rel_orbits))
+                    ]
+                )
+            # keeps least cloudy n (max image number)
+            l1c_products = l1c_products[l1c_products["uuid"].isin(uuids)]
+            tile_log.info(
+                "    {} L1C products remain:".format(l1c_products.shape[0])
+            )
+            for product in l1c_products["title"]:
+                tile_log.info("       {}".format(product))
+
+
+    rel_orbits = np.unique(l2a_products["relativeorbitnumber"])
+    if len(rel_orbits) > 0:
+        if l2a_products.shape[0] > max_image_number / len(rel_orbits):
+            tile_log.info(
+                "Capping the number of L2A products to {}".format(max_image_number)
+            )
+            tile_log.info(
+                "Relative orbits found covering tile: {}".format(rel_orbits)
+            )
+            uuids = []
+            for orb in rel_orbits:
+                uuids = uuids + list(
+                    l2a_products.loc[
+                        l2a_products["relativeorbitnumber"] == orb
+                    ].sort_values(by=["cloudcoverpercentage"], ascending=True)[
+                        "uuid"
+                    ][
+                        : int(max_image_number / len(rel_orbits))
+                    ]
+                )
+            l2a_products = l2a_products[l2a_products["uuid"].isin(uuids)]
+            tile_log.info(
+                "    {} L2A products remain:".format(l2a_products.shape[0])
+            )
+            for product in l2a_products["title"]:
+                tile_log.info("       {}".format(product))
+
+
+    if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
+        tile_log.info(
+            "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
+        )
+        (
+            l1c_products,
+            l2a_products,
+        ) = queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
+        tile_log.info(
+            "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
+                l1c_products.shape[0] + l2a_products.shape[0]
+            )
+        )
         tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
         tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
+    df = None
 
-        rel_orbits = np.unique(l1c_products["relativeorbitnumber"])
-        if len(rel_orbits) > 0:
-            if l1c_products.shape[0] > max_image_number / len(rel_orbits):
-                tile_log.info(
-                    "Capping the number of L1C products to {}".format(max_image_number)
-                )
-                tile_log.info(
-                    "Relative orbits found covering tile: {}".format(rel_orbits)
-                )
-                uuids = []
-                for orb in rel_orbits:
-                    uuids = uuids + list(
-                        l1c_products.loc[
-                            l1c_products["relativeorbitnumber"] == orb
-                        ].sort_values(by=["cloudcoverpercentage"], ascending=True)[
-                            "uuid"
-                        ][
-                            : int(max_image_number / len(rel_orbits))
-                        ]
-                    )
-                l1c_products = l1c_products[l1c_products["uuid"].isin(uuids)]
-                tile_log.info(
-                    "    {} L1C products remain:".format(l1c_products.shape[0])
-                )
-                for product in l1c_products["title"]:
-                    tile_log.info("       {}".format(product))
-
-        rel_orbits = np.unique(l2a_products["relativeorbitnumber"])
-        if len(rel_orbits) > 0:
-            if l2a_products.shape[0] > max_image_number / len(rel_orbits):
-                tile_log.info(
-                    "Capping the number of L2A products to {}".format(max_image_number)
-                )
-                tile_log.info(
-                    "Relative orbits found covering tile: {}".format(rel_orbits)
-                )
-                uuids = []
-                for orb in rel_orbits:
-                    uuids = uuids + list(
-                        l2a_products.loc[
-                            l2a_products["relativeorbitnumber"] == orb
-                        ].sort_values(by=["cloudcoverpercentage"], ascending=True)[
-                            "uuid"
-                        ][
-                            : int(max_image_number / len(rel_orbits))
-                        ]
-                    )
-                l2a_products = l2a_products[l2a_products["uuid"].isin(uuids)]
-                tile_log.info(
-                    "    {} L2A products remain:".format(l2a_products.shape[0])
-                )
-                for product in l2a_products["title"]:
-                    tile_log.info("       {}".format(product))
-
-        if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
-            tile_log.info(
-                "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
-            )
-            (
-                l1c_products,
-                l2a_products,
-            ) = queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
-            tile_log.info(
-                "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
-                    l1c_products.shape[0] + l2a_products.shape[0]
-                )
-            )
-            tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
-            tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
-        df = None
-
-        # Search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
+    
+    # Search the local directories, composite/L2A and L1C, checking if scenes have already been downloaded and/or processed whilst checking their dir sizes
+    if download_source == "scihub":
         if l1c_products.shape[0] > 0:
             tile_log.info(
                 "Checking for already downloaded and zipped L1C or L2A products and"
@@ -332,6 +419,8 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     + id.split("_")[5]
                     + "*"
                 )
+
+
                 tile_log.info(
                     "Searching on the data hub for files containing: {}.".format(
                         search_term
@@ -346,7 +435,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                     cloud=cloud_cover,
                     producttype="S2MSI2A",
                 )
-
+                    
                 matching_l2a_products_df = pd.DataFrame.from_dict(
                     matching_l2a_products, orient="index"
                 )
@@ -365,6 +454,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
                             matching_l2a_products_df.iloc[0, :]["title"]
                         )
                     )
+
                     drop.append(l1c_products.index[r])
                     add.append(matching_l2a_products_df.iloc[0, :])
                 if len(matching_l2a_products_df) == 0:
@@ -406,21 +496,28 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 add = pd.DataFrame(add)
                 l2a_products = pd.concat([l2a_products, add])
 
-            l2a_products = l2a_products.drop_duplicates(subset="title")
-            tile_log.info(
-                "    {} L1C products remaining for download".format(
-                    l1c_products.shape[0]
-                )
-            )
-            tile_log.info(
-                "    {} L2A products remaining for download".format(
-                    l2a_products.shape[0]
-                )
-            )
+    # here, dataspace and scihub derived l1c_products and l2a_products lists are the "same"
+    l2a_products = l2a_products.drop_duplicates(subset="title")
+    tile_log.info(
+        "    {} L1C products remaining for download".format(
+            l1c_products.shape[0]
+        )
+    )
+    tile_log.info(
+        "    {} L2A products remaining for download".format(
+            l2a_products.shape[0]
+        )
+    )
 
-        # if L1C products remain after matching for L2As, then download the unmatched L1Cs
-        if l1c_products.shape[0] > 0:
-            tile_log.info("Downloading Sentinel-2 L1C products.")
+    ######### above is querying
+
+    ######## below is downloading
+    # if L1C products remain after matching for L2As, then download the unmatched L1Cs
+
+    if l1c_products.shape[0] > 0:
+        tile_log.info(f"Downloading Sentinel-2 L1C products from {download_source}:")
+
+        if download_source == "scihub":
 
             queries_and_downloads.download_s2_data_from_df(
                 l1c_products,
@@ -431,172 +528,268 @@ def acd_by_tile_raster(config_path: str, tile: str):
                 passwd=sen_pass,
                 try_scihub_on_fail=True,
             )
-            tile_log.info("Atmospheric correction with sen2cor.")
-            raster_manipulation.atmospheric_correction(
-                composite_l1_image_dir,
-                composite_l2_image_dir,
-                sen2cor_path,
-                delete_unprocessed_image=False,
-                log=tile_log,
-            )
-        tile_log.info(f"download source is   {download_source}")
-        if l2a_products.shape[0] > 0:
-            tile_log.info("Downloading Sentinel-2 L2A products.")
-            queries_and_downloads.download_s2_data(
-                l2a_products.to_dict("index"),
-                composite_l1_image_dir,
-                composite_l2_image_dir,
-                source="scihub",
-                # download_source,
-                user=sen_user,
-                passwd=sen_pass,
-                try_scihub_on_fail=True,
-            )
+        if download_source == "dataspace":
 
-        # check for incomplete L2A downloads
-        incomplete_downloads, sizes = raster_manipulation.find_small_safe_dirs(
-            composite_l2_image_dir, threshold=faulty_granule_threshold * 1024 * 1024
+            queries_and_downloads.download_s2_data_from_dataspace(
+                product_df=l1c_products,
+                l1c_directory=composite_l1_image_dir,
+                l2a_directory=composite_l2_image_dir,
+                dataspace_username=sen_user,
+                dataspace_password=sen_pass,
+                log=tile_log
+            )
+        sys.exit(1)
+        tile_log.info("Atmospheric correction with sen2cor.")
+        raster_manipulation.atmospheric_correction(
+            composite_l1_image_dir,
+            composite_l2_image_dir,
+            sen2cor_path,
+            delete_unprocessed_image=False,
+            log=tile_log,
         )
-        if len(incomplete_downloads) > 0:
-            for index, safe_dir in enumerate(incomplete_downloads):
-                if sizes[
-                    index
-                ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(safe_dir):
-                    tile_log.warning(
-                        "Found likely incomplete download of size {} MB: {}".format(
-                            str(round(sizes[index] / 1024 / 1024)), safe_dir
-                        )
+
+    if l2a_products.shape[0] > 0:
+        tile_log.info("Downloading Sentinel-2 L2A products.")
+        queries_and_downloads.download_s2_data(
+            l2a_products.to_dict("index"),
+            composite_l1_image_dir,
+            composite_l2_image_dir,
+            source="scihub",
+            # download_source,
+            user=sen_user,
+            passwd=sen_pass,
+            try_scihub_on_fail=True,
+        )
+
+    # check for incomplete L2A downloads
+    incomplete_downloads, sizes = raster_manipulation.find_small_safe_dirs(
+        composite_l2_image_dir, threshold=faulty_granule_threshold * 1024 * 1024
+    )
+    if len(incomplete_downloads) > 0:
+        for index, safe_dir in enumerate(incomplete_downloads):
+            if sizes[
+                index
+            ] / 1024 / 1024 < faulty_granule_threshold and os.path.exists(safe_dir):
+                tile_log.warning(
+                    "Found likely incomplete download of size {} MB: {}".format(
+                        str(round(sizes[index] / 1024 / 1024)), safe_dir
                     )
-                    # shutil.rmtree(safe_dir)
+                )
+                # shutil.rmtree(safe_dir)
 
-        tile_log.info("---------------------------------------------------------------")
+    tile_log.info("---------------------------------------------------------------")
+    tile_log.info(
+        "Image download and atmospheric correction for composite is complete."
+    )
+    tile_log.info("---------------------------------------------------------------")
+
+    if config_dict["do_delete"]:
         tile_log.info(
-            "Image download and atmospheric correction for composite is complete."
+            "---------------------------------------------------------------"
         )
-        tile_log.info("---------------------------------------------------------------")
-
-        if config_dict["do_delete"]:
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            tile_log.info(
-                "Deleting downloaded L1C images for composite, keeping only derived L2A products"
-            )
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            directory = composite_l1_image_dir
-            tile_log.info("Deleting {}".format(directory))
-            shutil.rmtree(directory)
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            tile_log.info("Deletion of L1C images complete. Keeping only L2A images.")
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-        else:
-            if config_dict["do_zip"]:
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                tile_log.info(
-                    "Zipping downloaded L1C images for composite after atmospheric correction"
-                )
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                filesystem_utilities.zip_contents(composite_l1_image_dir)
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                tile_log.info("Zipping complete")
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-
-        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
-            "Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files."
+            "Deleting downloaded L1C images for composite, keeping only derived L2A products"
         )
-        tile_log.info("---------------------------------------------------------------")
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        directory = composite_l1_image_dir
+        tile_log.info("Deleting {}".format(directory))
+        shutil.rmtree(directory)
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info("Deletion of L1C images complete. Keeping only L2A images.")
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+    else:
+        if config_dict["do_zip"]:
+            tile_log.info(
+                "---------------------------------------------------------------"
+            )
+            tile_log.info(
+                "Zipping downloaded L1C images for composite after atmospheric correction"
+            )
+            tile_log.info(
+                "---------------------------------------------------------------"
+            )
+            filesystem_utilities.zip_contents(composite_l1_image_dir)
+            tile_log.info(
+                "---------------------------------------------------------------"
+            )
+            tile_log.info("Zipping complete")
+            tile_log.info(
+                "---------------------------------------------------------------"
+            )
 
-        directory = composite_l2_masked_image_dir
-        masked_file_paths = [
-            f
-            for f in os.listdir(directory)
-            if f.endswith(".tif") and os.path.isfile(os.path.join(directory, f))
-        ]
+    tile_log.info("---------------------------------------------------------------")
+    tile_log.info(
+        "Applying simple cloud, cloud shadow and haze mask based on SCL files and stacking the masked band raster files."
+    )
+    tile_log.info("---------------------------------------------------------------")
 
-        directory = composite_l2_image_dir
-        l2a_zip_file_paths = [f for f in os.listdir(directory) if f.endswith(".zip")]
+    directory = composite_l2_masked_image_dir
+    masked_file_paths = [
+        f
+        for f in os.listdir(directory)
+        if f.endswith(".tif") and os.path.isfile(os.path.join(directory, f))
+    ]
 
-        if len(l2a_zip_file_paths) > 0:
-            for f in l2a_zip_file_paths:
-                # check whether the zipped file has already been cloud masked
-                zip_timestamp = filesystem_utilities.get_image_acquisition_time(
-                    os.path.basename(f)
-                ).strftime("%Y%m%dT%H%M%S")
-                if any(zip_timestamp in f for f in masked_file_paths):
-                    continue
-                else:
-                    # extract it if not
-                    filesystem_utilities.unzip_contents(
-                        os.path.join(composite_l2_image_dir, f),
-                        ifstartswith="S2",
-                        ending=".SAFE",
+    directory = composite_l2_image_dir
+    l2a_zip_file_paths = [f for f in os.listdir(directory) if f.endswith(".zip")]
+
+    if len(l2a_zip_file_paths) > 0:
+        for f in l2a_zip_file_paths:
+            # check whether the zipped file has already been cloud masked
+            zip_timestamp = filesystem_utilities.get_image_acquisition_time(
+                os.path.basename(f)
+            ).strftime("%Y%m%dT%H%M%S")
+            if any(zip_timestamp in f for f in masked_file_paths):
+                continue
+            else:
+                # extract it if not
+                filesystem_utilities.unzip_contents(
+                    os.path.join(composite_l2_image_dir, f),
+                    ifstartswith="S2",
+                    ending=".SAFE",
+                )
+
+    directory = composite_l2_image_dir
+    l2a_safe_file_paths = [
+        f
+        for f in os.listdir(directory)
+        if f.endswith(".SAFE") and os.path.isdir(os.path.join(directory, f))
+    ]
+
+    files_for_cloud_masking = []
+    if len(l2a_safe_file_paths) > 0:
+        for f in l2a_safe_file_paths:
+            # check whether the L2A SAFE file has already been cloud masked
+            safe_timestamp = filesystem_utilities.get_image_acquisition_time(
+                os.path.basename(f)
+            ).strftime("%Y%m%dT%H%M%S")
+            if any(safe_timestamp in f for f in masked_file_paths):
+                continue
+            else:
+                # add it to the list of files to do if it has not been cloud masked yet
+                files_for_cloud_masking = files_for_cloud_masking + [f]
+
+    if len(files_for_cloud_masking) == 0:
+        tile_log.info(
+            "No L2A images found for cloud masking. They may already have been done."
+        )
+    else:
+        raster_manipulation.apply_scl_cloud_mask(
+            composite_l2_image_dir,
+            composite_l2_masked_image_dir,
+            scl_classes=[0, 1, 2, 3, 8, 9, 10, 11],
+            buffer_size=buffer_size_composite,
+            bands=bands,
+            out_resolution=out_resolution,
+            haze=None,
+            epsg=epsg,
+            skip_existing=skip_existing,
+        )
+    # I.R. 20220607 START
+    # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
+    tile_log.info("---------------------------------------------------------------")
+    tile_log.info("Offsetting cloud masked L2A images for composite.")
+    tile_log.info("---------------------------------------------------------------")
+
+    raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(
+        composite_l2_masked_image_dir, composite_l2_masked_image_dir
+    )
+
+    tile_log.info("---------------------------------------------------------------")
+    tile_log.info("Offsetting of cloud masked L2A images for composite complete.")
+    tile_log.info("---------------------------------------------------------------")
+    # I.R. 20220607 END
+
+    if config_dict["do_quicklooks"] or config_dict["do_all"]:
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info("Producing quicklooks.")
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        dirs_for_quicklooks = [composite_l2_masked_image_dir]
+        for main_dir in dirs_for_quicklooks:
+            files = [
+                f.path
+                for f in os.scandir(main_dir)
+                if f.is_file() and os.path.basename(f).endswith(".tif")
+            ]
+            # files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") and "class" in os.path.basename(f) ] # do classification images only
+            if len(files) == 0:
+                tile_log.warning("No images found in {}.".format(main_dir))
+            else:
+                for f in files:
+                    quicklook_path = os.path.join(
+                        quicklook_dir,
+                        os.path.basename(f).split(".")[0] + ".png",
                     )
+                    tile_log.info("Creating quicklook: {}".format(quicklook_path))
+                    raster_manipulation.create_quicklook(
+                        f,
+                        quicklook_path,
+                        width=512,
+                        height=512,
+                        format="PNG",
+                        bands=[3, 2, 1],
+                        scale_factors=[[0, 2000, 0, 255]],
+                    )
+    tile_log.info("Quicklooks complete.")
 
-        directory = composite_l2_image_dir
-        l2a_safe_file_paths = [
-            f
-            for f in os.listdir(directory)
-            if f.endswith(".SAFE") and os.path.isdir(os.path.join(directory, f))
-        ]
-
-        files_for_cloud_masking = []
-        if len(l2a_safe_file_paths) > 0:
-            for f in l2a_safe_file_paths:
-                # check whether the L2A SAFE file has already been cloud masked
-                safe_timestamp = filesystem_utilities.get_image_acquisition_time(
-                    os.path.basename(f)
-                ).strftime("%Y%m%dT%H%M%S")
-                if any(safe_timestamp in f for f in masked_file_paths):
-                    continue
-                else:
-                    # add it to the list of files to do if it has not been cloud masked yet
-                    files_for_cloud_masking = files_for_cloud_masking + [f]
-
-        if len(files_for_cloud_masking) == 0:
-            tile_log.info(
-                "No L2A images found for cloud masking. They may already have been done."
-            )
-        else:
-            raster_manipulation.apply_scl_cloud_mask(
-                composite_l2_image_dir,
-                composite_l2_masked_image_dir,
-                scl_classes=[0, 1, 2, 3, 8, 9, 10, 11],
-                buffer_size=buffer_size_composite,
-                bands=bands,
-                out_resolution=out_resolution,
-                haze=None,
-                epsg=epsg,
-                skip_existing=skip_existing,
-            )
-        # I.R. 20220607 START
-        # Apply offset to any images of processing baseline 0400 in the composite cloud_masked folder
-        tile_log.info("---------------------------------------------------------------")
-        tile_log.info("Offsetting cloud masked L2A images for composite.")
-        tile_log.info("---------------------------------------------------------------")
-
-        raster_manipulation.apply_processing_baseline_offset_correction_to_tiff_file_directory(
-            composite_l2_masked_image_dir, composite_l2_masked_image_dir
+    if config_dict["do_zip"]:
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info(
+            "Zipping downloaded L2A images for composite after cloud masking and band stacking"
+        )
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        filesystem_utilities.zip_contents(composite_l2_image_dir)
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info("Zipping complete")
+        tile_log.info(
+            "---------------------------------------------------------------"
         )
 
-        tile_log.info("---------------------------------------------------------------")
-        tile_log.info("Offsetting of cloud masked L2A images for composite complete.")
-        tile_log.info("---------------------------------------------------------------")
-        # I.R. 20220607 END
+    tile_log.info("---------------------------------------------------------------")
+    tile_log.info(
+        "Building initial cloud-free median composite from directory {}".format(
+            composite_l2_masked_image_dir
+        )
+    )
+    tile_log.info("---------------------------------------------------------------")
+    directory = composite_l2_masked_image_dir
+    masked_file_paths = [
+        f
+        for f in os.listdir(directory)
+        if f.endswith(".tif") and os.path.isfile(os.path.join(directory, f))
+    ]
+
+    if len(masked_file_paths) > 0:
+        raster_manipulation.clever_composite_directory(
+            composite_l2_masked_image_dir,
+            composite_dir,
+            chunks=config_dict["chunks"],
+            generate_date_images=True,
+            missing_data_value=0,
+        )
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info("Baseline composite complete.")
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
 
         if config_dict["do_quicklooks"] or config_dict["do_all"]:
             tile_log.info(
@@ -606,7 +799,7 @@ def acd_by_tile_raster(config_path: str, tile: str):
             tile_log.info(
                 "---------------------------------------------------------------"
             )
-            dirs_for_quicklooks = [composite_l2_masked_image_dir]
+            dirs_for_quicklooks = [composite_dir]
             for main_dir in dirs_for_quicklooks:
                 files = [
                     f.path
@@ -622,7 +815,9 @@ def acd_by_tile_raster(config_path: str, tile: str):
                             quicklook_dir,
                             os.path.basename(f).split(".")[0] + ".png",
                         )
-                        tile_log.info("Creating quicklook: {}".format(quicklook_path))
+                        tile_log.info(
+                            "Creating quicklook: {}".format(quicklook_path)
+                        )
                         raster_manipulation.create_quicklook(
                             f,
                             quicklook_path,
@@ -632,178 +827,91 @@ def acd_by_tile_raster(config_path: str, tile: str):
                             bands=[3, 2, 1],
                             scale_factors=[[0, 2000, 0, 255]],
                         )
-        tile_log.info("Quicklooks complete.")
+            tile_log.info("Quicklooks complete.")
 
-        if config_dict["do_zip"]:
+        if config_dict["do_delete"]:
             tile_log.info(
                 "---------------------------------------------------------------"
             )
             tile_log.info(
-                "Zipping downloaded L2A images for composite after cloud masking and band stacking"
+                "Deleting intermediate cloud-masked L2A images used for the baseline composite"
             )
             tile_log.info(
                 "---------------------------------------------------------------"
             )
-            filesystem_utilities.zip_contents(composite_l2_image_dir)
+            f = composite_l2_masked_image_dir
+            tile_log.info("Deleting {}".format(f))
+            shutil.rmtree(f)
             tile_log.info(
                 "---------------------------------------------------------------"
             )
-            tile_log.info("Zipping complete")
+            tile_log.info("Intermediate file products have been deleted.")
+            tile_log.info("They can be reprocessed from the downloaded L2A images.")
             tile_log.info(
                 "---------------------------------------------------------------"
             )
+        else:
+            if config_dict["do_zip"]:
+                tile_log.info(
+                    "---------------------------------------------------------------"
+                )
+                tile_log.info(
+                    "Zipping cloud-masked L2A images used for the baseline composite"
+                )
+                tile_log.info(
+                    "---------------------------------------------------------------"
+                )
+                filesystem_utilities.zip_contents(composite_l2_masked_image_dir)
+                tile_log.info(
+                    "---------------------------------------------------------------"
+                )
+                tile_log.info("Zipping complete")
+                tile_log.info(
+                    "---------------------------------------------------------------"
+                )
 
-        tile_log.info("---------------------------------------------------------------")
         tile_log.info(
-            "Building initial cloud-free median composite from directory {}".format(
-                composite_l2_masked_image_dir
+            "---------------------------------------------------------------"
+        )
+        tile_log.info(
+            "Compressing tiff files in directory {} and all subdirectories".format(
+                composite_dir
             )
         )
-        tile_log.info("---------------------------------------------------------------")
-        directory = composite_l2_masked_image_dir
-        masked_file_paths = [
-            f
-            for f in os.listdir(directory)
-            if f.endswith(".tif") and os.path.isfile(os.path.join(directory, f))
-        ]
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        for root, dirs, files in os.walk(composite_dir):
+            all_tiffs = [
+                image_name for image_name in files if image_name.endswith(".tif")
+            ]
+            for this_tiff in all_tiffs:
+                raster_manipulation.compress_tiff(
+                    os.path.join(root, this_tiff), os.path.join(root, this_tiff)
+                )
 
-        if len(masked_file_paths) > 0:
-            raster_manipulation.clever_composite_directory(
-                composite_l2_masked_image_dir,
-                composite_dir,
-                chunks=config_dict["chunks"],
-                generate_date_images=True,
-                missing_data_value=0,
-            )
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            tile_log.info("Baseline composite complete.")
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
+        tile_log.info(
+            "Baseline image composite, file compression, zipping and deletion of"
+        )
+        tile_log.info("intermediate file products (if selected) are complete.")
+        tile_log.info(
+            "---------------------------------------------------------------"
+        )
 
-            if config_dict["do_quicklooks"] or config_dict["do_all"]:
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                tile_log.info("Producing quicklooks.")
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                dirs_for_quicklooks = [composite_dir]
-                for main_dir in dirs_for_quicklooks:
-                    files = [
-                        f.path
-                        for f in os.scandir(main_dir)
-                        if f.is_file() and os.path.basename(f).endswith(".tif")
-                    ]
-                    # files = [ f.path for f in os.scandir(main_dir) if f.is_file() and os.path.basename(f).endswith(".tif") and "class" in os.path.basename(f) ] # do classification images only
-                    if len(files) == 0:
-                        tile_log.warning("No images found in {}.".format(main_dir))
-                    else:
-                        for f in files:
-                            quicklook_path = os.path.join(
-                                quicklook_dir,
-                                os.path.basename(f).split(".")[0] + ".png",
-                            )
-                            tile_log.info(
-                                "Creating quicklook: {}".format(quicklook_path)
-                            )
-                            raster_manipulation.create_quicklook(
-                                f,
-                                quicklook_path,
-                                width=512,
-                                height=512,
-                                format="PNG",
-                                bands=[3, 2, 1],
-                                scale_factors=[[0, 2000, 0, 255]],
-                            )
-                tile_log.info("Quicklooks complete.")
+    else:
+        tile_log.error(
+            "No cloud-masked L2A image products found in {}.".format(
+                composite_l2_image_dir
+            )
+        )
+        tile_log.error(
+            "Cannot produce a median composite. Download and cloud-mask some images first."
+        )
 
-            if config_dict["do_delete"]:
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                tile_log.info(
-                    "Deleting intermediate cloud-masked L2A images used for the baseline composite"
-                )
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                f = composite_l2_masked_image_dir
-                tile_log.info("Deleting {}".format(f))
-                shutil.rmtree(f)
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-                tile_log.info("Intermediate file products have been deleted.")
-                tile_log.info("They can be reprocessed from the downloaded L2A images.")
-                tile_log.info(
-                    "---------------------------------------------------------------"
-                )
-            else:
-                if config_dict["do_zip"]:
-                    tile_log.info(
-                        "---------------------------------------------------------------"
-                    )
-                    tile_log.info(
-                        "Zipping cloud-masked L2A images used for the baseline composite"
-                    )
-                    tile_log.info(
-                        "---------------------------------------------------------------"
-                    )
-                    filesystem_utilities.zip_contents(composite_l2_masked_image_dir)
-                    tile_log.info(
-                        "---------------------------------------------------------------"
-                    )
-                    tile_log.info("Zipping complete")
-                    tile_log.info(
-                        "---------------------------------------------------------------"
-                    )
-
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            tile_log.info(
-                "Compressing tiff files in directory {} and all subdirectories".format(
-                    composite_dir
-                )
-            )
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            for root, dirs, files in os.walk(composite_dir):
-                all_tiffs = [
-                    image_name for image_name in files if image_name.endswith(".tif")
-                ]
-                for this_tiff in all_tiffs:
-                    raster_manipulation.compress_tiff(
-                        os.path.join(root, this_tiff), os.path.join(root, this_tiff)
-                    )
-
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-            tile_log.info(
-                "Baseline image composite, file compression, zipping and deletion of"
-            )
-            tile_log.info("intermediate file products (if selected) are complete.")
-            tile_log.info(
-                "---------------------------------------------------------------"
-            )
-
-        else:
-            tile_log.error(
-                "No cloud-masked L2A image products found in {}.".format(
-                    composite_l2_image_dir
-                )
-            )
-            tile_log.error(
-                "Cannot produce a median composite. Download and cloud-mask some images first."
-            )
-
-    # ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
     # Step 2: Download change detection images for the specific time window (L2A where available plus additional L1C)
     # ------------------------------------------------------------------------
     if config_dict["do_all"] or config_dict["do_download"]:

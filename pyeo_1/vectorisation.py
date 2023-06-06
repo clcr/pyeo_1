@@ -1,5 +1,6 @@
 import logging
-
+from pyeo_1.filesystem_utilities import gdal_switch
+import pandas as pd
 
 def band_naming(band: int, log):
     """
@@ -66,7 +67,10 @@ def band_naming(band: int, log):
 
 
 def vectorise_from_band(
-    change_report_path: str, band: int, log: logging.Logger, conda_env_name: str
+    change_report_path: str,
+    band: int,
+    log: logging.Logger,
+    config_dict : dict
 ):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
@@ -83,8 +87,8 @@ def vectorise_from_band(
         instead of 0 as in Python.
     log : logging.Logger
         log variable
-    conda_env_name : str
-        String of the conda_env_name for specifying which GDAL and PROJ_LIB installation to use
+    config_dict : dict
+        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
     ----------------
@@ -97,10 +101,8 @@ def vectorise_from_band(
     from osgeo import gdal, ogr, osr
     from pathlib import Path
 
-    # specify gdal and proj installation, this is GDAL's
-    home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+    # switch gdal and proj installation to GDAL's
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
     log.info(f"what is change_report_path  :  {change_report_path}")
@@ -168,7 +170,9 @@ def vectorise_from_band(
 
 
 def clean_zero_nodata_vectorised_band(
-    vectorised_band_path: str, log: logging.Logger, conda_env_name: str
+    vectorised_band_path: str,
+    log: logging.Logger,
+    config_dict : dict
 ):
     """
 
@@ -181,8 +185,8 @@ def clean_zero_nodata_vectorised_band(
         path to the band to filter
     log : logging.Logger
         The logger object
-    conda_env_name : str
-        name of the conda environment
+    config_dict : dict
+        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
     ----------------
@@ -194,11 +198,8 @@ def clean_zero_nodata_vectorised_band(
     import os
     from pathlib import Path
 
-    # specify gdal and proj installation, here it is geopandas'
-    home = str(Path.home())
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # switch gdal and proj installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
@@ -226,6 +227,9 @@ def clean_zero_nodata_vectorised_band(
     del (shp, cleaned, cleaned_copy)
 
     log.info(f"filtering complete and saved at  : {filename}")
+
+    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return filename
 
@@ -332,7 +336,11 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
 
 
 def zonal_statistics(
-    raster_path: str, shapefile_path: str, report_band: int, log, conda_env_name: str
+    raster_path: str,
+    shapefile_path: str,
+    report_band: int,
+    log : logging.Logger,
+    config_dict : dict
 ):
     """
     This function calculates zonal statistics on a raster.
@@ -349,6 +357,8 @@ def zonal_statistics(
         the path to the shapefile which we will use as the "zones"
     band : int
         the band to run zonal statistics on.
+    config_dict : dict
+        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
     ----------------
@@ -367,12 +377,8 @@ def zonal_statistics(
     # enable gdal to raise exceptions
     gdal.UseExceptions()
 
-    # specify gdal and proj installation, this is GDAL's
-    home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
-
-    # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
+    # switch GDAL installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     with TemporaryDirectory(dir=os.getcwd()) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -513,24 +519,27 @@ def zonal_statistics(
             writer.writeheader()
             writer.writerows(zstats)
 
+    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
+
     return zstats_df
 
 
 def merge_and_calculate_spatial(
-    rb_ndetections_zstats_df,
-    rb_confidence_zstats_df,
-    rb_first_changedate_zstats_df,
+    rb_ndetections_zstats_df: pd.DataFrame,
+    rb_confidence_zstats_df: pd.DataFrame,
+    rb_first_changedate_zstats_df: pd.DataFrame,
     path_to_vectorised_binary_filtered: str,
     write_csv: bool,
     write_shapefile: bool,
     write_pkl: bool,
     change_report_path: str,
-    delete_intermediates: bool,
-    log,
+    log: logging.Logger,
     epsg: int,
     level_1_boundaries_path: str,
     tileid: str,
-    conda_env_name: str,
+    config_dict: dict,
+    delete_intermediates: bool=True,
 ):
     """
     This function takes the zonal statistics Pandas DataFrames and performs a table join
@@ -562,6 +571,24 @@ def merge_and_calculate_spatial(
 
     change_report_path : str
         the path of the original change_report tiff, used for filenaming if saving outputs
+    
+    log : logging.Logger
+        a logging object
+    
+    epsg : int
+        the epsg to work with, specified in `.ini`
+
+    level_1_boundaries_path : str
+        path to the administrative boundaries to filter by, specified in the `.ini`
+
+    tileid : str
+        tileid to work with
+        
+    config_dict : dict
+        a config_dict containing `conda_directory` and `conda_env_name`
+
+    delete_intermediates : bool
+        a boolean indicating whether to delete or keep intermediate files. Defaults to True.
 
     Returns
     ----------------
@@ -576,14 +603,8 @@ def merge_and_calculate_spatial(
     from pathlib import Path
     from pyeo_1.filesystem_utilities import serial_date_to_string
 
-    # specify gdal and proj installation, this is geopandas'
-    home = str(Path.home())
-    os.environ[
-        "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # switch GDAL installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     binary_dec = gpd.read_file(path_to_vectorised_binary_filtered)
 
@@ -684,4 +705,6 @@ def merge_and_calculate_spatial(
         except:
             log.info("Could not delete intermediate files")
 
+    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
     return

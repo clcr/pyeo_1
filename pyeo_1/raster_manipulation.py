@@ -2907,9 +2907,18 @@ def apply_scl_cloud_mask(
                                 epsg
                             )
                         )
+                        log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
+                        log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
+                        os.environ['GDAL_DATA'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\gdal'
+                        os.environ['PROJ_LIB'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\proj'
+                        log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
+                        log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
+                        
                         proj = osr.SpatialReference()
                         proj.ImportFromEPSG(epsg)
                         wkt = proj.ExportToWkt()
+                        log.info(f'epsg: {epsg}, wkt: {wkt}')
+
                         reproject_image(masked_file, out_path, wkt)
                     else:
                         shutil.move(masked_file, out_path)

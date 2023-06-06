@@ -1,17 +1,19 @@
 import configparser
+import glob
+import logging
 import os
 import subprocess
 import sys
-import glob
-import logging
+import time
 from pathlib import Path
-from pyeo_1 import filesystem_utilities
-from pyeo_1.apps.acd_national import acd_by_tile_raster
-from pyeo_1.apps.acd_national import acd_by_tile_vectorisation
+from tempfile import TemporaryDirectory
+
 import geopandas as gpd
 import pandas as pd
-from tempfile import TemporaryDirectory
-import time
+from pyeo_1 import filesystem_utilities
+from pyeo_1.filesystem_utilities import gdal_switch
+from pyeo_1.apps.acd_national import (acd_by_tile_raster,
+                                      acd_by_tile_vectorisation)
 
 
 # acd_national is the top-level function which controls the raster and vector processes for pyeo_1
@@ -44,9 +46,14 @@ def automatic_change_detection_national(config_path):
     acd_log.info("---------------------------------------------------------------")
     acd_log.info("Starting acd_roi_tile_intersection()")
     acd_log.info("---------------------------------------------------------------")
+
     tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
 
-    if config_dict["do_raster"]:
+    if config_dict["do_tile_intersection"]:
+        tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
+
+
+    if config_dict["do_raster"] and config_dict["do_tile_intersection"]:
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_raster():")
         acd_log.info("---------------------------------------------------------------")
@@ -54,7 +61,7 @@ def automatic_change_detection_national(config_path):
         acd_integrated_raster(config_dict, acd_log, tilelist_filepath, config_path)
 
     # and skip already existing vectors
-    if config_dict["do_vectorise"]:
+    if config_dict["do_vectorise"] and config_dict["do_tile_intersection"] :
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_vectorisation()")
         acd_log.info("  vectorising each change report raster, by tile")
@@ -121,7 +128,7 @@ def automatic_change_detection_national(config_path):
 def acd_initialisation(config_path):
     """
 
-    This function initialises the log.txt, making the log object available
+    This function initialises the log.log, making the log object available
 
     Parameters
     ----------
@@ -150,15 +157,18 @@ def acd_initialisation(config_path):
     )
 
     # check conda directory exists
-    # conda_boolean = filesystem_utilities.conda_check(config_path=config_path)
-    # if not conda_boolean:
-    #     log.error(f"Conda Dire")
+    conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict)
+    if not conda_boolean:
+        log.error(f"Conda Environment Directory does not exist")
+        log.error(f"Ensure this exists")
+        log.error(f"now exiting the pipeline")
+        sys.exit(1)
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
     log.info("---------------------------------------------------------------")
 
-    log.info("Reading in parameters defined in the Config")
+    log.info(f"Reading in parameters defined in: {config_path}")
     log.info("---------------------------------------------------------------")
 
     return config_dict, log
@@ -199,6 +209,9 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         log.info(
             "  Running in production mode, avoiding any development versions of functions."
         )
+    if config_dict["do_tile_intersection"]:
+        log.info("  -do_tile_intersection")
+        log.info("      Sentinel-2 tile intersection with ROI enabled")
     if config_dict["do_raster"]:
         log.info("  --do_raster")
         log.info("      raster pipeline enabled")
@@ -211,10 +224,12 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
             log.info(f"         composite end date  : {config_dict['end_date']}")
         if config_dict["do_download"]:
             log.info("  --download for change detection images")
-            if not config_dict["build_composite"]:
-                log.info(
-                    "  --download_source = {}".format(config_dict["download_source"])
-                )
+            log.info(
+                "  --download_source = {}".format(config_dict["download_source"])
+            )
+            log.info(
+                f"  Faulty Granule Threshold  : {config_dict['faulty_granule_threshold']}"
+            )
         if config_dict["do_classify"]:
             log.info(
                 "  --classify to apply the random forest model and create classification layers"
@@ -306,13 +321,16 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
     )
     log.info("-------------------------------------------")
+    log.info("-------------------------------------------")
+
     # log.info("Streaming config parameters to log file for reference")
     # # todo: for everything in config_dict, log the parameter
     # for each_section in config.sections():
     #     log.info(f"{each_section}")
     #     for (each_key, each_val) in config.items(each_section):
     #         log.info(f"     {each_key} :  {each_val}")
-    # end of function
+
+    return
 
 
 def acd_roi_tile_intersection(config_dict, log):
@@ -337,15 +355,8 @@ def acd_roi_tile_intersection(config_dict, log):
 
     """
 
-    # specify geopandas gdal and proj installation
-    conda_env_name = config_dict["conda_env_name"]
-    home = str(Path.home())
-    os.environ[
-        "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # switch GDAL installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     ####### read in roi
     # roi_filepath is relative to pyeo_dir supplied in pyeo_1.ini
@@ -381,16 +392,17 @@ def acd_roi_tile_intersection(config_dict, log):
     log.info("Finished ROI tile intersection")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    home = str(Path.home())
-    os.environ["GDAL_DATA"] = f"{home}/miniconda3/envs/{conda_env_name}/share/gdal"
-    os.environ["PROJ_LIB"] = f"{home}/miniconda3/envs/{conda_env_name}/share/proj"
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return tilelist_filepath
 
 
 def acd_integrated_raster(
-    config_dict: dict, log: logging.Logger, tilelist_filepath: str, config_path: str
-):
+    config_dict: dict, 
+    log: logging.Logger,
+    tilelist_filepath: str,
+    config_path: str
+) -> None:
     """
 
     This function:
@@ -426,6 +438,7 @@ def acd_integrated_raster(
         log.error(
             f"{tilelist_filepath} does not exist, check that you ran the acd_roi_tile_intersection beforehand"
         )
+        sys.exit(1)
 
     # check and read in credentials for downloading Sentinel-2 data
     credentials_path = config_dict["credentials_path"]
@@ -467,7 +480,7 @@ def acd_integrated_raster(
             # Launch an instance for this tile using qsub for parallelism
 
             # Setup required paths
-            ## TODO Update to obtain these from config file on config_path and match variable names to standardise on those in pyeo_1.ini)
+            ## TODO Update to obtain these from config file on config_path and match variable names to standardise on those in pyeo_1.ini)        a config_dict containing `conda_directory` and `conda_env_name`
             ## TODO Change print statments to log.info
             ## (Temporary test paths point to a test function 'apps/automation/_random_duration_test_program.py' that returns after a short random time delay)
             data_directory = config_dict[
@@ -800,14 +813,8 @@ def acd_national_integration(
     for number, path in enumerate(sorted(vectorised_paths)):
         log.info(f"{number} : {path}")
 
-    # specify gdal and proj installation, this is geopandas'
-    home = str(Path.home())
-    os.environ[
-        "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # switch gdal and proj installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     # initialise empty geodataframe
     merged_gdf = gpd.GeoDataFrame()
@@ -869,6 +876,9 @@ def acd_national_integration(
             log.error(f"failed to write output at :  {out_path}")
     log.info(f"Integrated GeoDataFrame written to {out_path}")
 
+    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
+
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
     log.info("National Integration of the Vectorised Change Reports Complete")
@@ -902,15 +912,8 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
     None
     """
 
-    # specify gdal and proj installation, this is geopandas'
-    home = str(Path.home())
-    conda_env_name = config_dict["conda_env_name"]
-    os.environ[
-        "GDAL_DATA"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/gdal"
-    os.environ[
-        "PROJ_LIB"
-    ] = f"{home}/miniconda3/envs/{conda_env_name}/lib/python3.10/site-packages/pyproj/proj_dir/share/proj"
+    # switch gdal and proj installation to geopandas'
+    gdal_switch(installation="geopandas", config_dict=config_dict)
 
     # find national_geodataframe
     search_pattern = "national_geodataframe.shp"
@@ -953,6 +956,9 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
             filtered.to_file(filename=out_path)
         except:
             log.error(f"failed to write output at :  {out_path}")
+
+    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
+    gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return
 
