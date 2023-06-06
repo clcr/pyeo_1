@@ -37,7 +37,7 @@ def automatic_change_detection_national(config_path):
     config_dict, acd_log = acd_initialisation(config_path)
 
     acd_log.info("---------------------------------------------------------------")
-    acd_log.info("Starting acd_to_config_to_log()")
+    acd_log.info("Starting acd_config_to_log()")
     acd_log.info("---------------------------------------------------------------")
 
     # echo configuration to log
