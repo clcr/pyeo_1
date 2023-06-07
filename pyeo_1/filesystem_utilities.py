@@ -397,6 +397,7 @@ def config_path_to_config_dict(config_path: str):
     config_dict["roi_dir"] = config["environment"]["roi_dir"]
     config_dict["roi_filename"] = config["environment"]["roi_filename"]
     config_dict["geometry_dir"] = config["environment"]["geometry_dir"]
+    config_dict["s2_tiles_filename"] = config["environment"]["s2_tiles_filename"]
     config_dict["log_dir"] = config["environment"]["log_dir"]
     config_dict["log_filename"] = config["environment"]["log_filename"]
     config_dict["sen2cor_path"] = config["environment"]["sen2cor_path"]
