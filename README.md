@@ -9,8 +9,8 @@ including downloading, preprocessing, creation of baseline composites, classific
 Full documentation is available at https://clcr.github.io/pyeo/build/html/index.html
 
 Example notebooks are available at:
+- https://github.com/clcr/pyeo_1/tree/main/notebooks
 - https://github.com/clcr/pyeo_training_materials
-- ./notebooks
 
 ## Requirements
 Package management is performed by Conda, for instructions on how to install Conda, please refer to: https://docs.conda.io/en/latest/.  
@@ -69,6 +69,8 @@ conda env create --file environment.yml --name pyeo_env
 conda activate pyeo_env
 python -m pip install -e .
 ```
+### A Note on Windows
+If the OS that pyeo is running on is Windows, we have noticed that `pyeo_windows.ini` may need to be saved with `ANSI` encoding instead of the usual `UTF-8`. See [this webpage](https://stackoverflow.com/questions/13282189/missingsectionheadererror-file-contains-no-section-headers) for more details.
 ### Automated Pipeline Execution
 To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_1.ini`, make the following file an executable by issuing this command:
 ```bash

@@ -56,7 +56,6 @@ def gdal_switch(installation: str,
     """
     
 
-
     conda_env_name = config_dict["conda_env_name"]
     conda_directory = config_dict["conda_directory"]
     # platform if branches

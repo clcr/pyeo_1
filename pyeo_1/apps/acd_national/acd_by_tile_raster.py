@@ -5,6 +5,7 @@ import logging
 import os
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -203,12 +204,21 @@ def acd_by_tile_raster(config_path: str,
             tile_geom = tile_geom.to_crs(epsg=4326)
             geometry = tile_geom["geometry"].iloc[0]
             geometry = geometry.representative_point()
+            
+            # convert date string to YYYY-MM-DD
+            tile_log.info(f"date start string was  : {composite_start_date}")
+            date_object = datetime.strptime(composite_start_date, "%Y%m%d")
+            dataspace_composite_start = date_object.strftime("%Y-%m-%d")
+            tile_log.info(f"date start string is now  : {dataspace_composite_start}")
+            date_object = datetime.strptime(composite_end_date, "%Y%m%d")
+            dataspace_composite_end = date_object.strftime("%Y-%m-%d")
+            tile_log.info(f"date end string is now  : {dataspace_composite_end}")
 
             try:
                 dataspace_composite_products_all = queries_and_downloads.query_dataspace_by_polygon(
                     max_cloud_cover=cloud_cover,
-                    start_date="2023-01-01", # ToDo: remember to change this to read from ini file
-                    end_date="2023-05-20", # ToDo: remember to change this to read from ini file
+                    start_date=dataspace_composite_start,
+                    end_date=dataspace_composite_end,
                     area_of_interest=geometry,
                     max_records=100
                 )
@@ -947,7 +957,7 @@ def acd_by_tile_raster(config_path: str,
                 "Cannot produce a median composite. Download and cloud-mask some images first."
             )
 
-# ------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Step 2: Download change detection images for the specific time window (L2A where available plus additional L1C)
     # ------------------------------------------------------------------------
     if config_dict["do_all"] or config_dict["do_download"]:

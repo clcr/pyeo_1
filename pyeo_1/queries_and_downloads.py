@@ -294,34 +294,50 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
     None
 
     """
-
+    # get auth_token needed to authenticate with CDSE API
     auth_token = get_access_token(
         dataspace_username=dataspace_username,
         dataspace_password=dataspace_password,
         refresh=False,
         )
-
+        
     for counter, product in enumerate(product_df.itertuples(index=False)):
 
         # if L1C have been passed, download to the l1c_directory
         if product.processinglevel == "Level-1C":
-            # try:
-            log.info(f"    Downloading {counter+1} of {len(product_df)} : {product.title}")
-            download_dataspace_product(
-                product_uuid=product.uuid,
-                auth_token=auth_token,
-                product_name=product.title,
-                safe_directory=l1c_directory,
-                log=log
-            )
 
-            # except Exception as error:
-            #     log.error(f"Download dataspace for a L1C Product did not finish")
-            #     log.error(f"Received this error :  {error}")
+            out_path = os.path.join(l1c_directory, product.title)
+            if check_for_invalid_l1_data(out_path) == 1:
+                log.info(
+                    f"{out_path} imagery already exists, skipping download"
+                )
+                # continue means to skip the current iteration and move to the next iteration of the for loop
+                continue
+            try:
+                log.info(f"    Downloading {counter+1} of {len(product_df)} : {product.title}")
+                download_dataspace_product(
+                    product_uuid=product.uuid,
+                    auth_token=auth_token,
+                    product_name=product.title,
+                    safe_directory=l1c_directory,
+                    log=log
+                )
+
+            except Exception as error:
+                log.error(f"Download dataspace for a L1C Product did not finish")
+                log.error(f"Received this error :  {error}")
 
         # if L2A have been passed, download to the l1c_directory
-        if product.processinglevel == "Level-2A":
+        elif product.processinglevel == "Level-2A":
+            out_path = os.path.join(l2a_directory, product.title)
+            if check_for_invalid_l2_data(out_path) == 1:
+                log.info(
+                    f"{out_path} imagery already exists, skipping download"
+                )
+                # continue means to skip the current iteration and move to the next iteration of the for loop
+                continue
             try:
+                log.info(f"    Downloading {counter+1} of {len(product_df)} : {product.title}")
                 download_dataspace_product(
                     product_uuid=product.uuid,
                     auth_token=auth_token,
@@ -331,6 +347,10 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
             except Exception as error:
                 log.error(f"Download dataspace for a L2A Product did not finish")
                 log.error(f"Received error   {error}")
+        else:
+            log.error(f"Neither 'Level-1C' or 'Level-2A' were in {product.processinglevel}")
+            log.error("could be a bad data source, therefore skipping")
+
     return
 
 
@@ -1560,8 +1580,6 @@ def download_s2_data_from_df(
             log.error("{} is not a Sentinel 2 product".format(identifier))
             raise BadDataSourceExpection
         out_path = os.path.dirname(out_path)
-        log.info("ATTENTION")
-        log.info("IS THIS L1C DOWNLOAD BRANCH BEING REACHED?")
         log.info("Downloading {} from {} to {}".format(identifier, source, out_path))
         if source == "aws":
             if try_scihub_on_fail:
@@ -1577,10 +1595,6 @@ def download_s2_data_from_df(
         # elif source == 'google':
         #    download_from_google_cloud([identifier], out_folder=out_path)
         elif source == "scihub":
-            # is index really an uuid?
-            log.info("ATTENTION")
-            log.info("IS THIS L1C BRANCH EVER REACHED?")
-            log.info(f"what is index? : {index}")
             e = download_from_scihub(index, out_path, user, passwd)
             if e == 1:
                 log.warning(
