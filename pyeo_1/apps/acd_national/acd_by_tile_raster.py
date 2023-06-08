@@ -209,11 +209,12 @@ def acd_by_tile_raster(config_path: str,
                     start_date=dataspace_composite_start,
                     end_date=dataspace_composite_end,
                     area_of_interest=geometry,
-                    max_records=100
+                    max_records=100,
+                    log=tile_log
                 )
             except Exception as error:
-                tile_log.error(f"query_by_polygon received this error: {error}")
-                
+                tile_log.error(f"query_dataspace_by_polygon received this error: {error}")
+            
             titles = dataspace_composite_products_all["title"].tolist()
             sizes = list()
             uuids = list()
@@ -238,6 +239,8 @@ def acd_by_tile_raster(config_path: str,
                                                 "status": statuses})
 
             # check granule sizes on the server
+            # tile_log.info(f"this is the before size df amendment : {scihub_compatible_df['size']}")
+            # sys.exit(1)
             scihub_compatible_df["size"] = scihub_compatible_df["size"].apply(lambda x: round(float(x) * 1e-6, 2))
             # reassign to match the scihub variable
             df_all = scihub_compatible_df
@@ -280,7 +283,7 @@ def acd_by_tile_raster(config_path: str,
         df = df_all.query("size >= " + str(faulty_granule_threshold))
 
         tile_log.info(
-            "Removed {} faulty scenes <{}MB in size from the list:".format(
+            "Removed {} faulty scenes <{}MB in size from the list".format(
                 len(df_all) - len(df), faulty_granule_threshold
             )
         )
