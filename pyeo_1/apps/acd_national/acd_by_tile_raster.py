@@ -221,7 +221,6 @@ def acd_by_tile_raster(config_path: str,
                 sizes.append(elem[-2]["download"]["size"])
                 uuids.append(elem[-2]["download"]["url"].split("/")[-1])
             
-
             relative_orbit_numbers = dataspace_composite_products_all["relativeOrbitNumber"].tolist()
             processing_levels = dataspace_composite_products_all["processingLevel"].tolist()
             transformed_levels = ['Level-1C' if level == 'S2MSI1C' else 'Level-2A' for level in processing_levels]

@@ -2909,8 +2909,8 @@ def apply_scl_cloud_mask(
                         )
                         log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
                         log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
-                        os.environ['GDAL_DATA'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\gdal'
-                        os.environ['PROJ_LIB'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\proj'
+                        # os.environ['GDAL_DATA'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\gdal'
+                        # os.environ['PROJ_LIB'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\proj'
                         log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
                         log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
                         
