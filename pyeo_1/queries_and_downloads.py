@@ -472,7 +472,8 @@ def filter_unique_dataspace_products(l1c_products: pd.DataFrame,
     # Remove the indicator column
     unique_l1c_products = unique_l1c_products.drop('_merge', axis=1)
     # remove the suffix _x
-    unique_l1c_products = unique_l1c_products.rename(columns={"title_x": "title"})
+    #unique_l1c_products = unique_l1c_products.rename(columns={"title_x": "title"})
+    unique_l1c_products.columns = [col.replace('_x', '') for col in unique_l1c_products.columns]
 
     # Output the missing l1c_products
     # log.info(f"After filtering, L1C products  : {unique_l1c_products}")
