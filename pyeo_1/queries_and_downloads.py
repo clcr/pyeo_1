@@ -1237,7 +1237,7 @@ def filter_non_matching_s2_data(query_output):
     return out_set
 
 
-def filter_unique_l1c_and_l2a_data(df):
+def filter_unique_l1c_and_l2a_data(df, log):
     """
     Filters a dataframe from a query result such that it contains only unique Sentinel-2
     datatakes, based on 'beginposition'.
@@ -1256,6 +1256,9 @@ def filter_unique_l1c_and_l2a_data(df):
 
     products_df = df.sort_values("beginposition")
     #  find those pairs of rows where the beginposition is duplicated
+    log.info("printing titles and beginpositions")
+    for row in products_df.itertuples():
+        log.info(f"{row.title}, {row.beginposition}")
     n = products_df.shape[0]
     rows2drop = []
     for r in range(n - 1):

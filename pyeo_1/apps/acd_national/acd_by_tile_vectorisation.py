@@ -45,7 +45,7 @@ def vector_report_generation(config_path: str, tile: str):
     # so we run the report glob again
 
     # get all report.tif that are within the root_dir with search pattern
-    report_tif_pattern = "/output/probabilities/report*.tif"
+    report_tif_pattern = f"{os.sep}output{os.sep}probabilities{os.sep}report*.tif"
     search_pattern = f"{tile}{report_tif_pattern}"
 
     change_report_path = glob.glob(
