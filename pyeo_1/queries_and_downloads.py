@@ -123,6 +123,7 @@ def query_dataspace_by_polygon(
     end_date: str,
     area_of_interest: str,
     max_records: int,
+    log: logging.Logger
 ) -> pd.DataFrame:
     """
     This function returns a DataFrame of available Sentinel-2 imagery from the Copernicus Dataspace API.
@@ -153,12 +154,25 @@ def query_dataspace_by_polygon(
         area_of_interest=area_of_interest,
         max_records=max_records,
     )
-
-    response = requests.get(request_string).json()["features"]
-
-    response_dataframe = pd.DataFrame.from_dict(response)
-    response_dataframe = pd.DataFrame.from_records(response_dataframe["properties"])
-    return response_dataframe
+    response = requests.get(request_string)
+    if response.status_code == 200:
+        response = response.json()["features"]
+        # log.info(json.dumps(response, indent=4))
+        # sys.exit(1)
+        response_dataframe = pd.DataFrame.from_dict(response)
+        response_dataframe = pd.DataFrame.from_records(response_dataframe["properties"])
+        return response_dataframe
+    elif response.status_code == 401:
+        log.error("Dataspace returned a 401 HTTP Status Code")
+        log.error("Which means that user credentials for the Copernicus Dataspace Ecosystem are incorrect.")
+        log.error("Now exiting the pipeline, please check your credentials in your credentials_ini")
+        sys.exit(1)
+    else:
+        log.error("Dataspace returned a non-200 HTTP Status Code")
+        log.error(f"The Status Code returned was  : HTTP Status Code {response.status_code}")
+        log.error("Now exiting the pipeline, please rerun when DataSpace API is back online")
+        # this could be improved by catching more specific status codes
+        sys.exit(1)
 
 def build_dataspace_request_string(
     max_cloud_cover: int,
@@ -237,6 +251,7 @@ def get_access_token(dataspace_username: str,
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         response = requests.post(DATASPACE_REFRESH_TOKEN_URL, data=payload, headers=headers)
+        
     else:
         payload = {
             "grant_type": "password",
@@ -1222,7 +1237,7 @@ def filter_non_matching_s2_data(query_output):
     return out_set
 
 
-def filter_unique_l1c_and_l2a_data(df):
+def filter_unique_l1c_and_l2a_data(df, log):
     """
     Filters a dataframe from a query result such that it contains only unique Sentinel-2
     datatakes, based on 'beginposition'.
@@ -1241,6 +1256,9 @@ def filter_unique_l1c_and_l2a_data(df):
 
     products_df = df.sort_values("beginposition")
     #  find those pairs of rows where the beginposition is duplicated
+    log.info("printing titles and beginpositions")
+    for row in products_df.itertuples():
+        log.info(f"{row.title}, {row.beginposition}")
     n = products_df.shape[0]
     rows2drop = []
     for r in range(n - 1):

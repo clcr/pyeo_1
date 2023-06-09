@@ -692,8 +692,8 @@ def merge_and_calculate_spatial(
         try:
             log.info("Deleting intermediate change report vectorisation files")
             directory = os.path.dirname(change_report_path)
-            binary_dec_pattern = f"{directory}/*band*"
-            zstats_pattern = f"{directory}/*zstats*"
+            binary_dec_pattern = f"{directory}{os.sep}*band*"
+            zstats_pattern = f"{directory}{os.sep}*zstats*"
 
             intermediate_files = glob.glob(binary_dec_pattern)
             zstat_files = glob.glob(zstats_pattern)
