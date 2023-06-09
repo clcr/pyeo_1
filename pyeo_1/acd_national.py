@@ -52,7 +52,6 @@ def automatic_change_detection_national(config_path):
     if config_dict["do_tile_intersection"]:
         tilelist_filepath = acd_roi_tile_intersection(config_dict, acd_log)
 
-
     if config_dict["do_raster"] and config_dict["do_tile_intersection"]:
         acd_log.info("---------------------------------------------------------------")
         acd_log.info("Starting acd_integrated_raster():")
@@ -91,10 +90,10 @@ def automatic_change_detection_national(config_path):
         if config_dict["counties_of_interest"]:
             acd_national_filtering(log=acd_log, config_dict=config_dict)
 
-    if config_dict["do_distribution"]:
-        acd_log.info("---------------------------------------------------------------")
-        acd_log.info("Starting acd_national_distribution()")
-        acd_log.info("---------------------------------------------------------------")
+    # if config_dict["do_distribution"]:
+    #     acd_log.info("---------------------------------------------------------------")
+    #     acd_log.info("Starting acd_national_distribution()")
+    #     acd_log.info("---------------------------------------------------------------")
         # acd_national_distribution()
         # messaging services to Park Rangers (e.g. WhatsApp, Maps2Me)
 
