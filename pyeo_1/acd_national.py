@@ -802,7 +802,7 @@ def acd_national_integration(
 
     # get tile name pattern and report shapefile pattern for glob
     tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
-    report_shp_pattern = "/output/probabilities/report*.shp"
+    report_shp_pattern = f"{os.sep}output{os.sep}probabilities{os.sep}report*.shp"
     search_pattern = f"{tiles_name_pattern}{report_shp_pattern}"
 
     # glob through passed directory, return files matching the two patterns
