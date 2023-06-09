@@ -361,23 +361,26 @@ def acd_by_tile_raster(config_path: str,
                     tile_log.info("       {}".format(product))
                 tile_log.info(f"len of L2A products for dataspace is {len(l2a_products['title'])}")
 
-        if download_source == "scihub":
-            if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
-                tile_log.info(
-                    "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
-                )
+        if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
+            tile_log.info(
+                "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
+            )
+            if download_source == "scihub":
                 (l1c_products,l2a_products,) = queries_and_downloads.filter_unique_l1c_and_l2a_data(df,log=tile_log)
-                tile_log.info(
-                    "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
-                        l1c_products.shape[0] + l2a_products.shape[0]
-                    )
-                )
-                tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
-                tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
-        df = None
 
-        tile_log.info(f"len of L1C products for dataspace is {len(l1c_products['title'])}")
-        tile_log.info(f"len of L2A products for dataspace is {len(l2a_products['title'])}")
+            if download_source == "dataspace":
+                l1c_products = queries_and_downloads.filter_unique_dataspace_products(l1c_products=l1c_products, l2a_products=l2a_products, log=tile_log)
+                                                                                                      
+            # tile_log.info(
+            #     "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
+            #         l1c_products.shape[0] + l2a_products.shape[0]
+            #     )
+            # )
+    
+    
+        df = None
+        tile_log.info(f" {len(l1c_products['title'])} L1C products for the Composite")
+        tile_log.info(f" {len(l2a_products['title'])} L2A products for the Composite")
 
         # Search the local directories, composite/L2A and L1C, checking if scenes have already been downloaded and/or processed whilst checking their dir sizes
         if download_source == "scihub":
@@ -975,7 +978,8 @@ def acd_by_tile_raster(config_path: str,
                     start_date=dataspace_change_start,
                     end_date=dataspace_change_end,
                     area_of_interest=geometry,
-                    max_records=100
+                    max_records=100,
+                    log=tile_log
                 )
             except Exception as error:
                 tile_log.error(f"query_by_polygon received this error: {error}")
@@ -1052,26 +1056,27 @@ def acd_by_tile_raster(config_path: str,
         l2a_products = df[df.processinglevel == "Level-2A"]
         tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
         tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
-        if download_source == "scihub":
-            if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
-                tile_log.info(
-                    "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
-                )
-                (
-                    l1c_products,
-                    l2a_products,
-                ) = queries_and_downloads.filter_unique_l1c_and_l2a_data(df)
-                tile_log.info(
-                    "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
-                        l1c_products.shape[0] + l2a_products.shape[0]
-                    )
-                )
-                tile_log.info("    {} L1C products".format(l1c_products.shape[0]))
-                tile_log.info("    {} L2A products".format(l2a_products.shape[0]))
-        df = None
+        
+        if l1c_products.shape[0] > 0 and l2a_products.shape[0] > 0:
+            tile_log.info(
+                "Filtering out L1C products that have the same 'beginposition' time stamp as an existing L2A product."
+            )
+            if download_source == "scihub":
+                (l1c_products,l2a_products,) = queries_and_downloads.filter_unique_l1c_and_l2a_data(df,log=tile_log)
 
-        tile_log.info(f"len of Change L1C products for dataspace is {len(l1c_products['title'])}")
-        tile_log.info(f"len of Change L2A products for dataspace is {len(l2a_products['title'])}")
+            if download_source == "dataspace":
+                l1c_products = queries_and_downloads.filter_unique_dataspace_products(l1c_products=l1c_products, l2a_products=l2a_products, log=tile_log)
+                                                                                                      
+            tile_log.info(
+                "--> {} L1C and L2A products with unique 'beginposition' time stamp for the composite:".format(
+                    l1c_products.shape[0] + l2a_products.shape[0]
+                )
+            )
+        
+        df = None
+        tile_log.info(f" {len(l1c_products['title'])} L1C Change Images")
+        tile_log.info(f" {len(l2a_products['title'])} L2A Change Images")
+
         # TODO: Before the next step, search the composite/L2A and L1C directories whether the scenes have already been downloaded and/or processed and check their dir sizes
         # Remove those already obtained from the list
         if download_source == "scihub":    
