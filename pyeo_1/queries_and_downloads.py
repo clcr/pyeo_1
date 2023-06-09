@@ -334,8 +334,7 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                     product_uuid=product.uuid,
                     auth_token=auth_token,
                     product_name=product.title,
-                    safe_directory=l1c_directory,
-                    log=log
+                    safe_directory=l1c_directory
                 )
 
             except Exception as error:
@@ -372,8 +371,8 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 def download_dataspace_product(product_uuid: str,
                                auth_token: str,
                                product_name: str,
-                               safe_directory: str,
-                               log) -> None:
+                               safe_directory: str
+                               ) -> None:
     """
     This function downloads a given Sentinel product, with a given product UUID from the ESA servers.
 
@@ -412,7 +411,6 @@ def download_dataspace_product(product_uuid: str,
 
     with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
         temporary_path = f"{temp_dir}/{product_name}.zip"
-        # log.info(f"        Downloading to temp_dir : {temporary_path}")
 
         with open(temporary_path, 'wb') as download:
             for data in file.iter_content(block_size):
@@ -422,9 +420,7 @@ def download_dataspace_product(product_uuid: str,
         progress_bar.close()
 
         unzipped_path = os.path.splitext(temporary_path)[0]
-        log.info(f"        Unzipping")
-        # log.info(f"        {temporary_path}")
-        # log.info(f"        to: {unzipped_path}")
+
         zip_ref = zipfile.ZipFile(temporary_path, "r")
         zip_ref.extractall(unzipped_path)
         zip_ref.close()
@@ -432,33 +428,63 @@ def download_dataspace_product(product_uuid: str,
 
         # # restructure paths
         within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
-        # log.info(f"        within folder path  :  {within_folder_path[0]}")
         destination_path = f"{safe_directory}/{product_name}"
-        # log.info(f"        Moving:")
-        # log.info(f"        {within_folder_path[0]}")
-        # log.info(f"        to: {destination_path}")
         shutil.move(src=within_folder_path[0], dst=destination_path)
-    # url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
-
-    # response = requests.get(
-    #     url=url,
-    #     headers={"Authorization": f"Bearer {auth_token}"},
-    #     stream=True,
-    # )
-
-    # total_size_in_bytes = int(response.headers.get("Content-Length", 0))
-    # block_size = 1024
-    # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
-
-    # with TemporaryDirectory():
-    #     with open(f"{safe_directory}/{product_name}.zip", "wb") as download:
-    #         for data in response.iter_content(block_size):
-    #             download.write(data)
-    #             progress_bar.update(len(data))
-
-    #     progress_bar.close()
 
     return
+
+def filter_unique_dataspace_products(l1c_products: pd.DataFrame,
+                                     l2a_products: pd.DataFrame,
+                                     log: logging.Logger
+                                     ) -> pd.DataFrame:
+    """
+
+    Parameters
+    ----------
+    l1c_products : pd.DataFrame
+        _description_
+    l2a_products : pd.DataFrame
+        _description_
+    log : logging.Logger
+        _description_
+
+    Returns
+    -------
+    pd.DataFrame
+        _description_
+
+    """
+    # log.info(f"Before filtering, L1C products  : {l1c_products['title']}")
+    # log.info(f"Before filtering, L2A products  : {l2a_products['title']}")
+    log.info(f"Before filtering, {len(l1c_products)} L1C and {len(l2a_products)} L2A")
+    for rows in l1c_products.itertuples():
+        log.info(f"L1C : {rows.title}")
+    for rows in l2a_products.itertuples():
+        log.info(f"L2A : {rows.title}")
+    # Perform left anti-join
+    unique_l1c_products = l1c_products.merge(
+        l2a_products, 
+        on='beginposition', 
+        how='left', 
+        indicator=True
+    ).query('_merge == "left_only"')
+
+    # Remove the indicator column
+    unique_l1c_products = unique_l1c_products.drop('_merge', axis=1)
+    # remove the suffix _x
+    unique_l1c_products = unique_l1c_products.rename(columns={"title_x": "title"})
+
+    # Output the missing l1c_products
+    # log.info(f"After filtering, L1C products  : {unique_l1c_products}")
+    # log.info(f"After filtering, L2A products  : {l2a_products['title']}")
+    log.info(f"After filtering, {len(unique_l1c_products)} L1C and {len(l2a_products)} L2A")
+    for rows in unique_l1c_products.itertuples():
+        log.info(f"Unique L1C : {rows.title}")
+    for rows in l2a_products.itertuples():
+        log.info(f"Unique L2A : {rows.title}")
+
+    return unique_l1c_products
+
 
 # I.R.
 # def _rest_query(user, passwd, footprint_wkt, start_date, end_date, cloud=100, start_row=0, filename=None):
