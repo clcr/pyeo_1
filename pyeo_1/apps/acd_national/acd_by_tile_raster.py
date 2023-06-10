@@ -956,8 +956,9 @@ def acd_by_tile_raster(config_path: str,
         if download_source == "dataspace":
 
             try:
-                tiles_geom_path = os.path.join(config_dict["geometry_dir"], config_dict["s2_tiles_filename"])
-                tiles_geom = gpd.read_file(tiles_geom_path)
+                tiles_geom_path = os.path.join(config_dict["pyeo_dir"], os.path.join(config_dict["geometry_dir"], config_dict["s2_tiles_filename"]))
+                tiles_geom = gpd.read_file(os.path.abspath(tiles_geom_path))
+                
             except FileNotFoundError:
                 tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
 
