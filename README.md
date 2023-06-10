@@ -1,7 +1,6 @@
 [![DOI](https://zenodo.org/badge/126246599.svg)](https://zenodo.org/badge/latestdoi/126246599)
 
-# PyEO
-Python for Earth Observation (PyEO)
+# Python for Earth Observation (PyEO)
 
 PyEO is designed to provide a set of portable, extensible and modular Python scripts for machine learning in earth observation and GIS,
 including downloading, preprocessing, creation of baseline composites, classification and validation.
@@ -14,13 +13,16 @@ Example notebooks are available at:
 
 ## Requirements
 Package management is performed by Conda, for instructions on how to install Conda, please refer to: https://docs.conda.io/en/latest/.  
-*Note: Conda can be installed as part of Anaconda https://www.anaconda.com/*
+*Note: Conda can be installed as part of Anaconda https://www.anaconda.com/*  
+<br>  
 
-From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space Ecosystem (COP DSE). In the meantime, if you wish to download from Scihub, you will need a Scihub account: https://scihub.copernicus.eu/
+## Satellite Imagery Providers
+From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space Ecosystem (CDSE). In the meantime, if you wish to download from Scihub, you will need a Scihub account: https://scihub.copernicus.eu/
 
-To use COP DSE, you will need a separate account: https://dataspace.copernicus.eu
+To use the CDSE, you will need a separate account: https://dataspace.copernicus.eu
 
-For processing of Sentinel-2 L1Cs, you will also need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/. This installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.
+To process Sentinel-2 L1Cs, you will also need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/. This installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.  
+<br>
 
 ## Installation on SEPAL
 
@@ -56,7 +58,8 @@ git clone https://github.com/clcr/pyeo_1.git
 ```
 1. Press the spanner shaped tab and click to open JupyterLab
 1. When JupyterLab is running navigate to your pyeo_home directory using the panel on the left hand side and then open the 'notebooks' subdirectory
-1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.
+1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.  
+<br>
 
 ## Installation on Other Platforms
 To install `pyeo_1`, put the following commands into **Bash** (Linux), **Terminal** (Mac) or the **Anaconda Prompt** (Windows)
@@ -69,14 +72,10 @@ conda env create --file environment.yml --name pyeo_env
 conda activate pyeo_env
 python -m pip install -e .
 ```
+<br>  
+
 ### A Note on Windows
 If the OS that pyeo is running on is Windows, we have noticed that `pyeo_windows.ini` may need to be saved with `ANSI` encoding instead of the usual `UTF-8`. See [this webpage](https://stackoverflow.com/questions/13282189/missingsectionheadererror-file-contains-no-section-headers) for more details.
-### Automated Pipeline Execution
-To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_1.ini`, make the following file an executable by issuing this command:
-```bash
-cd pyeo_1/apps/automation/
-chmod u+x automate_launch.sh
-```
 
 <!-- For Linux users, you can optionally access the `pyeo_1` command line functions, by adding the following to your .bashrc
 
@@ -84,10 +83,9 @@ chmod u+x automate_launch.sh
 export pyeo_1=/path/to/pyeo_1
 export PATH=$PATH:$pyeo_1/bin
 ``` -->
+<br>  
 
-
-
-# Installation Test Steps
+## Installation Test Steps
 
 If you do not want to edit `pyeo_1`, replace the pip install line with
 
@@ -109,12 +107,39 @@ or, by running the same import command above, after having started a jupyter not
 jupyter notebook
 ```
 
-*Please note, if you are using SEPAL, jupyter notebooks have to be started via a GUI method instead of from Bash, see*: https://user-images.githubusercontent.com/149204/132491851-5ac0303f-1064-4e12-9627-f34e3f78d880.png 
+*Please note, if you are using SEPAL, jupyter notebooks have to be started via a GUI method instead of from Bash, see*: https://user-images.githubusercontent.com/149204/132491851-5ac0303f-1064-4e12-9627-f34e3f78d880.png  
+<br>  
 
-# Further Setup Information
+## How to Run PyEO
+PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials, but the pipeline method can be run via the **Terminal**.  This process is automated and relies on an a configuration file (e.g. `pyeo_1.ini`) to make processing decisions.  
+
+<!-- add ini file examples here -->
+
+First, move to where PyEO is installed:
+```bash
+cd pyeo_1
+```
+Now, the pipeline mode for PyEO can be run like this:
+```bash
+python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1.ini
+```
+c
+
+<br>  
+
+## Automated Pipeline Execution
+To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_1.ini`, make the following file an executable by issuing this command:
+```bash
+cd pyeo_1/apps/automation/
+chmod u+x automate_launch.sh
+```
+<br>  
+
+## Further Setup Information
 A slightly more verbose setup tutorial for `pyeo_1` can be found in the notebooks directory, at PyEO_I_Setup_on_SEPAL.ipynb
+<br>  
 
-# Tutorials
+## Tutorials
 Once installation of `pyeo_1` is complete, you can follow the tutorial notebooks, which demonstrate the utility of `pyeo_1`.
 
 How to Train Your Classifier: https://github.com/clcr/pyeo_1/blob/main/notebooks/PyEO_I_Model_Training.ipynb

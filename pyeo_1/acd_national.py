@@ -696,7 +696,7 @@ def acd_integrated_vectorisation(
     for filepath in tiles_paths:
         if (
             tilelist_df["tile"]
-            .str.contains(filepath.split({os.sep})[-1].split("_")[2])
+            .str.contains(filepath.split(os.sep)[-1].split("_")[2])
             .any()
         ):
             matching_filepaths.append(filepath)
