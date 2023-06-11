@@ -123,7 +123,6 @@ Now, the pipeline mode for PyEO can be run like this:
 ```bash
 python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1.ini
 ```
-c
 
 <br>  
 
