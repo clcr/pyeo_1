@@ -117,13 +117,14 @@ def vector_report_generation(config_path: str, tile: str):
         write_csv=False,
         write_shapefile=True,
         write_pkl=False,
-        delete_intermediates=True,
         change_report_path=change_report_path,
         log=tile_log,
         epsg=epsg,
         level_1_boundaries_path=level_1_boundaries_path,
         tileid=tile,
-        conda_env_name=conda_env_name,
+        # conda_env_name=conda_env_name,
+        config_dict=config_dict,
+        delete_intermediates=True,
     )
 
     tile_log.info("---------------------------------------------------------------")

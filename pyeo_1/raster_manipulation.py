@@ -2989,21 +2989,19 @@ def apply_processing_baseline_0400_offset_correction_to_tiff_file_directory(
         if f.endswith(".tif") or f.endswith(".tiff")
     ]
     for f in image_files:
-        print(f"File: {f}, Baseline: {get_processing_baseline(f)}")
+        # print(f"File: {f}, Baseline: {get_processing_baseline(f)}")
         log.info(f"File: {f}, Baseline: {get_processing_baseline(f)}")
         if get_processing_baseline(f) == "A400":
-            print(
-                f"Offset already applied - file marked as: {get_processing_baseline(f)}"
-            )
-            log.info(
-                f"Offset already applied - file marked as: {get_processing_baseline(f)}"
-            )
+            # print(
+            #     f"Offset already applied - file marked as: {get_processing_baseline(f)}"
+            # )
+            log.info(f"Offset already applied - file marked as: {get_processing_baseline(f)}")
         if get_processing_baseline(f) == "0400":
             in_raster_path = os.path.join(in_tif_directory, f)
-            print(f"Offsetting file: {f}")
+            # print(f"Offsetting file: {f}")
             log.info(f"Offsetting file: {f}")
-            print(f"in_raster_path: {in_raster_path}")
-            # log.info(f'in_raster_path: {in_raster_path}')
+            # print(f"in_raster_path: {in_raster_path}")
+            log.info(f'in_raster_path: {in_raster_path}')
             # Define temporary file destination for output
             out_temporary_raster_path = os.path.join(
                 out_tif_directory,
@@ -3141,28 +3139,24 @@ def apply_processing_baseline_offset_correction_to_tiff_file_directory(
         if f.endswith(".tif") or f.endswith(".tiff")
     ]
     for f in image_files:
-        print(f"File: {f}, Baseline: {get_processing_baseline(f)}")
+        # print(f"File: {f}, Baseline: {get_processing_baseline(f)}")
         log.info(f"File: {f}, Baseline: {get_processing_baseline(f)}")
         if get_processing_baseline(f)[0] == "A":
-            print(
-                f"Offset already applied - file marked as: {get_processing_baseline(f)}"
-            )
-            log.info(
-                f"Offset already applied - file marked as: {get_processing_baseline(f)}"
-            )
-        print(f'int(get_processing_baseline(f)[1:]): {int(get_processing_baseline(f)[1:])}')
-        if (int(get_processing_baseline(f)[1:]) >= 400): # in ["0400", "0509"]:
+            # print(f"Offset already applied - file marked as: {get_processing_baseline(f)}")
+            log.info(f"Offset already applied - file marked as: {get_processing_baseline(f)}")
+        # print(f'int(get_processing_baseline(f)[1:]): {int(get_processing_baseline(f)[1:])}')
+        if get_processing_baseline(f)[0] == "0" and (int(get_processing_baseline(f)[1:]) >= 400): # in ["0400", "0509"]:
             in_raster_path = os.path.join(in_tif_directory, f)
-            print(f"Offsetting file: {f}")
+            # print(f"Offsetting file: {f}")
             log.info(f"Offsetting file: {f}")
-            print(f"in_raster_path: {in_raster_path}")
-            # log.info(f'in_raster_path: {in_raster_path}')
+            # print(f"in_raster_path: {in_raster_path}")
+            log.info(f'in_raster_path: {in_raster_path}')
             # Define temporary file destination for output
             out_temporary_raster_path = os.path.join(
                 out_tif_directory,
                 os.path.basename(f).split(".")[0] + "_offset_temp.tif",
             )
-            print(f"out_temporary_raster_path: {out_temporary_raster_path}")
+            # print(f"out_temporary_raster_path: {out_temporary_raster_path}")
             log.info(f"out_temporary_raster_path: {out_temporary_raster_path}")
             # Open data set
             in_raster_ds = gdal.Open(in_raster_path, gdal.GA_Update)
@@ -3178,11 +3172,11 @@ def apply_processing_baseline_offset_correction_to_tiff_file_directory(
             )
             # out_temporary_raster_array[...] = in_raster_array[bands_to_offset_index, :,:] + BOA_ADD_OFFSET
 
-            print(f"in_raster_array dtype: {in_raster_array.dtype}")
+            # print(f"in_raster_array dtype: {in_raster_array.dtype}")
             log.info(f"in_raster_array dtype: {in_raster_array.dtype}")
             dtype_max = 10000  # np.iinfo(in_raster_array.dtype).max # upper bound for range clipping - should be > any likely pixel value
-            print(f"in_raster_array dtype_max used: {dtype_max}")
-            log.info(f"in_raster_array dtype_max used: {dtype_max}")
+            # print(f"in_raster_array dtype_max used: {dtype_max}")
+            log.info(f"in_raster_array clipped to range of min: {-1 * BOA_ADD_OFFSET} and max: {dtype_max} then offset by: {BOA_ADD_OFFSET}")
 
             # Simple offset of all image bands
             out_temporary_raster_array[...] = (
@@ -4349,6 +4343,8 @@ def __change_from_class_maps(
         log.error("File creation failed. Skipping change detection step.")
         return -1
 
+    dNDVI_scale_factor = 100  # Multiplier used to scale dNDVI to integer range
+
     # create masks from the classes of interest
     with TemporaryDirectory(dir=os.getcwd()) as td:
         if not (skip_existing and os.path.exists(change_raster)):
@@ -4553,9 +4549,9 @@ def __change_from_class_maps(
                         # change_array[np.where(dvi >= dNDVI_threshold)] = -2
 
                         # I.R. 20230421+ START: Save NDVI and dNDVI of change image to disk for analysis
-                        dNDVI_scale_factor = (
-                            100  # Multiplier used to scale dNDVI to integer range
-                        )
+                        # dNDVI_scale_factor = (
+                        #     100  # Multiplier used to scale dNDVI to integer range
+                        # )
                         np.copyto(dNDVI_array, (dvi * dNDVI_scale_factor).astype(int))
                         NDVI_scale_factor = (
                             100  # Multiplier used to scale NDVI to integer range
@@ -5639,109 +5635,109 @@ def create_quicklook(
                 "Error opening raster file: {}    /   {}".format(in_raster_path, e)
             )
             return
-    # TODO: check data type of the in_raster - currently crashes when looking at images from the probabilities folder (wrong data type)
-    if image.RasterCount < 3:
-        # log.info("Raster count is {}. Using band 1.".format(image.RasterCount))
-        bands = [image.RasterCount]
-        alg = "nearest"
-        palette = "rgba"
-        band = image.GetRasterBand(1)
-        data = band.ReadAsArray()
-        scale_factors = None
-        output_type = gdal.GDT_Byte
-    else:
-        alg = None
-        palette = None
-        output_type = gdal.GDT_Byte
-        if scale_factors is None:
-            scale_factors = [[0, 2000, 0, 255]]  # this is specific to Sentinel-2
-        # log.info("Scaling values from {}...{} to {}...{}".format(scale_factors[0][0], scale_factors[0][1], scale_factors[0][2], scale_factors[0][3]))
+        # TODO: check data type of the in_raster - currently crashes when looking at images from the probabilities folder (wrong data type)
+        if image.RasterCount < 3:
+            # log.info("Raster count is {}. Using band 1.".format(image.RasterCount))
+            bands = [image.RasterCount]
+            alg = "nearest"
+            palette = "rgba"
+            band = image.GetRasterBand(1)
+            data = band.ReadAsArray()
+            scale_factors = None
+            output_type = gdal.GDT_Byte
+        else:
+            alg = None
+            palette = None
+            output_type = gdal.GDT_Byte
+            if scale_factors is None:
+                scale_factors = [[0, 2000, 0, 255]]  # this is specific to Sentinel-2
+            # log.info("Scaling values from {}...{} to {}...{}".format(scale_factors[0][0], scale_factors[0][1], scale_factors[0][2], scale_factors[0][3]))
 
-    # All the options that gdal.Translate() takes are listed here: gdal.org/python/osgeo.gdal-module.html#TranslateOptions
-    kwargs = {
-        "format": format,
-        "outputType": output_type,
-        "bandList": bands,
-        "noData": nodata,
-        "width": width,
-        "height": height,
-        "resampleAlg": alg,
-        "scaleParams": scale_factors,
-        "rgbExpand": palette,
-    }
+        # All the options that gdal.Translate() takes are listed here: gdal.org/python/osgeo.gdal-module.html#TranslateOptions
+        kwargs = {
+            "format": format,
+            "outputType": output_type,
+            "bandList": bands,
+            "noData": nodata,
+            "width": width,
+            "height": height,
+            "resampleAlg": alg,
+            "scaleParams": scale_factors,
+            "rgbExpand": palette,
+        }
 
-    if image.RasterCount < 3:
-        try:
-            # histo = np.array(band.GetHistogram())
-            # log.info("Histogram: {}".format(np.where(histo > 0)[0]))
-            # log.info("           {}".format(histo[np.where(histo > 0)]))
-            # log.info("Band data min, max: {}, {}".format(data.min(), data.max()))
-            colors = gdal.ColorTable()
-            # TODO: load a colour table (QGIS style file) from file if specified as an option by the function call
-            """
-            Comment: A *.qml file contains:
-            <colorPalette>
-               <paletteEntry label="0" color="#000000" alpha="255" value="0"/>
-               <paletteEntry label="1" color="#287d28" alpha="255" value="1"/>
-               <paletteEntry label="3" color="#c28540" alpha="255" value="3"/>
-               <paletteEntry label="4" color="#e1de0b" alpha="255" value="4"/>
-               <paletteEntry label="5" color="#bbdc00" alpha="255" value="5"/>
-               <paletteEntry label="11" color="#69de33" alpha="255" value="11"/>
-               <paletteEntry label="12" color="#3cd24b" alpha="255" value="12"/>
-            </colorPalette>
-            """
+        if image.RasterCount < 3:
+            try:
+                # histo = np.array(band.GetHistogram())
+                # log.info("Histogram: {}".format(np.where(histo > 0)[0]))
+                # log.info("           {}".format(histo[np.where(histo > 0)]))
+                # log.info("Band data min, max: {}, {}".format(data.min(), data.max()))
+                colors = gdal.ColorTable()
+                # TODO: load a colour table (QGIS style file) from file if specified as an option by the function call
+                """
+                Comment: A *.qml file contains:
+                <colorPalette>
+                <paletteEntry label="0" color="#000000" alpha="255" value="0"/>
+                <paletteEntry label="1" color="#287d28" alpha="255" value="1"/>
+                <paletteEntry label="3" color="#c28540" alpha="255" value="3"/>
+                <paletteEntry label="4" color="#e1de0b" alpha="255" value="4"/>
+                <paletteEntry label="5" color="#bbdc00" alpha="255" value="5"/>
+                <paletteEntry label="11" color="#69de33" alpha="255" value="11"/>
+                <paletteEntry label="12" color="#3cd24b" alpha="255" value="12"/>
+                </colorPalette>
+                """
 
-            if data.max() < 13:
-                log.info("Using custom colour table for up to 12 classes (0..11)")
-                colors.SetColorEntry(0, (0, 0, 0, 0))  # no data
-                colors.SetColorEntry(1, (0, 100, 0, 255))  # Primary Forest
-                colors.SetColorEntry(2, (154, 205, 50, 255))  # plantation Forest
-                colors.SetColorEntry(3, (139, 69, 19, 255))  # Bare Soil
-                colors.SetColorEntry(4, (189, 183, 107, 255))  # Crops
-                colors.SetColorEntry(5, (240, 230, 140, 255))  # Grassland
-                colors.SetColorEntry(6, (0, 0, 205, 255))  # Open Water
-                colors.SetColorEntry(7, (128, 0, 0, 255))  # Burn Scar
-                colors.SetColorEntry(8, (255, 255, 255, 255))  # cloud
-                colors.SetColorEntry(9, (60, 60, 60, 255))  # cloud shadow
-                colors.SetColorEntry(10, (128, 128, 128, 255))  # Haze
-                colors.SetColorEntry(11, (46, 139, 87, 255))  # Open Woodland
-                colors.SetColorEntry(12, (92, 145, 92, 255))  # Toby's Woodland
-            else:
-                # log.info("Using viridis colour table for {} classes".format(data.max()))
-                viridis = cm.get_cmap("viridis", min(data.max(), 255))
-                for index, color in enumerate(viridis.colors):
-                    colors.SetColorEntry(
-                        index,
-                        (
-                            int(color[0] * 255),
-                            int(color[1] * 255),
-                            int(color[2] * 255),
-                            int(color[3] * 255),
-                        ),
-                    )
-            band.SetRasterColorTable(colors)
-            band.WriteArray(data)
+                if data.max() < 13:
+                    log.info("Using custom colour table for up to 12 classes (0..11)")
+                    colors.SetColorEntry(0, (0, 0, 0, 0))  # no data
+                    colors.SetColorEntry(1, (0, 100, 0, 255))  # Primary Forest
+                    colors.SetColorEntry(2, (154, 205, 50, 255))  # plantation Forest
+                    colors.SetColorEntry(3, (139, 69, 19, 255))  # Bare Soil
+                    colors.SetColorEntry(4, (189, 183, 107, 255))  # Crops
+                    colors.SetColorEntry(5, (240, 230, 140, 255))  # Grassland
+                    colors.SetColorEntry(6, (0, 0, 205, 255))  # Open Water
+                    colors.SetColorEntry(7, (128, 0, 0, 255))  # Burn Scar
+                    colors.SetColorEntry(8, (255, 255, 255, 255))  # cloud
+                    colors.SetColorEntry(9, (60, 60, 60, 255))  # cloud shadow
+                    colors.SetColorEntry(10, (128, 128, 128, 255))  # Haze
+                    colors.SetColorEntry(11, (46, 139, 87, 255))  # Open Woodland
+                    colors.SetColorEntry(12, (92, 145, 92, 255))  # Toby's Woodland
+                else:
+                    # log.info("Using viridis colour table for {} classes".format(data.max()))
+                    viridis = cm.get_cmap("viridis", min(data.max(), 255))
+                    for index, color in enumerate(viridis.colors):
+                        colors.SetColorEntry(
+                            index,
+                            (
+                                int(color[0] * 255),
+                                int(color[1] * 255),
+                                int(color[2] * 255),
+                                int(color[3] * 255),
+                            ),
+                        )
+                band.SetRasterColorTable(colors)
+                band.WriteArray(data)
+                out_image = gdal.Translate(
+                    out_raster_path, image, options=gdal.TranslateOptions(**kwargs)
+                )
+                driver = gdal.GetDriverByName("PNG")
+                driver.CreateCopy(out_raster_path, out_image, 0)
+                data = None
+                out_image = None
+                image = None
+                band = None
+            except Exception as e:
+                log.error("An error occurred: {}".format(e))
+                log.error("  Skipping quicklook for image: {}".format(out_raster_path))
+                image = None
+                return
+        else:
             out_image = gdal.Translate(
                 out_raster_path, image, options=gdal.TranslateOptions(**kwargs)
             )
-            driver = gdal.GetDriverByName("PNG")
-            driver.CreateCopy(out_raster_path, out_image, 0)
-            data = None
             out_image = None
             image = None
-            band = None
-        except Exception as e:
-            log.error("An error occurred: {}".format(e))
-            log.error("  Skipping quicklook for image: {}".format(out_raster_path))
-            image = None
-            return
-    else:
-        out_image = gdal.Translate(
-            out_raster_path, image, options=gdal.TranslateOptions(**kwargs)
-        )
-        out_image = None
-        image = None
-    return out_raster_path
+        return out_raster_path
 
 
 def __combine_date_maps(date_image_paths, output_product):

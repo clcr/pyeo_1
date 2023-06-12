@@ -683,40 +683,36 @@ def acd_integrated_vectorisation(
         log.error("exiting pipeline")
         sys.exit(1)
 
+    log.info(f'Active tiles for vectorisation: {tilelist_df}')
+
     # get all report.tif that are within the root_dir with search pattern
     tiles_name_pattern = "[0-9][0-9][A-Z][A-Z][A-Z]"
     report_tif_pattern = f"{os.sep}output{os.sep}probabilities{os.sep}report*.tif"
     search_pattern = f"{tiles_name_pattern}{report_tif_pattern}"
 
     tiles_paths = glob.glob(os.path.join(config_dict["tile_dir"], search_pattern))
+    log.info(f'Report files found in tiles folders: {tiles_paths}')
 
     # only keep filepaths which match tilelist
     matching_filepaths = []
 
     for filepath in tiles_paths:
-        if (
-            tilelist_df["tile"]
-            .str.contains(filepath.split(os.sep)[-1].split("_")[2])
-            .any()
-        ):
+        # log.info(f'Filepath Field: {filepath.split(os.sep)[-1].split("_")[2]}')
+        # if (tilelist_df["tile"].str.contains(filepath.split({os.sep})[-1].split("_")[2]).any()):
+        if (tilelist_df["tile"].str.contains(filepath.split(os.sep)[-1].split("_")[2]).any()):
             matching_filepaths.append(filepath)
 
     # sort filepaths in ascending order
     sorted_filepaths = sorted(matching_filepaths)
     if len(sorted_filepaths) == 0:
-        log.error("there are no change reports to vectorise, here are some pointers:")
-        log.error(
-            "    Ensure the raster processing pipeline has successfully run and completed "
-        )
+        log.error("There are no change reports to vectorise, here are some pointers:")
+        log.error("    Ensure the raster processing pipeline has successfully run and completed ")
         log.error("    Ensure tile_dir has been specified correctly in pyeo_1.ini")
         log.error("Now exiting the vector pipeline")
         sys.exit(1)
 
-    log.info(
-        f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:"
-    )
-
     # log the filepaths to vectorise
+    log.info(f"There are {len(sorted_filepaths)} Change Report Rasters to vectorise, these are:")
     for n, tile_path in enumerate(sorted_filepaths):
         log.info(f"{n+1}  :  {tile_path}")
         log.info("---------------------------------------------------------------")
@@ -726,7 +722,7 @@ def acd_integrated_vectorisation(
         if config_dict["do_delete_existing_vector"]:
             # get list of existing report files in report path
             log.info(
-                "do_delete_existing_vector flag is set to True: deleting existing vectorised change report shapefiles, pkls and csvs"
+                "do_delete_existing_vector flag = True: Deleting existing vectorised change report shapefiles, pkls and csvs"
             )
             directory = os.path.dirname(report)
             report_shp_pattern = f"{os.sep}report*"
@@ -744,8 +740,8 @@ def acd_integrated_vectorisation(
                 except:
                     log.error(f"Could not delete : {file}, skipping")
         # find tile string for the report to be vectorised
+        # tile = sorted_filepaths[0].split(os.sep)[-1].split("_")[-2]
         tile = report.split(os.sep)[-1].split("_")[-2]
-        #tile = sorted_filepaths[0].split(os.sep)[-1].split("_")[-2]
 
         if not config_dict["do_parallel"]:
             # try:
