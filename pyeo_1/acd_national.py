@@ -739,7 +739,6 @@ def acd_integrated_vectorisation(
                     os.remove(file)
                 except:
                     log.error(f"Could not delete : {file}, skipping")
-
         # find tile string for the report to be vectorised
         # tile = sorted_filepaths[0].split(os.sep)[-1].split("_")[-2]
         tile = report.split(os.sep)[-1].split("_")[-2]
