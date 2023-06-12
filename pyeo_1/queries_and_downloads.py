@@ -96,12 +96,10 @@ from pyeo_1.filesystem_utilities import (check_for_invalid_l1_data,
                                          check_for_invalid_l2_data,
                                          get_sen_2_image_tile)
 from requests import Request
-from sentinelhub import download_safe_format
+from sentinelhub.aws import download_safe_format
 from sentinelsat import SentinelAPI, geojson_to_wkt, read_geojson
 
 log = logging.getLogger("pyeo_1")
-
-
 
 try:
     from google.cloud import storage

@@ -79,7 +79,6 @@ def automatic_change_detection_national(config_path):
             root_dir=config_dict["tile_dir"],
             log=acd_log,
             epsg=config_dict["epsg"],
-            conda_env_name=config_dict["conda_env_name"],
             config_dict=config_dict,
         )
 
@@ -155,14 +154,15 @@ def acd_initialisation(config_path):
         logger_name="pyeo_1_acd_log",
     )
 
-    # check conda directory exists
-    conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict, log=log)
-    log.info(conda_boolean)
-    if not conda_boolean:
-        log.error(f"Conda Environment Directory does not exist")
-        log.error(f"Ensure this exists")
-        log.error(f"now exiting the pipeline")
-        sys.exit(1)
+    # check conda directory exists if using conda
+    if config_dict["environment_manager"] == "conda":
+        conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict, log=log)
+        log.info(conda_boolean)
+        if not conda_boolean:
+            log.error(f"Conda Environment Directory does not exist")
+            log.error(f"Ensure this exists")
+            log.error(f"now exiting the pipeline")
+            sys.exit(1)
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
@@ -195,6 +195,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
     """
 
     log.info("Options:")
+    log.info(f"  The Environment Manager is configured to use : {config_dict['environment_manager']}")
     if config_dict["do_parallel"]:
         log.info("  --do_parallel")
         log.info(
@@ -316,10 +317,10 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
         f"Path to the Administrative Boundaries used in the Change Report Vectorisation   : {config_dict['level_1_boundaries_path']}"
     )
     log.info(f"Path to Sen2Cor is   : {config_dict['sen2cor_path']}")
-
-    log.info(
-        f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
-    )
+    if config_dict["environment_manager"] == "conda":
+        log.info(
+            f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
+        )
     log.info("-------------------------------------------")
     log.info("-------------------------------------------")
 
@@ -769,7 +770,6 @@ def acd_national_integration(
     root_dir: str,
     log: logging.Logger,
     epsg: int,
-    conda_env_name: str,
     config_dict: dict,
 ):
     """
