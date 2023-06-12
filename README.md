@@ -115,6 +115,9 @@ PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials
 
 <!-- add ini file examples here -->
 
+
+<!-- how to find gdal path -->
+
 First, move to where PyEO is installed:
 ```bash
 cd pyeo_1
@@ -123,7 +126,6 @@ Now, the pipeline mode for PyEO can be run like this:
 ```bash
 python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1.ini
 ```
-c
 
 <br>  
 

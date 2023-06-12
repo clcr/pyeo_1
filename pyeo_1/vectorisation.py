@@ -646,13 +646,10 @@ def merge_and_calculate_spatial(
     # check crs logic
     if boundaries.crs is not epsg:
         log.info(
-            f"boundary epsg is {boundaries.crs}, but merged dataframe has {merged.crs}"
+            f"boundary epsg is : {boundaries.crs}, but merged dataframe has : {merged.crs}, reprojecting..."
         )
-        log.info(f"reprojecting")
         boundaries = boundaries.to_crs(epsg)
         log.info(f"boundaries reprojected to {boundaries.crs}")
-    else:
-        pass
 
     # county spatial join
     merged = merged.sjoin(boundaries, predicate="within", how="left").drop(
