@@ -152,6 +152,7 @@ def acd_by_tile_raster(config_path: str,
     # Step 1: Create an initial cloud-free median composite from Sentinel-2 as a baseline map
     # ------------------------------------------------------------------------
 
+    ## Setup credentials for data API
     if download_source == "dataspace":
 
         tile_log.info(f'Running download handler for {download_source}')
@@ -172,9 +173,6 @@ def acd_by_tile_raster(config_path: str,
         sen_user = credentials_dict["sent_2"]["user"]
         sen_pass = credentials_dict["sent_2"]["pass"]
 
-        tile_log.info(f'credentials_dict: {credentials_dict}')
-
-
     if config_dict["build_composite"] or config_dict["do_all"]:
         tile_log.info("---------------------------------------------------------------")
         tile_log.info(
@@ -187,11 +185,11 @@ def acd_by_tile_raster(config_path: str,
 
             try:
                 tiles_geom_path = os.path.join(config_dict["pyeo_dir"], os.path.join(config_dict["geometry_dir"], config_dict["s2_tiles_filename"]))
-                tile_log.info(f"the absolute path given is  : {os.path.abspath(tiles_geom_path)}")
+                tile_log.info(f"Path to the S2 tile geometry information absolute path: {os.path.abspath(tiles_geom_path)}")
                 tiles_geom = gpd.read_file(os.path.abspath(tiles_geom_path))
             except FileNotFoundError:
-                tile_log.error(f"tiles_geom does not exist, the path is :{tiles_geom_path}")
-                tile_log.error(f"the absolute path given is  : {os.path.abspath(tiles_geom_path)}")
+                # tile_log.error(f"Path to the S2 tile geometry does not exist, the path is :{tiles_geom_path}")
+                tile_log.error(f"Path to the S2 tile geometry does not exist, absolute path given: {os.path.abspath(tiles_geom_path)}")
 
             tile_geom = tiles_geom[tiles_geom["Name"] == tile]
             tile_geom = tile_geom.to_crs(epsg=4326)
@@ -280,16 +278,20 @@ def acd_by_tile_raster(config_path: str,
                 .apply(lambda x: float(x[0]) * {"GB": 1e3, "MB": 1, "KB": 1e-3}[x[1]])
             )
 
-        # here the main call (from if download_source == "scihub" branch) is resumed
-        df = df_all.query("size >= " + str(faulty_granule_threshold))
+        if download_source == "scihub":
+            min_granule_size = faulty_granule_threshold
+        else:
+            min_granule_size = 0  # Required for dataspace API which doesn't report size correctly (often reported as zero)
+
+        df = df_all.query("size >= " + str(min_granule_size))
 
         tile_log.info(
             "Removed {} faulty scenes <{}MB in size from the list".format(
-                len(df_all) - len(df), faulty_granule_threshold
+                len(df_all) - len(df), min_granule_size
             )
         )
         # find < threshold sizes, report to log
-        df_faulty = df_all.query("size < " + str(faulty_granule_threshold))
+        df_faulty = df_all.query("size < " + str(min_granule_size))
         for r in range(len(df_faulty)):
             tile_log.info(
                 "   {} MB: {}".format(
