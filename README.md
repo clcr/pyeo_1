@@ -115,6 +115,9 @@ PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials
 
 <!-- add ini file examples here -->
 
+
+<!-- how to find gdal path -->
+
 First, move to where PyEO is installed:
 ```bash
 cd pyeo_1
