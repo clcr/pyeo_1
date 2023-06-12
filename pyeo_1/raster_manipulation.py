@@ -4425,7 +4425,7 @@ def __change_from_class_maps(
             )  # convert to 24-hour days
             # Matt: added serial_date_to_string function
             log.info("date of change in days since 2000-01-01 = {}".format(date))
-            log.info(f"date of change  : {serial_date_to_string(np.int(date))}")
+            log.info(f"date of change  : {serial_date_to_string(int(date))}")
             # replace all pixels != 2 with 0 and all pixels == 2 with the new acquisition date
             change_array[np.where(added_mask_array == 2)] = date
             change_array[np.where(added_mask_array != 2)] = 0
