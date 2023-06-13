@@ -2907,12 +2907,12 @@ def apply_scl_cloud_mask(
                                 epsg
                             )
                         )
-                        log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
-                        log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
+                        # log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
+                        # log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
                         # os.environ['GDAL_DATA'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\gdal'
                         # os.environ['PROJ_LIB'] = r'C:\Users\ir81\.conda\envs\pyeo_env_pcwe\Library\share\proj'
-                        log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
-                        log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
+                        # log.info(f"GDAL_DATA: {os.environ['GDAL_DATA']}")
+                        # log.info(f"PROJ_LIB: {os.environ['PROJ_LIB']}")
                         
                         proj = osr.SpatialReference()
                         proj.ImportFromEPSG(epsg)
@@ -3145,7 +3145,7 @@ def apply_processing_baseline_offset_correction_to_tiff_file_directory(
             # print(f"Offset already applied - file marked as: {get_processing_baseline(f)}")
             log.info(f"Offset already applied - file marked as: {get_processing_baseline(f)}")
         # print(f'int(get_processing_baseline(f)[1:]): {int(get_processing_baseline(f)[1:])}')
-        if get_processing_baseline(f)[0] == "0" and (int(get_processing_baseline(f)[1:]) >= 400): # in ["0400", "0509"]:
+        if get_processing_baseline(f)[0] != "A" and (int(get_processing_baseline(f)[1:]) >= 400): # in ["0400", "0509"]:
             in_raster_path = os.path.join(in_tif_directory, f)
             # print(f"Offsetting file: {f}")
             log.info(f"Offsetting file: {f}")
@@ -4425,7 +4425,7 @@ def __change_from_class_maps(
             )  # convert to 24-hour days
             # Matt: added serial_date_to_string function
             log.info("date of change in days since 2000-01-01 = {}".format(date))
-            log.info(f"date of change  : {serial_date_to_string(np.int(date))}")
+            log.info(f"date of change  : {serial_date_to_string(int(date))}")
             # replace all pixels != 2 with 0 and all pixels == 2 with the new acquisition date
             change_array[np.where(added_mask_array == 2)] = date
             change_array[np.where(added_mask_array != 2)] = 0
@@ -5410,7 +5410,7 @@ def buffer_mask_in_place(mask_path, buffer_size, cache=None):
         )
     else:
         cache = morph.binary_erosion(
-            mask_array.squeeze(), selem=morph.disk(buffer_size)
+            mask_array.squeeze(), footprint=morph.disk(buffer_size)
         )
     np.copyto(mask_array, cache)
     mask_array = None

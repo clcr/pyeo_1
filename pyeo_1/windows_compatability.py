@@ -75,7 +75,7 @@ if sys.platform.startswith(WINDOWS_PREFIX) or sys.platform.startswith(IOS_PREFIX
     # and should only be attempted by those with special training or
     # nothing to lose.
     log.warning(
-        "Windows or iOS detected; monkeypatching GetVirtualMemArray. Some functions may not respond as expected."
+        "Windows or iOS detected; Patching GetVirtualMemArray. Some functions may not respond as expected."
     )
 
     def WindowsVirtualMemArray(self, eAccess=None):

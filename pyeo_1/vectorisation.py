@@ -1,5 +1,5 @@
 import logging
-from pyeo_1.filesystem_utilities import gdal_switch
+# from pyeo_1.filesystem_utilities import gdal_switch
 import pandas as pd
 
 def band_naming(band: int, log):
@@ -102,7 +102,7 @@ def vectorise_from_band(
     from pathlib import Path
 
     # switch gdal and proj installation to GDAL's
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
     log.info(f"what is change_report_path  :  {change_report_path}")
@@ -199,7 +199,7 @@ def clean_zero_nodata_vectorised_band(
     from pathlib import Path
 
     # switch gdal and proj installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
@@ -229,7 +229,7 @@ def clean_zero_nodata_vectorised_band(
     log.info(f"filtering complete and saved at  : {filename}")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return filename
 
@@ -378,7 +378,7 @@ def zonal_statistics(
     gdal.UseExceptions()
 
     # switch GDAL installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     with TemporaryDirectory(dir=os.getcwd()) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -520,7 +520,7 @@ def zonal_statistics(
             writer.writerows(zstats)
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return zstats_df
 
@@ -604,7 +604,7 @@ def merge_and_calculate_spatial(
     from pyeo_1.filesystem_utilities import serial_date_to_string
 
     # switch GDAL installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     binary_dec = gpd.read_file(path_to_vectorised_binary_filtered)
 
@@ -703,5 +703,5 @@ def merge_and_calculate_spatial(
             log.info("Could not delete intermediate files")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
     return

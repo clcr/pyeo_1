@@ -140,7 +140,8 @@ def acd_by_tile_raster(config_path: str,
     credentials_path = config_dict["credentials_path"]
     if not os.path.exists(credentials_path):
         tile_log.error(f"The credentials path does not exist  :{credentials_path}")
-        tile_log.error("exiting raster pipeline")
+        tile_log.error(f"Current working directory :{os.getcwd()}")
+        tile_log.error("Exiting raster pipeline")
         sys.exit(1)
 
     conf = configparser.ConfigParser(allow_no_value=True)
