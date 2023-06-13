@@ -37,137 +37,137 @@ from pyeo_1.exceptions import CreateNewStacksException
 log = logging.getLogger("pyeo_1")
 formatter = logging.Formatter("%(asctime)s: %(levelname)s: %(message)s")
 
-def gdal_switch(installation: str,
-                config_dict: dict) -> None:
-    """
-    This function performs a Platform (OS) Independent switch of the `GDAL_DATA` and `PROJ_LIB` installation paths to the required version. This is necessary because of using the same conda environment to perform functions that use different GDAL installations.
+# def gdal_switch(installation: str,
+#                 config_dict: dict) -> None:
+#     """
+#     This function performs a Platform (OS) Independent switch of the `GDAL_DATA` and `PROJ_LIB` installation paths to the required version. This is necessary because of using the same conda environment to perform functions that use different GDAL installations.
 
-    Parameters
-    ---------
-    installation : str
-        a string of either 'gdal_api' or 'geopandas', indicating which GDAL and PROJ_LIB to switch to
-    config_dict : dict
-        a config_dict containing `conda_directory` and `conda_env_name`
+#     Parameters
+#     ---------
+#     installation : str
+#         a string of either 'gdal_api' or 'geopandas', indicating which GDAL and PROJ_LIB to switch to
+#     config_dict : dict
+#         a config_dict containing `conda_directory` and `conda_env_name`
     
-    Returns
-    ---------
-    None
+#     Returns
+#     ---------
+#     None
 
-    """
+#     """
     
 
-    conda_env_name = config_dict["conda_env_name"]
-    conda_directory = config_dict["conda_directory"]
-    # platform if branches
-    if sys.platform.startswith("linux") or sys.platform.startswith("darwin"):
-        # try:
-        if installation == "geopandas":
-            # geopandas installation of GDAL 
-            gdal_path = f"{conda_directory}/envs/{conda_env_name}/lib/python3.10/site-packages/fiona/gdal_data"
-            proj_path = f"{conda_directory}/envs/{conda_env_name}/lib/python3.10/site-packages/fiona/proj_data"
+#     conda_env_name = config_dict["conda_env_name"]
+#     conda_directory = config_dict["conda_directory"]
+#     # platform if branches
+#     if sys.platform.startswith("linux") or sys.platform.startswith("darwin"):
+#         # try:
+#         if installation == "geopandas":
+#             # geopandas installation of GDAL 
+#             gdal_path = f"{conda_directory}/envs/{conda_env_name}/lib/python3.10/site-packages/fiona/gdal_data"
+#             proj_path = f"{conda_directory}/envs/{conda_env_name}/lib/python3.10/site-packages/fiona/proj_data"
 
-            if not os.path.exists(gdal_path):
-                log.info("gdal branch reached")
-                log.error(f"{gdal_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether geopandas was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
+#             if not os.path.exists(gdal_path):
+#                 log.info("gdal branch reached")
+#                 log.error(f"{gdal_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether geopandas was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
 
-            if not os.path.exists(proj_path):
-                log.error(f"{proj_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether geopandas was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)  
-            else:
-                # set geopandas GDAL and PROJ_LIB installations
-                os.environ["GDAL_DATA"] = gdal_path
-                os.environ["PROJ_LIB"] = proj_path
+#             if not os.path.exists(proj_path):
+#                 log.error(f"{proj_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether geopandas was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)  
+#             else:
+#                 # set geopandas GDAL and PROJ_LIB installations
+#                 os.environ["GDAL_DATA"] = gdal_path
+#                 os.environ["PROJ_LIB"] = proj_path
 
-        if installation == "gdal_api":
-            # GDAL and PROJ_LIB standard installation
-            gdal_path = f"{conda_directory}/envs/{conda_env_name}/share/gdal"
-            proj_path = f"{conda_directory}/envs/{conda_env_name}/share/proj"
+#         if installation == "gdal_api":
+#             # GDAL and PROJ_LIB standard installation
+#             gdal_path = f"{conda_directory}/envs/{conda_env_name}/share/gdal"
+#             proj_path = f"{conda_directory}/envs/{conda_env_name}/share/proj"
 
-            if not os.path.exists(gdal_path):
-                log.error(f"{gdal_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
+#             if not os.path.exists(gdal_path):
+#                 log.error(f"{gdal_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
 
-            if not os.path.exists(proj_path):
-                log.error(f"{proj_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)   
-            else:
-                os.environ["GDAL_DATA"] = gdal_path
-                os.environ["PROJ_LIB"] = proj_path
-    # except Exception as error:
-    #     log.error(f"received this error : {error}'")
-    #     log.error(f"exiting...")
-    #     sys.exit(1)
+#             if not os.path.exists(proj_path):
+#                 log.error(f"{proj_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)   
+#             else:
+#                 os.environ["GDAL_DATA"] = gdal_path
+#                 os.environ["PROJ_LIB"] = proj_path
+#     # except Exception as error:
+#     #     log.error(f"received this error : {error}'")
+#     #     log.error(f"exiting...")
+#     #     sys.exit(1)
 
-    elif sys.platform.startswith("win"):
-        # try:
-        if installation == "geopandas":
-            # geopandas installation of GDAL
-            gdal_path = f"{conda_directory}\\envs\\{conda_env_name}\\Lib\\site-packages\\fiona\\gdal_data"
-            proj_path = f"{conda_directory}\\envs\\{conda_env_name}\\Lib\\site-packages\\fiona\\proj_data"
+#     elif sys.platform.startswith("win"):
+#         # try:
+#         if installation == "geopandas":
+#             # geopandas installation of GDAL
+#             gdal_path = f"{conda_directory}\\envs\\{conda_env_name}\\Lib\\site-packages\\fiona\\gdal_data"
+#             proj_path = f"{conda_directory}\\envs\\{conda_env_name}\\Lib\\site-packages\\fiona\\proj_data"
 
-            if not os.path.exists(gdal_path):
-                log.error(f"{gdal_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
+#             if not os.path.exists(gdal_path):
+#                 log.error(f"{gdal_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
 
-            if not os.path.exists(proj_path):
-                log.error(f"{proj_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
-            else:
-                os.environ["GDAL_DATA"] = gdal_path
-                os.environ["PROJ_LIB"] = proj_path
+#             if not os.path.exists(proj_path):
+#                 log.error(f"{proj_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
+#             else:
+#                 os.environ["GDAL_DATA"] = gdal_path
+#                 os.environ["PROJ_LIB"] = proj_path
 
-        if installation == "gdal_api":
-            # GDAL and PROJ_LIB standard installation
-            gdal_path = f"{conda_directory}\\envs\\{conda_env_name}\\Library\\share\\gdal"
-            proj_path = f"{conda_directory}\\envs\\{conda_env_name}\\Library\\share\\proj"
+#         if installation == "gdal_api":
+#             # GDAL and PROJ_LIB standard installation
+#             gdal_path = f"{conda_directory}\\envs\\{conda_env_name}\\Library\\share\\gdal"
+#             proj_path = f"{conda_directory}\\envs\\{conda_env_name}\\Library\\share\\proj"
 
-            if not os.path.exists(gdal_path):
-                log.error(f"{gdal_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
+#             if not os.path.exists(gdal_path):
+#                 log.error(f"{gdal_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
 
-            if not os.path.exists(proj_path):
-                log.error(f"{proj_path} does not exist")
-                log.error(f"check conda directory and conda env name were typed correctly in the .ini")
-                log.error(f"check whether GDAL was installed")
-                log.error("now exiting the pipeline...")
-                sys.exit(1)
-            else:
-                os.environ["GDAL_DATA"] = gdal_path
-                os.environ["PROJ_LIB"] = proj_path
+#             if not os.path.exists(proj_path):
+#                 log.error(f"{proj_path} does not exist")
+#                 log.error(f"check conda directory and conda env name were typed correctly in the .ini")
+#                 log.error(f"check whether GDAL was installed")
+#                 log.error("now exiting the pipeline...")
+#                 sys.exit(1)
+#             else:
+#                 os.environ["GDAL_DATA"] = gdal_path
+#                 os.environ["PROJ_LIB"] = proj_path
 
-        # except Exception as error:
-        #     log.error(f"received this error : {error}'")
-        #     log.error(f"exiting...")
-        #     sys.exit(1)
-    else:
-        log.error(f"OS is not one of 'win', 'linux' or 'darwin'")
-        log.error(f"OS this script is running on is : {sys.platform}")
-        log.error(f"exiting pipeline")
-        sys.exit(1)
+#         # except Exception as error:
+#         #     log.error(f"received this error : {error}'")
+#         #     log.error(f"exiting...")
+#         #     sys.exit(1)
+#     else:
+#         log.error(f"OS is not one of 'win', 'linux' or 'darwin'")
+#         log.error(f"OS this script is running on is : {sys.platform}")
+#         log.error(f"exiting pipeline")
+#         sys.exit(1)
 
-    return
+#     return
 
 def init_log(log_path):
     """

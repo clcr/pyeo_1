@@ -11,7 +11,7 @@ from tempfile import TemporaryDirectory
 import geopandas as gpd
 import pandas as pd
 from pyeo_1 import filesystem_utilities
-from pyeo_1.filesystem_utilities import gdal_switch
+# from pyeo_1.filesystem_utilities import gdal_switch
 from pyeo_1.apps.acd_national import (acd_by_tile_raster,
                                       acd_by_tile_vectorisation)
 
@@ -356,7 +356,7 @@ def acd_roi_tile_intersection(config_dict, log):
     """
 
     # switch GDAL installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     ####### read in roi
     # roi_filepath is relative to pyeo_dir supplied in pyeo_1.ini
@@ -392,7 +392,7 @@ def acd_roi_tile_intersection(config_dict, log):
     log.info("Finished ROI tile intersection")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return tilelist_filepath
 
@@ -810,7 +810,7 @@ def acd_national_integration(
         log.info(f"{number} : {path}")
 
     # switch gdal and proj installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     # initialise empty geodataframe
     merged_gdf = gpd.GeoDataFrame()
@@ -873,7 +873,7 @@ def acd_national_integration(
     log.info(f"Integrated GeoDataFrame written to {out_path}")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
@@ -909,7 +909,7 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
     """
 
     # switch gdal and proj installation to geopandas'
-    gdal_switch(installation="geopandas", config_dict=config_dict)
+    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     # find national_geodataframe
     search_pattern = "national_geodataframe.shp"
@@ -954,7 +954,7 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
             log.error(f"failed to write output at :  {out_path}")
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    gdal_switch(installation="gdal_api", config_dict=config_dict)
+    # gdal_switch(installation="gdal_api", config_dict=config_dict)
 
     return
 
