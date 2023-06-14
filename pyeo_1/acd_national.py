@@ -156,13 +156,14 @@ def acd_initialisation(config_path):
     )
 
     # check conda directory exists
-    conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict, log=log)
-    log.info(conda_boolean)
-    if not conda_boolean:
-        log.error(f"Conda Environment Directory does not exist")
-        log.error(f"Ensure this exists")
-        log.error(f"now exiting the pipeline")
-        sys.exit(1)
+    if config_dict["environment_manager"] == "conda":
+        conda_boolean = filesystem_utilities.conda_check(config_dict=config_dict, log=log)
+        log.info(conda_boolean)
+        if not conda_boolean:
+            log.error(f"Conda Environment Directory does not exist")
+            log.error(f"Ensure this exists")
+            log.error(f"now exiting the pipeline")
+            sys.exit(1)
 
     log.info("---------------------------------------------------------------")
     log.info("---                  INTEGRATED PROCESSING START            ---")
@@ -195,6 +196,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
     """
 
     log.info("Options:")
+    log.info(f"The Environment Manager configured to use is : {config_dict['environment_manager']}")
     if config_dict["do_parallel"]:
         log.info("  --do_parallel")
         log.info(

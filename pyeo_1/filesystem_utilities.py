@@ -298,7 +298,7 @@ def config_path_to_config_dict(config_path: str):
     config_dict["watch_period_seconds"] = int(
         config["run_mode"]["watch_period_seconds"]
     )
-
+    
     config_dict["do_tile_intersection"] = config.getboolean("raster_processing_parameters", "do_tile_intersection")
 
     config_dict["do_raster"] = config.getboolean(
@@ -389,6 +389,7 @@ def config_path_to_config_dict(config_path: str):
     config_dict["to_classes"] = json.loads(
         config["raster_processing_parameters"]["change_to_classes"]
     )
+    config_dict["environment_manager"] = config["environment"]["environment_manager"]
     config_dict["conda_directory"] = config["environment"]["conda_directory"]
     config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
     config_dict["pyeo_dir"] = config["environment"]["pyeo_dir"]
