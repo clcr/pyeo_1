@@ -197,6 +197,10 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
 
     log.info("Options:")
     log.info(f"The Environment Manager configured to use is : {config_dict['environment_manager']}")
+    if config_dict["environment_manager"] == "conda":
+        log.info(
+        f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
+    )
     if config_dict["do_parallel"]:
         log.info("  --do_parallel")
         log.info(
@@ -319,9 +323,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
     )
     log.info(f"Path to Sen2Cor is   : {config_dict['sen2cor_path']}")
 
-    log.info(
-        f"The Conda Environment specified in .ini file is :  {config_dict['conda_env_name']}"
-    )
+ 
     log.info("-------------------------------------------")
     log.info("-------------------------------------------")
 

@@ -390,8 +390,9 @@ def config_path_to_config_dict(config_path: str):
         config["raster_processing_parameters"]["change_to_classes"]
     )
     config_dict["environment_manager"] = config["environment"]["environment_manager"]
-    config_dict["conda_directory"] = config["environment"]["conda_directory"]
-    config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
+    if config_dict["environment_manager"] == "conda":
+        config_dict["conda_directory"] = config["environment"]["conda_directory"]
+        config_dict["conda_env_name"] = config["environment"]["conda_env_name"]
     config_dict["pyeo_dir"] = config["environment"]["pyeo_dir"]
     config_dict["tile_dir"] = config["environment"]["tile_dir"]
     config_dict["integrated_dir"] = config["environment"]["integrated_dir"]
