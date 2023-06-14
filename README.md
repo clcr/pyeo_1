@@ -47,8 +47,9 @@ cd pyeo_home
 ```
 Check that `git` is installed on your machine by entering in your terminal:
 ```bash
-git -h
+git -v
 ```
+If installed it will report its version
 
 1. Because SEPAL already provides git, you can skip the git installation step.
     1. If not, install git by following the install instructions on https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -68,20 +69,19 @@ python3 -m venv pyeo_venv
 ```bash
 source pyeo_venv/bin/activate
 ```
-3. Move into the `pyeo_1` folder that you cloned from Git:
+3. Install the packages that `pyeo_1` requires into `pyeo_venv`:
+```bash
+pip install -r pyeo_1/requirements.txt
+```
+4. Move into the `pyeo_1` folder that you cloned from Git:
 ```bash
 cd pyeo_1
-```
-4. Install the packages that `pyeo_1` requires into `pyeo_venv`:
-```bash
-pip install -r requirements.txt
 ```
 5. Install `pyeo_1` into `pyeo_venv`, be sure to include the `.` at the end of the command!:
 ```bash
 python -m pip install -e .
 ```
 6. Finally, test that `pyeo_1` was installed correctly by importing a module:
-
 ```bash
 python
 from pyeo_1 import classification
