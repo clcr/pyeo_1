@@ -560,14 +560,14 @@ def acd_by_tile_raster(config_path: str,
                     log=tile_log
                 )
             
-            # tile_log.info("Atmospheric correction with sen2cor.")
-            # raster_manipulation.atmospheric_correction(
-            #     composite_l1_image_dir,
-            #     composite_l2_image_dir,
-            #     sen2cor_path,
-            #     delete_unprocessed_image=False,
-            #     log=tile_log,
-            # )
+            tile_log.info("Atmospheric correction with sen2cor.")
+            raster_manipulation.atmospheric_correction(
+                composite_l1_image_dir,
+                composite_l2_image_dir,
+                sen2cor_path,
+                delete_unprocessed_image=False,
+                log=tile_log,
+            )
 
         if l2a_products.shape[0] > 0:
             tile_log.info("Downloading Sentinel-2 L2A products.")
