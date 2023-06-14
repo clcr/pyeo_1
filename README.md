@@ -56,10 +56,37 @@ git -h
 ```bash
 git clone https://github.com/clcr/pyeo_1.git
 ```
-1. Press the spanner shaped tab and click to open JupyterLab
-1. When JupyterLab is running navigate to your pyeo_home directory using the panel on the left hand side and then open the 'notebooks' subdirectory
-1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.  
-<br>
+<!-- 1. Press the spanner shaped tab and click to open JupyterLab
+1. When JupyterLab is running navigate to your pyeo_home directory using the panel on the left hand side and then open the 'notebooks' subdirectory -->
+<!-- 1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.  
+<br> -->
+1. SEPAL uses `venv` as the package manager for building python libraries, so first create a venv:
+```bash
+python3 -m venv pyeo_venv
+```
+2. Then activate the venv:
+```bash
+source pyeo_venv/bin/activate
+```
+3. Move into the `pyeo_1` folder that you cloned from Git:
+```bash
+cd pyeo_1
+```
+4. Install the packages that `pyeo_1` requires into `pyeo_venv`:
+```bash
+pip install -r requirements.txt
+```
+5. Install `pyeo_1` into `pyeo_venv`, be sure to include the `.` at the end of the command!:
+```bash
+python -m pip install -e .
+```
+6. Finally, test that `pyeo_1` was installed correctly by importing a module:
+
+```bash
+python
+from pyeo_1 import classification
+```
+7. Now, proceed to the Section below - How to Run PyEO.
 
 ## Installation on Other Platforms
 To install `pyeo_1`, put the following commands into **Bash** (Linux), **Terminal** (Mac) or the **Anaconda Prompt** (Windows)
@@ -110,6 +137,21 @@ jupyter notebook
 *Please note, if you are using SEPAL, jupyter notebooks have to be started via a GUI method instead of from Bash, see*: https://user-images.githubusercontent.com/149204/132491851-5ac0303f-1064-4e12-9627-f34e3f78d880.png  
 <br>  
 
+## How PyEO works
+PyEO operates across two stages:  
+1. Across Sentinel-2 (S2) tiles
+2. Within individual S2 tiles
+<br>  
+
+
+1. Takes a Region of Interest (ROI) and calculates which Sentinel-2 (S2) tiles overlap with the ROI
+2. Builds a Baseline Composite to compare land cover changes against, by downloading S2 images and calculating the median of these images.
+3. Downloads images over the Change Period
+4. Classifies the Composite and the Change images using a classifier in `./models/`
+5. Calculates the change between the **from classes** and the **to classes**, for each classified image. This could be changes from forest to bare soil.
+6. Creates a Change Report describing the consistency of the class changes, highlighting the changes that `PyEO` is confident.
+7. Vectorises the Change Report and removes any changes outside of the ROI
+
 ## How to Run PyEO
 PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials, but the pipeline method can be run via the **Terminal**.  This process is automated and relies on an a configuration file (e.g. `pyeo_1.ini`) to make processing decisions.  
 
@@ -124,7 +166,34 @@ cd pyeo_1
 ```
 Now, the pipeline mode for PyEO can be run like this:
 ```bash
-python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1.ini
+python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1_linux.ini
+```
+
+The pipeline uses arguments specified in the `.ini` file (short for initialisation), to decide what processes to run.
+Here, we will go through the sections of the `ini` file and what arguments do what.
+
+```
+[forest_sentinel]
+# Acquisition dates for Images in the Change Period, in the form yyyymmdd
+start_date=20230101
+end_date=20230611
+
+# Acquisition dates for Images for the Baseline Composite, in the form yyyymmdd
+composite_start=20220101
+composite_end=20221231
+
+# EPSG code, for example - Kenya. This epsg is for areas North of equator and East of 36°E is EPSG:21097
+# See https://epsg.io/21097 and https://spatialreference.org/ref/epsg/21097/
+epsg=21097
+
+# Cloud cover threshold for imagery to download
+cloud_cover=25
+
+# Certainty value above which a pixel is considered a cloud from sen2cor
+cloud_certainty_threshold=0
+
+# path to the trained machine learning model for land cover in Kenya
+model= ./models/model_36MYE_Unoptimised_20230505_no_haze.pkl
 ```
 
 <br>  
