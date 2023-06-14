@@ -694,6 +694,8 @@ def download_dataspace_product(product_uuid: str,
         # zip_ref.extractall(unzipped_path)
         # zip_ref.close()
         destination_path = f"{safe_directory}/zips/{product_name}"
+        if not os.path.exists(destination_path):
+            os.mkdir(destination_path)
         shutil.copyfile(src=temporary_path, dst=destination_path)
         shutil.unpack_archive(temporary_path, unzipped_path)
         # no need to remove unzipped path because it is within temp_dir
