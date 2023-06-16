@@ -32,6 +32,11 @@ conda env create --file environment.yml --name pyeo_env
 conda activate pyeo_env
 python -m pip install -e .
 ```
+If you do not want to edit `pyeo_1`, replace `python -m pip install -e .` line with
+
+```bash
+python -m pip install -vv .
+```
 
 ### Windows
 ```bash
@@ -41,6 +46,12 @@ cd pyeo_1
 conda env create --file environment_windows.yml --name pyeo_env
 conda activate pyeo_env
 python -m pip install -e .
+```
+
+If you do not want to edit `pyeo_1`, replace `python -m pip install -e .` line with
+
+```bash
+python -m pip install -vv .
 ```
 <br>  
 
@@ -102,11 +113,6 @@ export PATH=$PATH:$pyeo_1/bin
 
 ## Installation Test Steps
 
-If you do not want to edit `pyeo_1`, replace the pip install line with
-
-```bash
-python -m pip install . -vv
-```
 
 You can test your installation with by typing the following in Bash/Terminal/Anaconda Prompt:
 ```bash
