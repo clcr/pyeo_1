@@ -113,7 +113,6 @@ export PATH=$PATH:$pyeo_1/bin
 
 ## Installation Test Steps
 
-
 You can test your installation with by typing the following in Bash/Terminal/Anaconda Prompt:
 ```bash
 python
@@ -132,35 +131,33 @@ jupyter notebook
 <br>  
 
 ## How to Run PyEO
-PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials, but the pipeline method can be run via the **Terminal**.  This process is automated and relies on an a configuration file (e.g. `pyeo_1.ini`) to make processing decisions.  
-
+PyEO can be run interactively in the Jupyter Notebooks provided in the Tutorials, but the pipeline method can be run via the **Terminal**.  This process is automated and is suited to the advanced python user. <br> 
+Both the terminal and notebook methods rely on an a configuration file (e.g. `pyeo_linux.ini`, `pyeo_windows.ini`, `pyeo_sepal.ini`) to make processing decisions.  <br>
+The below example references `pyeo_sepal.ini`, but this can be switched for the Linux or Windows equivalent. <br>
 <!-- add ini file examples here -->
 
-
-<!-- how to find gdal path -->
-
-First, move to where PyEO is installed:
+1. First, move to where PyEO is installed:
 ```bash
 cd pyeo_1
 ```
-Now, the pipeline mode for PyEO can be run like this:
+2. Now, the pipeline method runs like this. Here we are telling the terminal that we want to invoke `python` to run the script `run_acd_national.py` within the folder `pyeo_1`, then we pass the absolute path to the initialisation file for your OS. The script `run_acd_national.py` requires this path as all the processing parameters are stored in the initialisation file. See below:
 ```bash
-python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_1.ini
+python pyeo_1/run_acd_national.py <insert_your_absolute_path_to>/pyeo_sepal.ini
 ```
 
 <br>  
 
 ## Automated Pipeline Execution
-To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_1.ini`, make the following file an executable by issuing this command:
+To enable parallel processing of the raster and vector processing pipelines with the `do_parallel = True` option enabled in `pyeo_sepal.ini`, make the following file an executable by issuing this command:
 ```bash
 cd pyeo_1/apps/automation/
 chmod u+x automate_launch.sh
 ```
 <br>  
 
-## Further Setup Information
+<!-- ## Further Setup Information
 A slightly more verbose setup tutorial for `pyeo_1` can be found in the notebooks directory, at PyEO_I_Setup_on_SEPAL.ipynb
-<br>  
+<br>  -->
 
 ## Tutorials
 Once installation of `pyeo_1` is complete, you can follow the tutorial notebooks, which demonstrate the utility of `pyeo_1`.
