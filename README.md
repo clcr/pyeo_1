@@ -12,9 +12,40 @@ Example notebooks are available at:
 - https://github.com/clcr/pyeo_training_materials
 
 ## Requirements
+Python library requirements are categorised by Platform (Operating System - OS). For use in the Cloud Processing platform SEPAL - pyeo is already installed in a virtual environment. <!-- This is in anticipation of pyeo SEPAL-wide venv being created -->
+SEPAL is a cloud computing platform for geospatial data which offers remote Linux Instances that are customised for performing geospatial analysis in R or Python. More information can be found here: https://github.com/openforis/sepal <br>. 
+
 Package management is performed by Conda, for instructions on how to install Conda, please refer to: https://docs.conda.io/en/latest/.  
 *Note: Conda can be installed as part of Anaconda https://www.anaconda.com/*  
+<br>
+
+For installation locally on an OS of your choice, see the sections below.  
+
+To install `pyeo_1`, put the following commands into **Bash** (Linux), **Terminal** (Mac) or the **Anaconda Prompt** (Windows) <br>
+
+### Ubuntu or MacOS
+```bash
+conda install -c conda-forge git
+git clone https://github.com/clcr/pyeo_1.git
+cd pyeo_1
+conda env create --file environment.yml --name pyeo_env
+conda activate pyeo_env
+python -m pip install -e .
+```
+
+### Windows
+```bash
+conda install -c conda-forge git
+git clone https://github.com/clcr/pyeo_1.git
+cd pyeo_1
+conda env create --file environment_windows.yml --name pyeo_env
+conda activate pyeo_env
+python -m pip install -e .
+```
 <br>  
+
+#### A Note on `.ini` file encoding on Windows
+If the OS that pyeo is running on is Windows, we have noticed that `pyeo_windows.ini` may need to be saved with `ANSI` encoding instead of the usual `UTF-8`. See [this webpage](https://stackoverflow.com/questions/13282189/missingsectionheadererror-file-contains-no-section-headers) for more details.
 
 ## Satellite Imagery Providers
 From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space Ecosystem (CDSE). In the meantime, if you wish to download from Scihub, you will need a Scihub account: https://scihub.copernicus.eu/
@@ -24,9 +55,9 @@ To use the CDSE, you will need a separate account: https://dataspace.copernicus.
 To process Sentinel-2 L1Cs, you will also need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/. This installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.  
 <br>
 
-## Installation on SEPAL
+<!-- ## Installation on SEPAL
 
-SEPAL is a cloud computing platform for geospatial data which offers remote Linux Instances that are customised for performing geospatial analysis in R or Python. More information can be found here: https://github.com/openforis/sepal
+
 
 If you want to use `pyeo_1` on SEPAL, you can follow these customised instructions below:
 
@@ -58,24 +89,8 @@ git clone https://github.com/clcr/pyeo_1.git
 ```
 1. Press the spanner shaped tab and click to open JupyterLab
 1. When JupyterLab is running navigate to your pyeo_home directory using the panel on the left hand side and then open the 'notebooks' subdirectory
-1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.  
+1. Double click the file `PyEO_1_Setup_on_SEPAL.ipynb` and follow the contained instructions to setup the PyEO conda environment.  -->
 <br>
-
-## Installation on Other Platforms
-To install `pyeo_1`, put the following commands into **Bash** (Linux), **Terminal** (Mac) or the **Anaconda Prompt** (Windows)
-
-```bash
-conda install -c conda-forge git
-git clone https://github.com/clcr/pyeo_1.git
-cd pyeo_1
-conda env create --file environment.yml --name pyeo_env
-conda activate pyeo_env
-python -m pip install -e .
-```
-<br>  
-
-### A Note on Windows
-If the OS that pyeo is running on is Windows, we have noticed that `pyeo_windows.ini` may need to be saved with `ANSI` encoding instead of the usual `UTF-8`. See [this webpage](https://stackoverflow.com/questions/13282189/missingsectionheadererror-file-contains-no-section-headers) for more details.
 
 <!-- For Linux users, you can optionally access the `pyeo_1` command line functions, by adding the following to your .bashrc
 
