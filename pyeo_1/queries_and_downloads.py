@@ -68,6 +68,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import time
 from tqdm import tqdm
 import zipfile
 from multiprocessing.dummy import Pool
@@ -471,7 +472,10 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
         dataspace_username=dataspace_username,
         dataspace_password=dataspace_password,
         )
-    
+    # wait for 60 seconds
+    print("sleep for 60 seconds")
+    time.sleep(60)
+    print("awake after sleep")
     # print(f"auth response  :  {auth_response}")
         
     for counter, product in enumerate(product_df.itertuples(index=False)):
@@ -505,7 +509,10 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
             dataspace_password=dataspace_password,
             refresh_token=auth_response["refresh_token"],
             )
-
+            # wait for 60 seconds
+            print("sleep for 60")
+            time.sleep(60)
+            print("awake from sleep")
             # print(f"original auth response: {auth_response}")
             # print("---"*30)
             # print(f"new auth response : {new_auth_response}")
@@ -538,7 +545,9 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
             dataspace_password=dataspace_password,
             refresh_token=auth_response["refresh_token"],
             )
-
+            print("sleep for 60")
+            time.sleep(60)
+            print("awake from sleep")
             # print(f"original auth response: {auth_response}")
             # print("---"*30)
             # print(f"new auth response : {new_auth_response}")
@@ -678,7 +687,7 @@ def download_dataspace_product(product_uuid: str,
     # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
     with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
-        temporary_path = f"{temp_dir}/{product_name}.zip"
+        temporary_path = f"{temp_dir}{os.sep}{product_name}.zip"
 
         with open(temporary_path, 'wb') as download:
             # for data in file.iter_content(block_size):
@@ -688,15 +697,16 @@ def download_dataspace_product(product_uuid: str,
         # progress_bar.close()
         log.info(f"this is the temporary_path  :  {temporary_path}")
         unzipped_path = os.path.splitext(temporary_path)[0]
-
         # is the 'not a .zip' error here?
         # zip_ref = zipfile.ZipFile(temporary_path, "r")
         # zip_ref.extractall(unzipped_path)
         # zip_ref.close()
-        destination_path = f"{safe_directory}/zips/{product_name}"
-        if not os.path.exists(destination_path):
-            os.mkdir(destination_path)
-        shutil.copyfile(src=temporary_path, dst=destination_path)
+        destination_path = f"{safe_directory}{os.sep}{product_name}"
+        log.info(f"this is the destination path  :  {destination_path}")
+        # if not os.path.exists(destination_path):
+        #     os.mkdir(destination_path)
+        # shutil.copyfile(src=temporary_path, dst=destination_path)
+        log.info("    unpacking archive...")
         shutil.unpack_archive(temporary_path, unzipped_path)
         # no need to remove unzipped path because it is within temp_dir
         # print("sys exiting to preserve temp_dir...")
@@ -704,6 +714,7 @@ def download_dataspace_product(product_uuid: str,
         # # restructure paths
         within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
         destination_path = f"{safe_directory}/{product_name}"
+        log.info("    moving directory...")
         shutil.move(src=within_folder_path[0], dst=destination_path)
     
     return
