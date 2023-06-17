@@ -20,7 +20,9 @@ from pyeo_1.apps.acd_national import (acd_by_tile_raster,
 def automatic_change_detection_national(config_path):
     """
     This function:
-        - acts as the singular call to run automatic change detection per tile, then aggregate to national, then distribute the change alerts.
+        - Acts as the singular call to run automatic change detection for all RoI intersecting tiles 
+        and then to vectorise and aggregate the results into a national scale shape file
+        of the change alerts suitable for use within QGIS.
 
     Parameters
     ----------
@@ -838,7 +840,7 @@ def acd_national_integration(
     roi = roi.to_crs(epsg)
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         for vector in sorted(vectorised_paths):
             try:
                 # read in shapefile, reproject
@@ -868,7 +870,7 @@ def acd_national_integration(
                 log.error(f"failed to merge geodataframe: {vector}")
 
     # write integrated geodataframe to shapefile
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             out_path = f"{os.path.join(root_dir, 'national_geodataframe.shp')}"
             log.info(
@@ -949,7 +951,7 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
     filtered = filtered.query(query_values)
 
     # write filtered geodataframe to shapefile
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             out_path = f"{os.path.join(config_dict['tile_dir'], 'national_geodataframe_filtered.shp')}"
             log.info(

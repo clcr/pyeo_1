@@ -686,7 +686,7 @@ def download_dataspace_product(product_uuid: str,
     # block_size = 1024
     # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as temp_dir:
         temporary_path = f"{temp_dir}{os.sep}{product_name}.zip"
 
         with open(temporary_path, 'wb') as download:
@@ -1052,7 +1052,7 @@ def sent2_query(
     download by granule; there is no need to have a precise polygon at this stage.
 
     """
-    with TemporaryDirectory() as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # Preprocessing dates
         start_date = _date_to_timestamp(start_date)
         end_date = _date_to_timestamp(end_date)
