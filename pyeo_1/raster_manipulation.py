@@ -3650,7 +3650,7 @@ def apply_sen2cor(
     # Removing it resolves this problem.
 
     # I.R. 20220509
-    # log.info("calling sen2cor:")
+    log.info("Calling sen2cor:")
     log.info(sen2cor_path + " " + image_path + " --output_dir " + out_path)
     sen2cor_proc = subprocess.Popen(
         [sen2cor_path, image_path, "--output_dir", out_path],
@@ -3676,7 +3676,7 @@ def apply_sen2cor(
         if len(nextline) > 0:
             log.info(nextline)
         if nextline == "" and sen2cor_proc.poll() is not None:
-            break
+            break    
         if "CRITICAL" in nextline:
             # log.error(nextline)
             raise subprocess.CalledProcessError(-1, "L2A_Process")
@@ -3719,6 +3719,13 @@ def build_sen2cor_output_path(image_path, timestamp, version):
         out_path = out_path.rpartition("_")[0] + "_" + timestamp + ".SAFE"
     else:
         out_path = image_path.replace("MSIL1C", "MSIL2A")
+    
+    # I.R. Modification to use home directory to store temporary sen2cor output 
+    # - required to avoid errors due to path length exceeding maximum allowed under Windows
+    # - note sen2cor fails if given a relative path
+    user_home_path = os.path.expanduser('~')
+    out_path = os.path.join(user_home_path, os.path.basename(out_path))
+
     return out_path
 
 
@@ -3797,18 +3804,14 @@ def atmospheric_correction(
         # see https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/naming-convention
         image_timestamp = datetime.datetime.now().strftime(r"%Y%m%dT%H%M%S")
         # log.info("   sen2cor processing time stamp = " + image_timestamp)
-        out_name = build_sen2cor_output_path(
-            image, image_timestamp, get_sen2cor_version(sen2cor_path)
-        )
-        # log.info("   out name = " + out_name)
+        out_name = build_sen2cor_output_path(image, image_timestamp, get_sen2cor_version(sen2cor_path))
+        log.info("   out name = " + out_name)
         out_path = os.path.join(out_directory, out_name)
-        # log.info("   out path = " + out_path)
+        log.info("   out path = " + out_path)
         out_glob = out_path.rpartition("_")[0] + "*"
-        # log.info("   out glob = " + out_glob)
+        log.info("   out glob = " + out_glob)
         if glob.glob(out_glob):
-            log.info(
-                "Skipping atmospheric correction of {}. Already done.".format(image)
-            )
+            log.info("Skipping atmospheric correction of {}. Already done.".format(image))
             continue
         else:
             log.info("Atmospheric correction of {}".format(image))
@@ -3821,23 +3824,13 @@ def atmospheric_correction(
                 )
                 l2_name = os.path.basename(l2_path)
                 log.info("Changing L2A path: {}".format(l2_path))
-                log.info(
-                    "  to new L2A path: {}".format(os.path.join(out_directory, l2_name))
-                )
+                log.info("  to new L2A path: {}".format(os.path.join(out_directory, l2_name)))
                 if os.path.exists(l2_path):
                     os.rename(l2_path, os.path.join(out_directory, l2_name))
                 else:
-                    log.error(
-                        "L2A path not found after atmospheric correction with Sen2Cor: {}".format(
-                            l2_path
-                        )
-                    )
+                    log.error("L2A path not found after atmospheric correction with Sen2Cor: {}".format(l2_path))
             except (subprocess.CalledProcessError, BadS2Exception):
-                log.error(
-                    "Atmospheric correction failed for {}. Moving on to next image.".format(
-                        image
-                    )
-                )
+                log.error("Atmospheric correction failed for {}. Moving on to next image.".format(image))
     return
 
 

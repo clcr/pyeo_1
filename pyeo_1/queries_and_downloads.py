@@ -695,17 +695,27 @@ def download_dataspace_product(product_uuid: str,
             #     progress_bar.update(len(data))
             download.write(file.content)
         # progress_bar.close()
-        log.info(f"this is the temporary_path  :  {temporary_path}")
+        log.info(f"Downloaded file temporary_path: {temporary_path}")
         unzipped_path = os.path.splitext(temporary_path)[0]
         # is the 'not a .zip' error here?
         # zip_ref = zipfile.ZipFile(temporary_path, "r")
         # zip_ref.extractall(unzipped_path)
         # zip_ref.close()
         destination_path = f"{safe_directory}{os.sep}{product_name}"
-        log.info(f"this is the destination path  :  {destination_path}")
+        log.info(f"Downloaded file destination path: {destination_path}")
         # if not os.path.exists(destination_path):
         #     os.mkdir(destination_path)
         # shutil.copyfile(src=temporary_path, dst=destination_path)
+
+        destination_path_size = os.path.getsize(destination_path)
+        log.info(f"Downloaded file file size: {destination_path} bytes")
+        min_file_size = 2000  # in bytes
+        if (destination_path_size < min_file_size):
+            log.info(f'Downloaded file too small, contents are:')
+            file_dnld = open(destination_path, 'r')
+            log.info(file_dnld.readline())
+            file_dnld.close()
+
         log.info("    unpacking archive...")
         shutil.unpack_archive(temporary_path, unzipped_path)
         # no need to remove unzipped path because it is within temp_dir

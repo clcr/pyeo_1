@@ -673,7 +673,10 @@ def acd_integrated_vectorisation(
     config_dict = filesystem_utilities.config_path_to_config_dict(
         config_path=config_path
     )
-
+    
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+    
     # check if tilelist_filepath exists, open if it does, exit if it doesn't
     if os.path.exists(tilelist_filepath):
         try:

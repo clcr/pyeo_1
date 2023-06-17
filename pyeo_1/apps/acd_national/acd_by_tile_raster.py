@@ -77,6 +77,9 @@ def acd_by_tile_raster(config_path: str,
     #     f"This individual tile directory already exists  : {individual_tile_directory_path}"
     # )
 
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
         log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"),
