@@ -63,6 +63,20 @@ From July 2023, Scihub will be deprecated in favour of the Copernicus Data Space
 
 To use the CDSE, you will need a separate account: https://dataspace.copernicus.eu
 
+Once you have created your account, you will need to enter your email address and password into the `credentials_dummy.ini` file in the folder `credentials`, like this:  
+
+```
+[sent_2]
+user=replace_this_with_your_email_address
+pass=replace_this_with_your_password
+
+[dataspace]
+user=replace_this_with_your_email_address
+pass=replace_this_with_your_password
+```
+
+Where `user` and `pass` under `[sent_2]` correspond to your `scihub` account details, and `user` and `pass` under `[dataspace]` correspond to your `dataspace` account details. <br>
+
 To process Sentinel-2 L1Cs, you will also need Sen2Cor installed: http://step.esa.int/main/third-party-plugins-2/sen2cor/. This installation process is covered in the PyEO_I_Setup.ipynb notebook, available from the notebooks folder.  
 <br>
 
