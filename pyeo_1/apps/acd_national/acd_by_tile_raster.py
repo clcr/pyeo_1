@@ -83,7 +83,7 @@ def acd_by_tile_raster(config_path: str,
     # create per tile log file
     tile_log = filesystem_utilities.init_log_acd(
         log_path=os.path.join(individual_tile_directory_path, "log", tile + "_log.log"),
-        logger_name="pyeo_1"
+        logger_name=tile  #"pyeo_1"
     )
 
     # print config parameters to the tile log
@@ -103,9 +103,7 @@ def acd_by_tile_raster(config_path: str,
     composite_dir = os.path.join(tile_root_dir, "composite")
     composite_l1_image_dir = os.path.join(tile_root_dir, f"composite{os.sep}L1C")
     composite_l2_image_dir = os.path.join(tile_root_dir, f"composite{os.sep}L2A")
-    composite_l2_masked_image_dir = os.path.join(
-        tile_root_dir, f"composite{os.sep}cloud_masked"
-    )
+    composite_l2_masked_image_dir = os.path.join(tile_root_dir, f"composite{os.sep}cloud_masked")
     quicklook_dir = os.path.join(tile_root_dir, f"output{os.sep}quicklooks")
 
     start_date = config_dict["start_date"]
@@ -179,9 +177,7 @@ def acd_by_tile_raster(config_path: str,
 
     if config_dict["build_composite"] or config_dict["do_all"]:
         tile_log.info("---------------------------------------------------------------")
-        tile_log.info(
-            "Creating an initial cloud-free median composite from Sentinel-2 as a baseline map"
-        )
+        tile_log.info("Creating an initial cloud-free median composite from Sentinel-2 as a baseline map")
         tile_log.info("---------------------------------------------------------------")
         tile_log.info("Searching for images for initial composite.")
 
@@ -189,11 +185,11 @@ def acd_by_tile_raster(config_path: str,
 
             try:
                 tiles_geom_path = os.path.join(config_dict["pyeo_dir"], os.path.join(config_dict["geometry_dir"], config_dict["s2_tiles_filename"]))
-                tile_log.info(f"Path to the S2 tile geometry information absolute path: {os.path.abspath(tiles_geom_path)}")
+                tile_log.info(f"Absolute path to S2 tile geometry: {os.path.abspath(tiles_geom_path)}")
                 tiles_geom = gpd.read_file(os.path.abspath(tiles_geom_path))
             except FileNotFoundError:
                 # tile_log.error(f"Path to the S2 tile geometry does not exist, the path is :{tiles_geom_path}")
-                tile_log.error(f"Path to the S2 tile geometry does not exist, absolute path given: {os.path.abspath(tiles_geom_path)}")
+                tile_log.error(f"Path to S2 tile geometry does not exist, absolute path given: {os.path.abspath(tiles_geom_path)}")
 
             tile_geom = tiles_geom[tiles_geom["Name"] == tile]
             tile_geom = tile_geom.to_crs(epsg=4326)
@@ -391,9 +387,7 @@ def acd_by_tile_raster(config_path: str,
         # Search the local directories, composite/L2A and L1C, checking if scenes have already been downloaded and/or processed whilst checking their dir sizes
         if download_source == "scihub":
             if l1c_products.shape[0] > 0:
-                tile_log.info(
-                    "Checking for already downloaded and zipped L1C or L2A products and"
-                )
+                tile_log.info("Checking for already downloaded and zipped L1C or L2A products and")
                 tile_log.info("  availability of matching L2A products for download.")
                 n = len(l1c_products)
                 drop = []

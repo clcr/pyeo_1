@@ -472,11 +472,12 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
         dataspace_username=dataspace_username,
         dataspace_password=dataspace_password,
         )
+    print(f"auth response  :  {auth_response}")
+    
     # wait for 60 seconds
     print("sleep for 60 seconds")
     time.sleep(60)
     print("awake after sleep")
-    # print(f"auth response  :  {auth_response}")
         
     for counter, product in enumerate(product_df.itertuples(index=False)):
         log.info(f"    Checking {counter+1} of {len(product_df)} : {product.title}")        # if L1C have been passed, download to the l1c_directory
@@ -500,7 +501,7 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                 )
             
             except Exception as error:
-                log.error(f"Download dataspace for a L1C Product did not finish")
+                log.error(f"Download from dataspace of L1C Product did not finish")
                 log.error(f"Received this error :  {error}")
 
             # refresh
@@ -536,7 +537,7 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                     log=log
                 )
             except Exception as error:
-                log.error(f"Download dataspace for a L2A Product did not finish")
+                log.error(f"Download from dataspace of L2A Product did not finish")
                 log.error(f"Received error   {error}")
 
             # refresh
@@ -707,23 +708,37 @@ def download_dataspace_product(product_uuid: str,
         #     os.mkdir(destination_path)
         # shutil.copyfile(src=temporary_path, dst=destination_path)
 
-        destination_path_size = os.path.getsize(destination_path)
-        log.info(f"Downloaded file file size: {destination_path} bytes")
+        downloaded_file_size = os.path.getsize(temporary_path)
+        log.info(f"Downloaded file size: {downloaded_file_size} bytes")
         min_file_size = 2000  # in bytes
-        if (destination_path_size < min_file_size):
-            log.info(f'Downloaded file too small, contents are:')
-            file_dnld = open(destination_path, 'r')
+        if (downloaded_file_size < min_file_size):
+            log.info(f'  Downloaded file too small, contents are:')
+            file_dnld = open(temporary_path, 'r')
             log.info(file_dnld.readline())
             file_dnld.close()
 
         log.info("    unpacking archive...")
         shutil.unpack_archive(temporary_path, unzipped_path)
+
+        log.info(f"Unpacked Archive Path: {unzipped_path}")
+
+        downloaded_file_size = os.path.getsize(unzipped_path)
+        log.info(f"Downloaded unzipped file size: {downloaded_file_size} bytes")
+        min_file_size = 2000  # in bytes
+        if (downloaded_file_size < min_file_size):
+            log.info(f'  Downloaded unzipped file too small, contents are:')
+            file_dnld = open(unzipped_path, 'r')
+            log.info(file_dnld.readline())
+            file_dnld.close()
+
         # no need to remove unzipped path because it is within temp_dir
         # print("sys exiting to preserve temp_dir...")
         # sys.exit(1)
         # # restructure paths
         within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
-        destination_path = f"{safe_directory}/{product_name}"
+        log.info(f"Downloaded file within_folder path: {within_folder_path}")
+
+        # destination_path = f"{safe_directory}/{product_name}"
         log.info("    moving directory...")
         shutil.move(src=within_folder_path[0], dst=destination_path)
     
