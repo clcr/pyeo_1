@@ -273,8 +273,8 @@ def build_dataspace_request_string(
 
 #     return response["access_token"]
 
-def get_access_token(dataspace_username: str,
-                     dataspace_password: str,
+def get_access_token(dataspace_username: str = None,
+                     dataspace_password: str = None,
                      refresh_token: str = None) -> str:
     """
 
@@ -468,16 +468,16 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 
     """
     # get auth_token needed to authenticate with CDSE API
-    auth_response = get_access_token(
-        dataspace_username=dataspace_username,
-        dataspace_password=dataspace_password,
-        )
-    print(f"auth response  :  {auth_response}")
-    
-    # wait for 60 seconds
-    print("sleep for 60 seconds")
-    time.sleep(60)
-    print("awake after sleep")
+    # auth_response = get_access_token(
+    #     dataspace_username=dataspace_username,
+    #     dataspace_password=dataspace_password,
+    #     )
+    # print(f"auth response  :  {auth_response}")
+
+    # # wait for 60 seconds
+    # print("sleep for 60 seconds")
+    # time.sleep(60)
+    # print("awake after sleep")
         
     for counter, product in enumerate(product_df.itertuples(index=False)):
         log.info(f"    Checking {counter+1} of {len(product_df)} : {product.title}")        # if L1C have been passed, download to the l1c_directory
@@ -485,16 +485,16 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 
             out_path = os.path.join(l1c_directory, product.title)
             if check_for_invalid_l1_data(out_path) == 1:
-                log.info(
-                    f"        {out_path} imagery already exists, skipping download"
-                )
-                # continue means to skip the current iteration and move to the next iteration of the for loop
+                log.info(f"        {out_path} imagery already exists, skipping download")
+                # continue means skip the current iteration and move to the next iteration of the for loop
                 continue
             try:
                 log.info(f"        Downloading : {product.title}")
                 download_dataspace_product(
                     product_uuid=product.uuid,
-                    auth_response=auth_response,
+                    # auth_response=auth_response,
+                    dataspace_username=dataspace_username,
+                    dataspace_password=dataspace_password,
                     product_name=product.title,
                     safe_directory=l1c_directory,
                     log=log
@@ -505,15 +505,16 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                 log.error(f"Received this error :  {error}")
 
             # refresh
-            auth_response = get_access_token(
-            dataspace_username=dataspace_username,
-            dataspace_password=dataspace_password,
-            refresh_token=auth_response["refresh_token"],
-            )
-            # wait for 60 seconds
-            print("sleep for 60")
-            time.sleep(60)
-            print("awake from sleep")
+            # auth_response = get_access_token(
+            # dataspace_username=dataspace_username,
+            # dataspace_password=dataspace_password,
+            # refresh_token=auth_response["refresh_token"],
+            # )
+            # # wait for 60 seconds
+            # print("sleep for 60")
+            # time.sleep(60)
+            # print("awake from sleep")
+
             # print(f"original auth response: {auth_response}")
             # print("---"*30)
             # print(f"new auth response : {new_auth_response}")
@@ -522,16 +523,16 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
         elif product.processinglevel == "Level-2A":
             out_path = os.path.join(l2a_directory, product.title)
             if check_for_invalid_l2_data(out_path) == 1:
-                log.info(
-                    f"        {out_path} imagery already exists, skipping download"
-                )
+                log.info(f"        {out_path} imagery already exists, skipping download")
                 # continue means to skip the current iteration and move to the next iteration of the for loop
                 continue
             try:
                 log.info(f"        Downloading  : {product.title}")
                 download_dataspace_product(
                     product_uuid=product.uuid,
-                    auth_response=auth_response,
+                    # auth_response=auth_response,
+                    dataspace_username=dataspace_username,
+                    dataspace_password=dataspace_password,
                     product_name=product.title,
                     safe_directory=l2a_directory,
                     log=log
@@ -540,15 +541,15 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
                 log.error(f"Download from dataspace of L2A Product did not finish")
                 log.error(f"Received error   {error}")
 
-            # refresh
-            auth_response = get_access_token(
-            dataspace_username=dataspace_username,
-            dataspace_password=dataspace_password,
-            refresh_token=auth_response["refresh_token"],
-            )
-            print("sleep for 60")
-            time.sleep(60)
-            print("awake from sleep")
+            # # refresh
+            # auth_response = get_access_token(
+            # dataspace_username=dataspace_username,
+            # dataspace_password=dataspace_password,
+            # refresh_token=auth_response["refresh_token"],
+            # )
+            # print("sleep for 60")
+            # time.sleep(60)
+            # print("awake from sleep")
             # print(f"original auth response: {auth_response}")
             # print("---"*30)
             # print(f"new auth response : {new_auth_response}")
@@ -626,7 +627,9 @@ def download_s2_data_from_dataspace(product_df: pd.DataFrame,
 #     return
 
 def download_dataspace_product(product_uuid: str,
-                               auth_response: dict,
+                            #    auth_response: dict,
+                               dataspace_username,
+                               dataspace_password,
                                product_name: str,
                                safe_directory: str,
                                log: logging.Logger
@@ -665,6 +668,16 @@ def download_dataspace_product(product_uuid: str,
     # with open(f"product.zip", 'wb') as p:
     #     p.write(file.content)
 
+    auth_response = get_access_token(
+        dataspace_username=dataspace_username,
+        dataspace_password=dataspace_password,
+        )
+    # log.info(f"auth response  :  {auth_response}")
+    # # wait for 60 seconds
+    # print("sleep for 60 seconds")
+    # time.sleep(60)
+    # print("awake after sleep")
+
     ############################
     # auth limited to 10 minutes
     auth_token = auth_response["access_token"]
@@ -678,17 +691,31 @@ def download_dataspace_product(product_uuid: str,
     response = session.get(url, allow_redirects=False)
 
     while response.status_code in (301, 302, 303, 307):
+        log.info(f"response.status_code: {response.status_code}")
+        log.info(f"url = response.headers['Location']: {url}")
         url = response.headers['Location']
         response = session.get(url, allow_redirects=False)
 
+    log.info(f"Final response redirects to url: {url}")
     file = session.get(url, verify=False, allow_redirects=True)
+    # log.info(f"file object: {dir(file)}")
+
+    min_file_size = 2000  # in bytes
+    if (len(file.content) <= min_file_size):
+        log.info(f'  Downloaded file too small, length: {len(file.content)} bytes, contents: {file.content}')
+        # Check if == {"detail":"Expired signature!"}
+        # If so re-authorise (using refresh token) and try again
 
     # total_size_in_bytes = int(response.headers.get("Content-Length", 0))
     # block_size = 1024
     # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
+    my_temp_dir = os.path.join(os.path.expanduser('~'), '20230602_pyeo_temp_folder')
+    log.info(f"my_temp_dir: {my_temp_dir}")
+    # with my_temp_dir as temp_dir:
     with TemporaryDirectory(dir=os.path.expanduser('~')) as temp_dir:
         temporary_path = f"{temp_dir}{os.sep}{product_name}.zip"
+        log.info(f"Downloaded file temporary_path: {temporary_path}")
 
         with open(temporary_path, 'wb') as download:
             # for data in file.iter_content(block_size):
@@ -696,7 +723,6 @@ def download_dataspace_product(product_uuid: str,
             #     progress_bar.update(len(data))
             download.write(file.content)
         # progress_bar.close()
-        log.info(f"Downloaded file temporary_path: {temporary_path}")
         unzipped_path = os.path.splitext(temporary_path)[0]
         # is the 'not a .zip' error here?
         # zip_ref = zipfile.ZipFile(temporary_path, "r")
@@ -710,7 +736,6 @@ def download_dataspace_product(product_uuid: str,
 
         downloaded_file_size = os.path.getsize(temporary_path)
         log.info(f"Downloaded file size: {downloaded_file_size} bytes")
-        min_file_size = 2000  # in bytes
         if (downloaded_file_size < min_file_size):
             log.info(f'  Downloaded file too small, contents are:')
             file_dnld = open(temporary_path, 'r')
@@ -722,26 +747,29 @@ def download_dataspace_product(product_uuid: str,
 
         log.info(f"Unpacked Archive Path: {unzipped_path}")
 
-        downloaded_file_size = os.path.getsize(unzipped_path)
-        log.info(f"Downloaded unzipped file size: {downloaded_file_size} bytes")
-        min_file_size = 2000  # in bytes
-        if (downloaded_file_size < min_file_size):
-            log.info(f'  Downloaded unzipped file too small, contents are:')
-            file_dnld = open(unzipped_path, 'r')
-            log.info(file_dnld.readline())
-            file_dnld.close()
+        # downloaded_file_size = os.path.getsize(unzipped_path)
+        # log.info(f"Downloaded unzipped file size: {downloaded_file_size} bytes")
+        # min_file_size = 2000  # in bytes
+        # if (downloaded_file_size < min_file_size):
+        #     log.info(f'  Downloaded unzipped file too small, contents are:')
+        #     file_dnld = open(unzipped_path, 'r')
+        #     log.info(file_dnld.readline())
+        #     file_dnld.close()
 
         # no need to remove unzipped path because it is within temp_dir
-        # print("sys exiting to preserve temp_dir...")
-        # sys.exit(1)
+
         # # restructure paths
         within_folder_path = glob.glob(os.path.join(unzipped_path, "*"))
-        log.info(f"Downloaded file within_folder path: {within_folder_path}")
+        log.info(f"Downloaded file within_folder path: {within_folder_path[0]}")
 
         # destination_path = f"{safe_directory}/{product_name}"
         log.info("    moving directory...")
         shutil.move(src=within_folder_path[0], dst=destination_path)
-    
+
+        # Debug code
+        # print("Exiting program to preserve temp_dir for checking contents...")
+        # sys.exit(1)
+
     return
 
 
