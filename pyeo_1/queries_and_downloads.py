@@ -300,7 +300,7 @@ def get_access_token(dataspace_username: str = None,
     """
 
     if refresh_token:
-        print("refreshing...")
+        print("refreshing access token...")
         # print(f"refresh token : {refresh_token}")
         payload = {
             "grant_type": "refresh_token",
@@ -680,38 +680,50 @@ def download_dataspace_product(product_uuid: str,
 
     ############################
     # auth limited to 10 minutes
-    auth_token = auth_response["access_token"]
+    auth_access_token = auth_response["access_token"]
     # # refresh limited to 1 hour
     # refresh_token = auth_response.refresh_token
 
     session = requests.Session()
-    session.headers.update({'Authorization': f"Bearer {auth_token}"})
+    session.headers.update({'Authorization': f"Bearer {auth_access_token}"})
     url=f"{DATASPACE_DOWNLOAD_URL}({product_uuid})/$value"
-        
-    response = session.get(url, allow_redirects=False)
 
+    log.info('Obtaining the download URL - via redirect from url constructed from uuid')
+    response = session.get(url, allow_redirects=False)
     while response.status_code in (301, 302, 303, 307):
         log.info(f"response.status_code: {response.status_code}")
-        log.info(f"url = response.headers['Location']: {url}")
+        log.info(f"download url = response.headers['Location']: {url}")
         url = response.headers['Location']
         response = session.get(url, allow_redirects=False)
 
     log.info(f"Final response redirects to url: {url}")
+
+    log.info('Refresh access token as url redirect may take longer than 600s token expiry time')
+    auth_refresh_token = auth_response["refresh_token"]
+    auth_response = get_access_token(
+        dataspace_username=dataspace_username,
+        dataspace_password=dataspace_password,
+        refresh_token=auth_refresh_token,
+    )
+    auth_access_token = auth_response["access_token"]
+    session.headers.update({'Authorization': f"Bearer {auth_access_token}"})
+
+    log.info('Download the zipped image file')
     file = session.get(url, verify=False, allow_redirects=True)
     # log.info(f"file object: {dir(file)}")
 
     min_file_size = 2000  # in bytes
     if (len(file.content) <= min_file_size):
         log.info(f'  Downloaded file too small, length: {len(file.content)} bytes, contents: {file.content}')
-        # Check if == {"detail":"Expired signature!"}
-        # If so re-authorise (using refresh token) and try again
+        # TODO Check if == {"detail":"Expired signature!"}
+        #   If so re-authorise (using refresh token) and loop to try again
 
     # total_size_in_bytes = int(response.headers.get("Content-Length", 0))
     # block_size = 1024
     # progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
-    my_temp_dir = os.path.join(os.path.expanduser('~'), '20230602_pyeo_temp_folder')
-    log.info(f"my_temp_dir: {my_temp_dir}")
+    # my_temp_dir = os.path.join(os.path.expanduser('~'), '20230602_pyeo_temp_folder')
+    # log.info(f"my_temp_dir: {my_temp_dir}")
     # with my_temp_dir as temp_dir:
     with TemporaryDirectory(dir=os.path.expanduser('~')) as temp_dir:
         temporary_path = f"{temp_dir}{os.sep}{product_name}.zip"
