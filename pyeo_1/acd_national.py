@@ -481,6 +481,8 @@ def acd_integrated_raster(
         if not config_dict["do_parallel"]:
             acd_by_tile_raster.acd_by_tile_raster(config_path, tile[0])
             log.info(f"Finished ACD Raster Processes for Tile :  {tile[0]}")
+            log.info(f"")
+            log.info(f"")
 
         if config_dict["do_parallel"]:
             # Launch an instance for this tile using qsub for parallelism

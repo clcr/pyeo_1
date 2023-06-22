@@ -1430,11 +1430,10 @@ def acd_by_tile_raster(config_path: str,
     # ------------------------------------------------------------------------
     if config_dict["do_all"] or config_dict["do_classify"]:
         tile_log.info("---------------------------------------------------------------")
-        tile_log.info(
-            "Classify a land cover map for each L2A image and composite image using a saved model"
-        )
+        tile_log.info("Classifying composite & change images using Random Forest Model")
+        tile_log.info("Model Provided: {}".format(model_path))
         tile_log.info("---------------------------------------------------------------")
-        tile_log.info("Model used: {}".format(model_path))
+
         if skip_existing:
             tile_log.info("Skipping existing classification images if found.")
         classification.classify_directory(
@@ -1459,12 +1458,9 @@ def acd_by_tile_raster(config_path: str,
         )
 
         tile_log.info("---------------------------------------------------------------")
-        tile_log.info(
-            "Compressing tiff files in directory {} and all subdirectories".format(
-                categorised_image_dir
-            )
-        )
+        tile_log.info("Compressing tiff files in directory {} and all subdirectories".format(categorised_image_dir))
         tile_log.info("---------------------------------------------------------------")
+        
         for root, dirs, files in os.walk(categorised_image_dir):
             all_tiffs = [
                 image_name for image_name in files if image_name.endswith(".tif")
