@@ -91,7 +91,6 @@ psutil==5.9.5
 ptyprocess==0.7.0
 pure-eval==0.2.2
 pycparser==2.21
--e git+https://github.com/clcr/pyeo_1.git@3407b1b0bf518426ab18abf32aac1e9ca19e5942#egg=pyeo_1
 Pygments==2.15.1
 pyparsing==3.0.9
 pyproj==3.4.1
