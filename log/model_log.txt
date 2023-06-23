@@ -1,0 +1,121 @@
+2023-06-23 02:31:54,794: INFO: ****PROCESSING START****
+2023-06-23 02:31:54,799: INFO: PyEO_1_Model_Training Notebook Started:
+2023-06-23 02:31:54,801: INFO: - pyeo_dir set to: /home/sepal-user/20230626_pyeo_installation/pyeo_1
+2023-06-23 02:31:54,802: INFO: - model_dir set to: ./models/my_model
+2023-06-23 02:31:54,803: INFO: - log_dir set to: ./log
+2023-06-23 02:37:50,711: INFO: File and Folder Specification Started::
+2023-06-23 02:37:50,723: INFO: - training_shape_filename set to: composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:37:50,724: INFO: - training_raster_filename set to: composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:37:50,725: INFO: - out_dir set to: ./models/my_model
+2023-06-23 02:37:50,726: INFO: - model_out_filename set to: my_model.pkl
+2023-06-23 02:37:50,728: INFO: - feature_out_filename set to: my_model_features.csv
+2023-06-23 02:39:08,355: INFO: ****PROCESSING START****
+2023-06-23 02:39:08,355: INFO: ****PROCESSING START****
+2023-06-23 02:39:08,363: INFO: PyEO_1_Model_Training Notebook Started:
+2023-06-23 02:39:08,363: INFO: PyEO_1_Model_Training Notebook Started:
+2023-06-23 02:39:08,365: INFO: - pyeo_dir set to: /home/sepal-user/20230626_pyeo_installation/pyeo_1
+2023-06-23 02:39:08,365: INFO: - pyeo_dir set to: /home/sepal-user/20230626_pyeo_installation/pyeo_1
+2023-06-23 02:39:08,367: INFO: - model_dir set to: ./models/my_model
+2023-06-23 02:39:08,367: INFO: - model_dir set to: ./models/my_model
+2023-06-23 02:39:08,368: INFO: - log_dir set to: ./log
+2023-06-23 02:39:08,368: INFO: - log_dir set to: ./log
+2023-06-23 02:45:53,106: INFO: Feature Extraction Started:
+2023-06-23 02:45:53,106: INFO: Feature Extraction Started:
+2023-06-23 02:45:53,114: INFO: - out_path set to: ./models/my_model/my_model_features.csv
+2023-06-23 02:45:53,114: INFO: - out_path set to: ./models/my_model/my_model_features.csv
+2023-06-23 02:45:53,117: INFO: - training_raster_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:45:53,117: INFO: - training_raster_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:45:53,118: INFO: - training_shapefile_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:45:53,118: INFO: - training_shapefile_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:46:23,031: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:46:23,031: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:46:23,033: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:46:23,033: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:46:23,041: ERROR: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif not found.
+2023-06-23 02:46:23,041: ERROR: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif not found.
+2023-06-23 02:50:09,163: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:09,163: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:09,182: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:50:09,182: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp
+2023-06-23 02:50:09,185: ERROR: ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp not found.
+2023-06-23 02:50:09,185: ERROR: ./models/my_model/composite_T36MYE_20230220T074941_clipped.shp not found.
+2023-06-23 02:50:47,213: INFO: File and Folder Specification Started::
+2023-06-23 02:50:47,213: INFO: File and Folder Specification Started::
+2023-06-23 02:50:47,225: INFO: - training_shape_filename set to: composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:50:47,225: INFO: - training_shape_filename set to: composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:50:47,228: INFO: - training_raster_filename set to: composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:47,228: INFO: - training_raster_filename set to: composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:47,231: INFO: - out_dir set to: ./models/my_model
+2023-06-23 02:50:47,231: INFO: - out_dir set to: ./models/my_model
+2023-06-23 02:50:47,236: INFO: - model_out_filename set to: my_model.pkl
+2023-06-23 02:50:47,236: INFO: - model_out_filename set to: my_model.pkl
+2023-06-23 02:50:47,238: INFO: - feature_out_filename set to: my_model_features.csv
+2023-06-23 02:50:47,238: INFO: - feature_out_filename set to: my_model_features.csv
+2023-06-23 02:50:55,261: INFO: Feature Extraction Started:
+2023-06-23 02:50:55,261: INFO: Feature Extraction Started:
+2023-06-23 02:50:55,269: INFO: - out_path set to: ./models/my_model/my_model_features.csv
+2023-06-23 02:50:55,269: INFO: - out_path set to: ./models/my_model/my_model_features.csv
+2023-06-23 02:50:55,270: INFO: - training_raster_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:55,270: INFO: - training_raster_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:55,271: INFO: - training_shapefile_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:50:55,271: INFO: - training_shapefile_path set to: ./models/my_model/composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:50:58,913: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:58,913: INFO: Get training data from ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 02:50:58,917: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:50:58,917: INFO:                    and ./models/my_model/composite_T36MYE_20230220T074941_clipped_features.shp
+2023-06-23 02:51:00,089: INFO: Shape raster path /home/sepal-user/20230626_pyeo_installation/pyeo_1/tmppkhzwdnq/composite_T36MYE_20230220T074941_clipped_features_rasterised
+2023-06-23 02:51:00,089: INFO: Shape raster path /home/sepal-user/20230626_pyeo_installation/pyeo_1/tmppkhzwdnq/composite_T36MYE_20230220T074941_clipped_features_rasterised
+2023-06-23 02:51:00,450: INFO: 4 bands in image file
+2023-06-23 02:51:00,450: INFO: 4 bands in image file
+2023-06-23 02:51:00,451: INFO: 11943 training pixels in shapefile
+2023-06-23 02:51:00,451: INFO: 11943 training pixels in shapefile
+2023-06-23 03:04:19,485: INFO: Model Building Started:
+2023-06-23 03:04:19,485: INFO: Model Building Started:
+2023-06-23 03:04:20,459: INFO: Model saved at ./models/my_model/my_model.pkl
+2023-06-23 03:04:20,459: INFO: Model saved at ./models/my_model/my_model.pkl
+2023-06-23 03:08:16,320: INFO: Model Performance Analysis Started:
+2023-06-23 03:08:16,320: INFO: Model Performance Analysis Started:
+2023-06-23 03:08:55,651: INFO: Model Performance Analysis Started:
+2023-06-23 03:08:55,651: INFO: Model Performance Analysis Started:
+2023-06-23 03:10:21,028: INFO: Model Performance Analysis Started:
+2023-06-23 03:10:21,028: INFO: Model Performance Analysis Started:
+2023-06-23 03:11:01,563: INFO: Model Performance Analysis Started:
+2023-06-23 03:11:01,563: INFO: Model Performance Analysis Started:
+2023-06-23 03:20:32,316: INFO: Model Performance Analysis Started:
+2023-06-23 03:20:32,316: INFO: Model Performance Analysis Started:
+2023-06-23 03:26:33,505: INFO: Image Classification with Model Started:
+2023-06-23 03:26:33,505: INFO: Image Classification with Model Started:
+2023-06-23 03:26:33,512: INFO: Classifying file: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 03:26:33,512: INFO: Classifying file: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif
+2023-06-23 03:26:33,513: INFO: Saved model     : ./models/my_model/my_model.pkl
+2023-06-23 03:26:33,513: INFO: Saved model     : ./models/my_model/my_model.pkl
+2023-06-23 03:26:33,893: INFO: Proportion of non-missing values: 100.00%
+2023-06-23 03:26:33,893: INFO: Proportion of non-missing values: 100.00%
+2023-06-23 03:26:35,021: INFO:    Number of chunks 10 Chunk size 265194 Chunk residual 6
+2023-06-23 03:26:35,021: INFO:    Number of chunks 10 Chunk size 265194 Chunk residual 6
+2023-06-23 03:26:35,038: INFO:    Classifying chunk 1 of size 265194
+2023-06-23 03:26:35,038: INFO:    Classifying chunk 1 of size 265194
+2023-06-23 03:26:37,074: INFO:    Classifying chunk 2 of size 265194
+2023-06-23 03:26:37,074: INFO:    Classifying chunk 2 of size 265194
+2023-06-23 03:26:39,227: INFO:    Classifying chunk 3 of size 265194
+2023-06-23 03:26:39,227: INFO:    Classifying chunk 3 of size 265194
+2023-06-23 03:26:41,302: INFO:    Classifying chunk 4 of size 265194
+2023-06-23 03:26:41,302: INFO:    Classifying chunk 4 of size 265194
+2023-06-23 03:26:43,487: INFO:    Classifying chunk 5 of size 265194
+2023-06-23 03:26:43,487: INFO:    Classifying chunk 5 of size 265194
+2023-06-23 03:26:45,689: INFO:    Classifying chunk 6 of size 265194
+2023-06-23 03:26:45,689: INFO:    Classifying chunk 6 of size 265194
+2023-06-23 03:26:48,022: INFO:    Classifying chunk 7 of size 265194
+2023-06-23 03:26:48,022: INFO:    Classifying chunk 7 of size 265194
+2023-06-23 03:26:50,317: INFO:    Classifying chunk 8 of size 265194
+2023-06-23 03:26:50,317: INFO:    Classifying chunk 8 of size 265194
+2023-06-23 03:26:52,536: INFO:    Classifying chunk 9 of size 265194
+2023-06-23 03:26:52,536: INFO:    Classifying chunk 9 of size 265194
+2023-06-23 03:26:54,942: INFO:    Classifying chunk 10 of size 265200
+2023-06-23 03:26:54,942: INFO:    Classifying chunk 10 of size 265200
+2023-06-23 03:26:58,273: INFO: Created classification image file: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif_full_class.tif
+2023-06-23 03:26:58,273: INFO: Created classification image file: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif_full_class.tif
+2023-06-23 03:26:58,280: INFO: Classified Image Saved: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif_full_class.tif
+2023-06-23 03:26:58,280: INFO: Classified Image Saved: ./models/my_model/composite_T36MYE_20230220T074941_clipped.tif_full_class.tif
+2023-06-23 03:31:14,495: INFO: Classified Image Visualisation Started:
+2023-06-23 03:31:14,495: INFO: Classified Image Visualisation Started:
