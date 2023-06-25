@@ -20,7 +20,9 @@ from pyeo_1.apps.acd_national import (acd_by_tile_raster,
 def automatic_change_detection_national(config_path):
     """
     This function:
-        - acts as the singular call to run automatic change detection per tile, then aggregate to national, then distribute the change alerts.
+        - Acts as the singular call to run automatic change detection for all RoI intersecting tiles 
+        and then to vectorise and aggregate the results into a national scale shape file
+        of the change alerts suitable for use within QGIS.
 
     Parameters
     ----------
@@ -479,6 +481,8 @@ def acd_integrated_raster(
         if not config_dict["do_parallel"]:
             acd_by_tile_raster.acd_by_tile_raster(config_path, tile[0])
             log.info(f"Finished ACD Raster Processes for Tile :  {tile[0]}")
+            log.info(f"")
+            log.info(f"")
 
         if config_dict["do_parallel"]:
             # Launch an instance for this tile using qsub for parallelism
@@ -673,7 +677,10 @@ def acd_integrated_vectorisation(
     config_dict = filesystem_utilities.config_path_to_config_dict(
         config_path=config_path
     )
-
+    
+    # changes directory to pyeo_dir, enabling the use of relative paths from the config file
+    os.chdir(config_dict["pyeo_dir"])
+    
     # check if tilelist_filepath exists, open if it does, exit if it doesn't
     if os.path.exists(tilelist_filepath):
         try:
@@ -835,7 +842,7 @@ def acd_national_integration(
     roi = roi.to_crs(epsg)
 
     # for each shapefile in the list of shapefile paths, read, filter and merge
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         for vector in sorted(vectorised_paths):
             try:
                 # read in shapefile, reproject
@@ -865,7 +872,7 @@ def acd_national_integration(
                 log.error(f"failed to merge geodataframe: {vector}")
 
     # write integrated geodataframe to shapefile
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             out_path = f"{os.path.join(root_dir, 'national_geodataframe.shp')}"
             log.info(
@@ -946,7 +953,7 @@ def acd_national_filtering(log: logging.Logger, config_dict: dict):
     filtered = filtered.query(query_values)
 
     # write filtered geodataframe to shapefile
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             out_path = f"{os.path.join(config_dict['tile_dir'], 'national_geodataframe_filtered.shp')}"
             log.info(

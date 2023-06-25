@@ -109,7 +109,7 @@ def vectorise_from_band(
     # let GDAL use Python to raise Exceptions, instead of printing to sys.stdout
     gdal.UseExceptions()
 
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # get Raster datasource
         src_ds = gdal.Open(change_report_path)
         log.info(f"Opening {change_report_path}")
@@ -203,7 +203,7 @@ def clean_zero_nodata_vectorised_band(
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # read in shapefile
         shp = gpd.read_file(vectorised_band_path)
 
@@ -380,7 +380,7 @@ def zonal_statistics(
     # switch GDAL installation to geopandas'
     # gdal_switch(installation="geopandas", config_dict=config_dict)
 
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         mem_driver = ogr.GetDriverByName("Memory")
         mem_driver_gdal = gdal.GetDriverByName("MEM")
         shp_name = "temp"

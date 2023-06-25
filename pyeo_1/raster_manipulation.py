@@ -658,7 +658,7 @@ def trim_image(in_raster_path, out_raster_path, polygon, format="GTiff"):
     format : str
         Image format of the output raster. Defaults to 'GTiff'.
     """
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         in_raster = gdal.Open(in_raster_path)
         in_gt = in_raster.GetGeoTransform()
@@ -1402,7 +1402,7 @@ def clever_composite_images(
     for i in in_raster_path_list:
         log.info("   {}".format(i))
     # use raster stacking to calculate the median over all masked raster files and all 4 bands
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         tmpfiles = []
         for band in range(n_bands):
             log.info(
@@ -2053,7 +2053,7 @@ def stack_and_trim_images(old_image_path, new_image_path, aoi_path, out_image):
     if os.path.exists(out_image):
         log.info("{} exists, skipping.")
         return
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         old_clipped_image_path = os.path.join(td, "old.tif")
         new_clipped_image_path = os.path.join(td, "new.tif")
@@ -2091,7 +2091,7 @@ def clip_raster(
 
     # TODO: Set values outside clip to 0 or to NaN - in irregular polygons
     # https://gis.stackexchange.com/questions/257257/how-to-use-gdal-warp-cutline-option
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         log.info("Clipping {} with {} to {}".format(raster_path, aoi_path, out_path))
         # log.info("Making temp dir {}".format(td))
         raster = gdal.Open(raster_path)
@@ -2147,7 +2147,7 @@ def clip_raster_to_intersection(
         A location for the finished raster
     """
 
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         temp_aoi_path = os.path.join(td, "temp_clip.shp")
         get_extent_as_shp(extent_raster_path, temp_aoi_path)
@@ -2249,7 +2249,7 @@ def resample_image_in_place(image_path, new_res):
         return
     image = None
     # log.info("Resampling to {}m resolution: {}".format(new_res, image_path))
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # Remember this is used for masks, so any averaging resample strat will cock things up.
         args = gdal.WarpOptions(xRes=new_res, yRes=new_res)
         temp_image = os.path.join(td, "temp_image.tif")
@@ -2613,7 +2613,8 @@ def filter_by_class_map(
             class_map_path, classes_of_interest, image_path
         )
     )
-    with TemporaryDirectory(dir=os.getcwd(dir=os.getcwd())) as td:
+    # with TemporaryDirectory(dir=os.getcwd(dir=os.getcwd())) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         binary_mask_path = os.path.join(td, "binary_mask.tif")
         create_mask_from_class_map(
@@ -2733,7 +2734,7 @@ def preprocess_sen2_images(
         if safe_file_path.endswith(".SAFE")
     ]
     for l2_safe_file in safe_file_path_list:
-        with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+        with TemporaryDirectory(dir=os.path.expanduser('~')) as temp_dir:
             log.info("----------------------------------------------------")
             log.info(
                 "Merging the selected 10m band files in directory {}".format(
@@ -2857,7 +2858,7 @@ def apply_scl_cloud_mask(
                 out_path = os.path.join(
                     out_dir, get_sen_2_granule_id(l2_safe_file) + ".tif"
                 )
-                with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+                with TemporaryDirectory(dir=os.path.expanduser('~')) as temp_dir:
                     stacked_file = os.path.join(
                         temp_dir, get_sen_2_granule_id(l2_safe_file) + "_stacked.tif"
                     )
@@ -3288,7 +3289,7 @@ def preprocess_landsat_images(
     out_array = None
     out_image = None
     if new_projection:
-        with TemporaryDirectory(dir=os.getcwd()) as td:
+        with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
             # log.info("Making temp dir {}".format(td))
             # log.info("Reprojecting to {}")
             temp_path = os.path.join(td, "reproj_temp.tif")
@@ -3333,7 +3334,7 @@ def stack_sentinel_2_bands(
 
 
     # Move every image NOT in the requested resolution to resample_dir and resample
-    with TemporaryDirectory(dir=os.getcwd()) as resample_dir:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as resample_dir:
         # log.info("Making temp dir {}".format(resample_dir))
         new_band_paths = []
         for band_path in band_paths:
@@ -3650,7 +3651,7 @@ def apply_sen2cor(
     # Removing it resolves this problem.
 
     # I.R. 20220509
-    # log.info("calling sen2cor:")
+    log.info("Calling sen2cor:")
     log.info(sen2cor_path + " " + image_path + " --output_dir " + out_path)
     sen2cor_proc = subprocess.Popen(
         [sen2cor_path, image_path, "--output_dir", out_path],
@@ -3676,7 +3677,7 @@ def apply_sen2cor(
         if len(nextline) > 0:
             log.info(nextline)
         if nextline == "" and sen2cor_proc.poll() is not None:
-            break
+            break    
         if "CRITICAL" in nextline:
             # log.error(nextline)
             raise subprocess.CalledProcessError(-1, "L2A_Process")
@@ -3719,6 +3720,13 @@ def build_sen2cor_output_path(image_path, timestamp, version):
         out_path = out_path.rpartition("_")[0] + "_" + timestamp + ".SAFE"
     else:
         out_path = image_path.replace("MSIL1C", "MSIL2A")
+    
+    # I.R. Modification to use home directory to store temporary sen2cor output 
+    # - required to avoid errors due to path length exceeding maximum allowed under Windows
+    # - note sen2cor fails if given a relative path
+    user_home_path = os.path.expanduser('~')
+    out_path = os.path.join(user_home_path, os.path.basename(out_path))
+
     return out_path
 
 
@@ -3792,23 +3800,20 @@ def atmospheric_correction(
         # log.info("Atmospheric correction of {}".format(image))
         # log.info("   sen2cor path = " + sen2cor_path)
         image_path = os.path.join(in_directory, image)
-        # log.info("   image path = " + image_path)
+        log.info("   image path = " + image_path)
         # update the product discriminator part of the output file name
         # see https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi/naming-convention
         image_timestamp = datetime.datetime.now().strftime(r"%Y%m%dT%H%M%S")
         # log.info("   sen2cor processing time stamp = " + image_timestamp)
-        out_name = build_sen2cor_output_path(
-            image, image_timestamp, get_sen2cor_version(sen2cor_path)
-        )
-        # log.info("   out name = " + out_name)
-        out_path = os.path.join(out_directory, out_name)
-        # log.info("   out path = " + out_path)
+        log.info("   out_directory = " + out_directory)
+        out_name = build_sen2cor_output_path(image, image_timestamp, get_sen2cor_version(sen2cor_path))
+        log.info("   out name = " + out_name)
+        out_path = os.path.join(out_directory, os.path.basename(out_name))
+        log.info("   out path = " + out_path)
         out_glob = out_path.rpartition("_")[0] + "*"
-        # log.info("   out glob = " + out_glob)
+        log.info("   out glob = " + out_glob)
         if glob.glob(out_glob):
-            log.info(
-                "Skipping atmospheric correction of {}. Already done.".format(image)
-            )
+            log.info("Skipping atmospheric correction of {}. Already done.".format(image))
             continue
         else:
             log.info("Atmospheric correction of {}".format(image))
@@ -3821,23 +3826,13 @@ def atmospheric_correction(
                 )
                 l2_name = os.path.basename(l2_path)
                 log.info("Changing L2A path: {}".format(l2_path))
-                log.info(
-                    "  to new L2A path: {}".format(os.path.join(out_directory, l2_name))
-                )
+                log.info("  to new L2A path: {}".format(os.path.join(out_directory, l2_name)))
                 if os.path.exists(l2_path):
                     os.rename(l2_path, os.path.join(out_directory, l2_name))
                 else:
-                    log.error(
-                        "L2A path not found after atmospheric correction with Sen2Cor: {}".format(
-                            l2_path
-                        )
-                    )
+                    log.error("L2A path not found after atmospheric correction with Sen2Cor: {}".format(l2_path))
             except (subprocess.CalledProcessError, BadS2Exception):
-                log.error(
-                    "Atmospheric correction failed for {}. Moving on to next image.".format(
-                        image
-                    )
-                )
+                log.error("Atmospheric correction failed for {}. Moving on to next image.".format(image))
     return
 
 
@@ -3869,7 +3864,7 @@ def create_mask_from_model(
     # TODO: Fix this properly. Deferred import to deal with circular reference
     from pyeo_1.classification import classify_image
 
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         log = logging.getLogger(__name__)
         log.info(
@@ -4346,7 +4341,7 @@ def __change_from_class_maps(
     dNDVI_scale_factor = 100  # Multiplier used to scale dNDVI to integer range
 
     # create masks from the classes of interest
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         if not (skip_existing and os.path.exists(change_raster)):
             from_class_mask_path = create_mask_from_class_map(
                 class_map_path=old_class_path,
@@ -4972,7 +4967,7 @@ def change_from_class_maps(
         log.info("File already exists: {}. Skipping.".format(change_raster))
         return
     # create masks from the classes of interest
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         from_class_mask_path = create_mask_from_class_map(
             class_map_path=old_class_path,
             out_path=os.path.join(
@@ -5068,7 +5063,7 @@ def verify_change_detections(
         )
     )
     # create masks from the classes of interest
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         class_mask_paths = [
             create_mask_from_class_map(
                 f,
@@ -5177,7 +5172,7 @@ def apply_mask_to_image(mask_path, image_path, masked_image_path):
             if geotransform_of_image[g] - geotransform_of_mask[g] > 0.000001:
                 flag = False  # raise exception
         if not flag:
-            with TemporaryDirectory(dir=os.getcwd()) as td:
+            with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
                 temp_path_1 = os.path.join(td, "reproj_mask_temp.tif")
                 # log.info("Geotransforms do not match. Reprojecting {} to {}.".format(mask_path, temp_path_1))
                 reproject_image(
@@ -5460,7 +5455,7 @@ def create_mask_from_sen2cor_and_fmask(
         If greater than 0, the buffer to apply to the Sentinel 2 thematic map
 
     """
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         s2c_mask_path = os.path.join(td, "s2_mask.tif")
         fmask_mask_path = os.path.join(td, "fmask.tif")
@@ -5490,7 +5485,7 @@ def create_mask_from_fmask(in_l1_dir, out_path):
     """
     log = logging.getLogger(__name__)
     log.info("Creating fmask for {}".format(in_l1_dir))
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         # log.info("Making temp dir {}".format(td))
         temp_fmask_path = os.path.join(td, "fmask.tif")
         apply_fmask(in_l1_dir, temp_fmask_path)
@@ -5620,7 +5615,7 @@ def create_quicklook(
     # heightPct --- height of the output raster in percentage (100 = original height)
     # xRes --- output horizontal resolution
     # yRes --- output vertical resolution
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             image = gdal.Open(in_raster_path, gdal.GA_ReadOnly)
             tmpfile_path = os.path.join(
@@ -6094,7 +6089,7 @@ def compress_tiff(in_path, out_path):
     out_path : str
         The path to the output GeoTiff file.
     """
-    with TemporaryDirectory(dir=os.getcwd()) as td:
+    with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         try:
             tmp_path = os.path.join(td, "tmp_compressed.tif")
             # translateoptions = gdal.TranslateOptions(gdal.ParseCommandLine("-of GTiff -co COMPRESS=DEFLATE -co LZW -co OVERVIEWS=NONE"))
