@@ -246,3 +246,13 @@ Once installation of `pyeo_1` is complete, you can follow the tutorial notebooks
 How to Train Your Classifier: https://github.com/clcr/pyeo_1/blob/main/notebooks/PyEO_I_Model_Training.ipynb
 
 Downloading Sentinel-2 Imagery, Creating a Baseline Composite, Performing Automatic Change Detection: https://github.com/clcr/pyeo_1/blob/main/notebooks/PyEO_I_Master_Tutorials.ipynb
+
+## How to cite this software
+
+Please use the following references when using pyeo:
+
+Roberts, J.F., Mwangi, R., Mukabi, F., Njui, J., Nzioka, K., Ndambiri, J.K., Bispo, P.C., Espirito-Santo, F.D.B., Gou, Y., Johnson, S.C.M. and Louis, V., 2022. Pyeo: A Python package for near-real-time forest cover change detection from Earth observation using machine learning. Computers & Geosciences, 167, p.105192.
+
+Roberts, J., Balzter, H., Gou, Y., Louis, V., Robb, C., 2020. Pyeo: Automated satellite imagery processing. https://doi.org/10.5281/zenodo.3689674
+
+Pacheco-Pascagaza, A.M., Gou, Y., Louis, V., Roberts, J.F., Rodríguez-Veiga, P., da Conceição Bispo, P., Espírito-Santo, F.D., Robb, C., Upton, C., Galindo, G. and Cabrera, E., 2022. Near real-time change detection system using Sentinel-2 and machine learning: A test for Mexican and Colombian forests. Remote Sensing, 14(3), p.707.
