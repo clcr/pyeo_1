@@ -23,7 +23,8 @@ def vector_report_generation(config_path: str, tile: str):
 
     Returns
     ----------
-    None
+    output_vector_products : list of str
+        list of output vector file names created
 
     """
 
@@ -36,7 +37,7 @@ def vector_report_generation(config_path: str, tile: str):
     os.chdir(config_dict["pyeo_dir"])
     
     # get other parameters
-    conda_env_name = config_dict["conda_env_name"]
+    #conda_env_name = config_dict["conda_env_name"]
     epsg = config_dict["epsg"]
     level_1_boundaries_path = config_dict["level_1_boundaries_path"]
 
@@ -109,29 +110,30 @@ def vector_report_generation(config_path: str, tile: str):
     # was band=7
 
     # table joins, area, lat lon, county
-    vectorisation.merge_and_calculate_spatial(
-        rb_ndetections_zstats_df=rb_ndetections_zstats_df,
-        rb_confidence_zstats_df=rb_confidence_zstats_df,
-        rb_first_changedate_zstats_df=rb_first_changedate_zstats_df,
-        path_to_vectorised_binary_filtered=path_vectorised_binary_filtered,
-        write_csv=False,
-        write_shapefile=True,
-        write_pkl=False,
-        change_report_path=change_report_path,
-        log=tile_log,
-        epsg=epsg,
-        level_1_boundaries_path=level_1_boundaries_path,
-        tileid=tile,
-        # conda_env_name=conda_env_name,
-        config_dict=config_dict,
-        delete_intermediates=True,
-    )
+    output_vector_files = vectorisation.merge_and_calculate_spatial(
+                                        rb_ndetections_zstats_df=rb_ndetections_zstats_df,
+                                        rb_confidence_zstats_df=rb_confidence_zstats_df,
+                                        rb_first_changedate_zstats_df=rb_first_changedate_zstats_df,
+                                        path_to_vectorised_binary_filtered=path_vectorised_binary_filtered,
+                                        write_csv=False,
+                                        write_shapefile=True,
+                                        write_kmlfile=True,
+                                        write_pkl=False,
+                                        change_report_path=change_report_path,
+                                        log=tile_log,
+                                        epsg=epsg,
+                                        level_1_boundaries_path=level_1_boundaries_path,
+                                        tileid=tile,
+                                        # conda_env_name=conda_env_name,
+                                        config_dict=config_dict,
+                                        delete_intermediates=True,
+                                    )
 
     tile_log.info("---------------------------------------------------------------")
     tile_log.info("Vectorisation of the Change Report Raster complete")
     tile_log.info("---------------------------------------------------------------")
 
-    return
+    return(list(output_vector_files))
 
 
 # if run from terminal, do this:

@@ -532,6 +532,7 @@ def merge_and_calculate_spatial(
     path_to_vectorised_binary_filtered: str,
     write_csv: bool,
     write_shapefile: bool,
+    write_kml: bool,
     write_pkl: bool,
     change_report_path: str,
     log: logging.Logger,
@@ -569,6 +570,9 @@ def merge_and_calculate_spatial(
     write_shapefile : bool (optional)
         whether to write to shapefile, defaults to False
 
+    write_kml : bool (optional)
+        whether to write to kml file, defaults to False
+
     change_report_path : str
         the path of the original change_report tiff, used for filenaming if saving outputs
     
@@ -592,13 +596,15 @@ def merge_and_calculate_spatial(
 
     Returns
     ----------------
-    None
+    output_vector_files : list of str
+        list of output vector files created
 
     """
 
     import os
     import glob
     import pandas as pd
+    import fiona
     import geopandas as gpd
     from pathlib import Path
     from pyeo_1.filesystem_utilities import serial_date_to_string
@@ -670,12 +676,22 @@ def merge_and_calculate_spatial(
     merged = merged.reindex(columns=columns)
 
     shp_fname = f"{os.path.splitext(change_report_path)[0]}.shp"
+    kml_fname = f"{os.path.splitext(change_report_path)[0]}.kml"
     csv_fname = f"{os.path.splitext(change_report_path)[0]}.csv"
     pkl_fname = f"{os.path.splitext(change_report_path)[0]}.pkl"
+    
+    output_vector_files = []
 
     if write_shapefile:
         merged.to_file(shp_fname)
         log.info(f"Shapefile written as ESRI Shapefile, to:  {shp_fname}")
+        output_vector_files.append(shp_fname)
+        
+    if write_kmlfile:
+        fiona.supported_drivers['KML'] = 'rw'
+        merged.to_file(kml_fname, driver='KML')
+        log.info(f"Vector file written as kml file, to:  {kml_fname}")
+        output_vector_files.append(kml_fname)
 
     if write_pkl:
         merged.to_pickle(pkl_fname)
@@ -704,4 +720,5 @@ def merge_and_calculate_spatial(
 
     # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
     # gdal_switch(installation="gdal_api", config_dict=config_dict)
-    return
+    
+    return(list(output_vector_files))
