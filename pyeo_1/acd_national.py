@@ -5,13 +5,12 @@ import os
 import subprocess
 import sys
 import time
-from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import fiona
 import geopandas as gpd
 import pandas as pd
 from pyeo_1 import filesystem_utilities
-# from pyeo_1.filesystem_utilities import gdal_switch
 from pyeo_1.apps.acd_national import (acd_by_tile_raster,
                                       acd_by_tile_vectorisation)
 
@@ -27,7 +26,7 @@ def automatic_change_detection_national(config_path):
     Parameters
     ----------
     config_path : str
-        The path to the config file, which is an .ini
+        The path to the config file, which is an `.ini`
 
     Returns
     ----------
@@ -81,8 +80,8 @@ def automatic_change_detection_national(config_path):
             root_dir=config_dict["tile_dir"],
             log=acd_log,
             epsg=config_dict["epsg"],
-            conda_env_name=config_dict["conda_env_name"],
             config_dict=config_dict,
+            write_kml=True
         )
 
     if config_dict["do_filter"]:
@@ -187,6 +186,7 @@ def acd_config_to_log(config_dict: dict, log: logging.Logger):
 
     config_dict : dict
         config_dict variable
+
     log : logging.Logger
         log variable
 
@@ -350,19 +350,17 @@ def acd_roi_tile_intersection(config_dict, log):
     Parameters
     ----------
     config_dict : (dict)
-        Dictionary of the Configuration Parameters specified in pyeo_1.ini
-    log
-        Log variable
+        Dictionary of the Configuration Parameters specified in the `.ini`
+
+    log : logging.Logger
+        Logger object
 
     Returns
-    ----------
-    tilelist_filepath (str)
+    -------
+    tilelist_filepath : (str)
         Filepath of a .txt containing the list of tiles on which to perform raster processes
 
     """
-
-    # switch GDAL installation to geopandas'
-    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     ####### read in roi
     # roi_filepath is relative to pyeo_dir supplied in pyeo_1.ini
@@ -397,9 +395,6 @@ def acd_roi_tile_intersection(config_dict, log):
         log.error(f"Could not write to {tilelist_filepath}")
     log.info("Finished ROI tile intersection")
 
-    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
-
     return tilelist_filepath
 
 
@@ -413,18 +408,21 @@ def acd_integrated_raster(
 
     This function:
 
-        - checks whether tilelist.csv exists before running acd_by_tile_raster for each tile
+        - checks whether `tilelist.csv` exists before running acd_by_tile_raster for each tile
 
-        - calls acd_by_tile_raster for all active tiles
+        - calls `acd_by_tile_raster` for all active tiles
 
     Parameters
     ----------
     config_dict : dict
-        Dictionary of the Configuration Parameters specified in pyeo_1.ini
+        Dictionary of the Configuration Parameters specified in the `.ini`
+
     log : logging.Logger
         Logger object
+
     tilelist_filepath : str
         Filepath of a .csv containing the list of tiles on which to perform raster processes
+
     config_path : str
         filepath of the config (pyeo_1.ini) for `acd_by_tile_raster`, this is present to enable the parallel processing option.
 
@@ -659,8 +657,10 @@ def acd_integrated_vectorisation(
     ----------
     log : logging.Logger
         The logger object
+
     tilelist_filepath : str
         A filepath of a `.csv` containing the tiles to vectorise, is used for sorting the tiles so they are vectorised in the order reported by `acd_roi_tile_intersection()`.
+
     config_path : str
         path to pyeo_1.ini
 
@@ -780,8 +780,8 @@ def acd_national_integration(
     root_dir: str,
     log: logging.Logger,
     epsg: int,
-    conda_env_name: str,
     config_dict: dict,
+    write_kml: bool
 ):
     """
 
@@ -794,11 +794,16 @@ def acd_national_integration(
     Parameters:
     ----------
     root_dir : str
+
     log : logging.Logger
         a Logger object
+
     epsg : int
-    conda_env_name : str
+
     config_dict : dict
+
+    write_kml : bool
+        writes to `.kml` if True
 
     Returns:
     ----------
@@ -819,9 +824,6 @@ def acd_national_integration(
     log.info("Paths of shapefiles to integrate are:")
     for number, path in enumerate(sorted(vectorised_paths)):
         log.info(f"{number} : {path}")
-
-    # switch gdal and proj installation to geopandas'
-    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     # initialise empty geodataframe
     merged_gdf = gpd.GeoDataFrame()
@@ -880,12 +882,19 @@ def acd_national_integration(
             )
             merged_gdf.to_file(filename=out_path)
         except:
-            log.error(f"failed to write output at :  {out_path}")
-    log.info(f"Integrated GeoDataFrame written to {out_path}")
+            log.error(f"failed to write output to shapefile at :  {out_path}")
 
-    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
+        if write_kml:
+            try:
+                kml_out_path = f"{os.path.join(root_dir, 'national_geodataframe.kml')}"
+                fiona.supported_drivers['KML'] = 'rw'
+                merged_gdf.to_file(kml_out_path, driver='KML')
+            except:
+                log.error(f"failed to write output to kml, at : {kml_out_path}")
 
+    log.info(f"Integrated GeoDataFrame written to : {out_path}")
+    if write_kml:
+       log.info(f"Integrated GeoDataFrame written to : {kml_out_path}")
     log.info("---------------------------------------------------------------")
     log.info("---------------------------------------------------------------")
     log.info("National Integration of the Vectorised Change Reports Complete")

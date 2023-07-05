@@ -37,7 +37,6 @@ def vector_report_generation(config_path: str, tile: str):
     os.chdir(config_dict["pyeo_dir"])
     
     # get other parameters
-    #conda_env_name = config_dict["conda_env_name"]
     epsg = config_dict["epsg"]
     level_1_boundaries_path = config_dict["level_1_boundaries_path"]
 
@@ -117,14 +116,13 @@ def vector_report_generation(config_path: str, tile: str):
                                         path_to_vectorised_binary_filtered=path_vectorised_binary_filtered,
                                         write_csv=False,
                                         write_shapefile=True,
-                                        write_kmlfile=True,
+                                        write_kmlfile=False,
                                         write_pkl=False,
                                         change_report_path=change_report_path,
                                         log=tile_log,
                                         epsg=epsg,
                                         level_1_boundaries_path=level_1_boundaries_path,
                                         tileid=tile,
-                                        # conda_env_name=conda_env_name,
                                         config_dict=config_dict,
                                         delete_intermediates=True,
                                     )
@@ -135,8 +133,6 @@ def vector_report_generation(config_path: str, tile: str):
 
     return(list(output_vector_files))
 
-
-# if run from terminal, do this:
 if __name__ == "__main__":
     # assuming argv[0] is script name, config_path passed as index 1 and tile string as index 2
     vector_report_generation(config_path=sys.argv[1], tile=sys.argv[2])
