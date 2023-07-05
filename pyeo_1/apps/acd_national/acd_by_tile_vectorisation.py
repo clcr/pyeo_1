@@ -8,11 +8,7 @@ from pyeo_1 import vectorisation
 
 def vector_report_generation(config_path: str, tile: str):
     """
-
-    This function:
-
-        - Vectorises the Change Report Raster, with the aim of producing shapefiles \n
-            that can be filtered and summarised spatially, and displayed in a GIS.
+    This function vectorises the Change Report Raster, with the aim of producing shapefiles that can be filtered and summarised spatially, and displayed in a GIS.
 
     Parameters
     ----------
@@ -22,7 +18,7 @@ def vector_report_generation(config_path: str, tile: str):
         Sentinel-2 tile name to process
 
     Returns
-    ----------
+    -------
     output_vector_products : list of str
         list of output vector file names created
 
@@ -70,23 +66,20 @@ def vector_report_generation(config_path: str, tile: str):
     path_vectorised_binary = vectorisation.vectorise_from_band(
         change_report_path=change_report_path,
         band=15,
-        log=tile_log,
-        config_dict=config_dict
+        log=tile_log
     )
     # was band=6
 
     path_vectorised_binary_filtered = vectorisation.clean_zero_nodata_vectorised_band(
         vectorised_band_path=path_vectorised_binary,
-        log=tile_log,
-        config_dict=config_dict
+        log=tile_log
     )
 
     rb_ndetections_zstats_df = vectorisation.zonal_statistics(
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=5,
-        log=tile_log,
-        config_dict=config_dict
+        log=tile_log
         )
     # was band=2
 
@@ -94,8 +87,7 @@ def vector_report_generation(config_path: str, tile: str):
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=9,
-        log=tile_log,
-        config_dict=config_dict
+        log=tile_log
     )
     # was band=5
 
@@ -103,8 +95,7 @@ def vector_report_generation(config_path: str, tile: str):
         raster_path=change_report_path,
         shapefile_path=path_vectorised_binary_filtered,
         report_band=4,
-        log=tile_log,
-        config_dict=config_dict,
+        log=tile_log
     )
     # was band=7
 
@@ -123,7 +114,6 @@ def vector_report_generation(config_path: str, tile: str):
                                         epsg=epsg,
                                         level_1_boundaries_path=level_1_boundaries_path,
                                         tileid=tile,
-                                        config_dict=config_dict,
                                         delete_intermediates=True,
                                     )
 

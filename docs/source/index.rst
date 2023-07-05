@@ -1,6 +1,6 @@
-****
+******
 pyeo_1
-****
+******
 
 .. toctree::
    :caption: Contents:
@@ -59,7 +59,7 @@ and a raster. The below example:
 
 .. code-block:: bash
 
-   conda activate pyeo_1_env
+   conda activate pyeo_env
    extract_signatures your_raster.tif your_shapefile.shp signatures.csv
    create_model_from_signatures signatures.csv model.pkl
    classify_image your_raster model.pkl output_image.tif

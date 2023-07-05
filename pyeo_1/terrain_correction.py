@@ -129,17 +129,15 @@ def calculate_ic_array(
     slope_raster_path, aspect_raster_path, raster_datetime, ic_raster_out_path=None
 ):
     """
-    Given a slope and an aspect raster, creates an array of the illumination conditions as specified in
-    https://ieeexplore.ieee.org/document/8356797, equation 9. The Pysolar library is
-    used to calculate solar position.
+    Given a slope and an aspect raster, creates an array of the illumination conditions as specified in https://ieeexplore.ieee.org/document/8356797, equation 9. The Pysolar library is used to calculate solar position.
 
     Parameters
     ----------
-    dem_raster_path
+    dem_raster_path : str
         The path to a raster containing the DEM in question
     raster_datetime
         The time of day _with timezone set_ for the
-    ic_raster_out_path
+    ic_raster_out_path : str
         If present, saves a raster of the illumination condition
 
     Returns
