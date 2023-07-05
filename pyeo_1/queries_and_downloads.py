@@ -1,13 +1,13 @@
 """
 pyeo_1.queries_and_downloads
-==========================
+============================
 Functions for querying, filtering and downloading data.
 
 Key functions
 -------------
 :py:func:`check_for_s2_data_by_date` Queries the Sentinel 2 archive for products between two dates
 :py:func:`download_s2_data` Downloads Sentinel 2 data from Scihub by default
-:py:func: `query_dataspace_by_polygon` Queries the New Copernicus Dataspace API for products between two dates, that conform to the Area of Interest and maximum cloud cover supplied.
+:py:func:`query_dataspace_by_polygon` Queries the New Copernicus Dataspace API for products between two dates, that conform to the Area of Interest and maximum cloud cover supplied.
 
 SAFE files
 ----------
@@ -102,8 +102,6 @@ from sentinelsat import SentinelAPI, geojson_to_wkt, read_geojson
 
 log = logging.getLogger("pyeo_1")
 
-
-
 try:
     from google.cloud import storage
 except ImportError:
@@ -145,7 +143,7 @@ def query_dataspace_by_polygon(
 
     Returns
     -------
-
+    None
     """
 
     request_string = build_dataspace_request_string(
@@ -2084,14 +2082,18 @@ def query_for_corresponding_image(prod, conf):
     return out
 
 
-def download_from_aws_with_rollback(product_id, folder, uuid, user, passwd):
+def download_from_aws_with_rollback(product_id: str,
+                                    folder: str,
+                                    uuid: str,
+                                    user: str,
+                                    passwd: str) -> None:
     """
-    Attempts to download a single product from AWS using product_id; if not found, rolls back to Scihub using the UUID
+    Attempts to download a single product from AWS using product_id; if not found, rolls back to Scihub using the UUID.
 
     Parameters
     ----------
     product_id : str
-        The product ID ("L2A_...")
+        The product ID (`L2A...`)
     folder : str
         The folder to download the .SAFE file to.
     uuid : str
@@ -2100,6 +2102,10 @@ def download_from_aws_with_rollback(product_id, folder, uuid, user, passwd):
         Scihub username
     passwd : str
         Scihub password
+    
+    Returns
+    -------
+    None
 
     """
     log = logging.getLogger(__file__)
@@ -2116,14 +2122,14 @@ def download_from_aws_with_rollback(product_id, folder, uuid, user, passwd):
             log.warning("Something went wrong in the download from Copernicus SciHub.")
 
 
-def download_from_scihub(product_uuid, out_folder, user, passwd):
+def download_from_scihub(product_uuid: str, out_folder: str, user: str, passwd: str) -> None:
     """
-    Downloads and unzips product_uuid from scihub
+    Downloads and unzips product_uuid from scihub.
 
     Parameters
     ----------
     product_uuid : str
-        The product UUID (4dfB4-432df....)
+        The product UUID (e.g. 4dfB4-432df....)
     out_folder : str
         The folder to save the .SAFE file to
     user : str
@@ -2132,7 +2138,7 @@ def download_from_scihub(product_uuid, out_folder, user, passwd):
         Scihub password
 
     Returns
-    ----------
+    -------
     0 : No error
     1 : HTTP Error in server response
 

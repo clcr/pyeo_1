@@ -1,18 +1,18 @@
 """
 pyeo_1.raster_manipulation
-========================
+==========================
 Functions for working with raster data, including masks and platform-specific processing functions.
 
 Key functions
 -------------
 
-    :py:func:`create_matching_dataset` Creates an empty raster of the same shape as a source, ready for writing.
+:py:func:`create_matching_dataset` Creates an empty raster of the same shape as a source, ready for writing.
 
-    :py:func:`stack_images` Stacks a list of rasters into a single raster.
+:py:func:`stack_images` Stacks a list of rasters into a single raster.
 
-    :py:func:`n2_images` Preprocesses a set of of Sentinel-2 images into single raster files.
+:py:func:`n2_images` Preprocesses a set of of Sentinel-2 images into single raster files.
 
-    :py:func:`clip_raster` Clips a raster to a shapefile
+:py:func:`clip_raster` Clips a raster to a shapefile
 
 Rasters
 -------
@@ -119,8 +119,6 @@ import glob
 import logging
 import numpy as np
 
-# I.R.
-# import ogr
 import os
 from osgeo import gdal, gdalconst
 from osgeo import gdal_array, osr, ogr
@@ -129,8 +127,6 @@ from osgeo.gdal_array import (
     GDALTypeCodeToNumericTypeCode,
 )
 
-# I.R.
-# import osr
 import pdb
 import re
 import shutil
@@ -195,7 +191,7 @@ def create_matching_dataset(
     """
     Creates an empty gdal dataset with the same dimensions, projection and geotransform as in_dataset.
     Defaults to 1 band.
-    Datatype is set from the first layer of in_dataset if unspecified
+    Datatype is set from the first layer of in_dataset if unspecified.
 
     Parameters
     ----------
@@ -445,9 +441,9 @@ def stack_images(
         The path to the saved output raster.
     geometry_mode : {'intersect' or 'union'}
         Can be either 'intersect' or 'union'.
-        - If 'intersect', then the output raster will only contain the pixels of the input rasters that overlap.
-        - If 'union', then the output raster will contain every pixel in the outputs. Layers without data will
-          have their pixel values set to 0.
+    - If 'intersect', then the output raster will only contain the pixels of the input rasters that overlap.
+    - If 'union', then the output raster will contain every pixel in the outputs. Layers without data will
+        have their pixel values set to 0.
     format : str, optional
         The GDAL image format for the output. Defaults to 'GTiff'
     datatype : gdal datatype, optional
@@ -560,8 +556,7 @@ def average_images(
     out_raster_path,
     geometry_mode="intersect",
     format="GTiff",
-    datatype=gdal.GDT_Int32,
-):
+    datatype=gdal.GDT_Int32):
     """
     When provided with a list of rasters, will stack them into a single raster. The number of
     bands in the output is equal to the total number of bands in the input. Geotransform and projection
@@ -576,9 +571,8 @@ def average_images(
         The path to the saved output raster.
     geometry_mode : {'intersect' or 'union'}, optional
         Can be either 'intersect' or 'union'. Defaults to 'intersect'.
-        - If 'intersect', then the output raster will only contain the pixels of the input rasters that overlap.
-        - If 'union', then the output raster will contain every pixel in the outputs. Layers without data will
-          have their pixel values set to 0.
+    - If 'intersect', then the output raster will only contain the pixels of the input rasters that overlap.
+    - If 'union', then the output raster will contain every pixel in the outputs. Layers without data will have their pixel values set to 0.
     format : str
         The GDAL image format for the output. Defaults to 'GTiff'
     datatype : gdal datatype
@@ -3976,24 +3970,27 @@ def create_mask_from_scl_layer(l2_safe_path, out_path, scl_classes, buffer_size=
     buffer_size : int, optional
         The size of the buffer to apply around the masked out pixels (dilation)
 
-    Label    Classification
-      0    NO_DATA
-      1    SATURATED_OR_DEFECTIVE
-      2    DARK_AREA_PIXELS
-      3    CLOUD_SHADOWS
-      4    VEGETATION
-      5    NOT_VEGETATED
-      6    WATER
-      7    UNCLASSIFIED
-      8    CLOUD_MEDIUM_PROBABILITY
-      9    CLOUD_HIGH_PROBABILITY
-     10    THIN_CIRRUS
-     11    SNOW
-
     Returns
     -------
     out_path : str
         The path to the mask
+
+    Notes
+    -----
+    The SCL codes correspond to the following classification labels:
+
+    - 0: NO_DATA
+    - 1: SATURATED_OR_DEFECTIVE
+    - 2: DARK_AREA_PIXELS
+    - 3: CLOUD_SHADOWS
+    - 4: VEGETATION
+    - 5: NOT_VEGETATED
+    - 6: WATER
+    - 7: UNCLASSIFIED
+    - 8: CLOUD_MEDIUM_PROBABILITY
+    - 9: CLOUD_HIGH_PROBABILITY
+    - 10: THIN_CIRRUS
+    - 11: SNOW  
 
     """
     log = logging.getLogger(__name__)

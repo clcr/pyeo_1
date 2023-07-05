@@ -1,5 +1,15 @@
+"""
+pyeo_1.vectorisation
+====================
+Functions for converting raster data to vectors, notably .shp but also .kml and non-geographic formats, .csv and .pkl.
+
+Key functions
+-------------
+
+:py:func:`vectorise_from_band` 
+"""
+
 import logging
-# from pyeo_1.filesystem_utilities import gdal_switch
 import pandas as pd
 
 def band_naming(band: int, log):
@@ -69,9 +79,7 @@ def band_naming(band: int, log):
 def vectorise_from_band(
     change_report_path: str,
     band: int,
-    log: logging.Logger,
-    config_dict : dict
-):
+    log: logging.Logger):
     """
     This function takes the path of a change report raster and using a band integer, vectorises a band layer.
 
@@ -87,8 +95,6 @@ def vectorise_from_band(
         instead of 0 as in Python.
     log : logging.Logger
         log variable
-    config_dict : dict
-        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
     ----------------
@@ -99,12 +105,7 @@ def vectorise_from_band(
     import os
     from tempfile import TemporaryDirectory
     from osgeo import gdal, ogr, osr
-    from pathlib import Path
 
-    # switch gdal and proj installation to GDAL's
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
-
-    # log.info(f"PROJ_LIB path has been set to : {os.environ['PROJ_LIB']}")
     log.info(f"what is change_report_path  :  {change_report_path}")
     # let GDAL use Python to raise Exceptions, instead of printing to sys.stdout
     gdal.UseExceptions()
@@ -171,35 +172,27 @@ def vectorise_from_band(
 
 def clean_zero_nodata_vectorised_band(
     vectorised_band_path: str,
-    log: logging.Logger,
-    config_dict : dict
-):
+    log: logging.Logger):
     """
 
     This function removes 0s and nodata values from the vectorised bands.
 
     Parameters
-    ----------------
+    ----------
 
     vectorised_band_path : str
         path to the band to filter
     log : logging.Logger
         The logger object
-    config_dict : dict
-        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
-    ----------------
-    filename : variable
+    -------
+    filename : str
 
     """
     from tempfile import TemporaryDirectory
     import geopandas as gpd
     import os
-    from pathlib import Path
-
-    # switch gdal and proj installation to geopandas'
-    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     log.info(f"filtering out zeroes and nodata from: {vectorised_band_path}")
 
@@ -228,25 +221,30 @@ def clean_zero_nodata_vectorised_band(
 
     log.info(f"filtering complete and saved at  : {filename}")
 
-    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
-
     return filename
 
 
-def boundingBoxToOffsets(bbox, geot):
+def boundingBoxToOffsets(bbox: list, geot: object) -> list[float]:
     """
 
-    This function converts a bounding box to offsets.
-    The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
+    This function calculates offsets from the provided bounding box and geotransform.
 
     Parameters
-    ----------------
+    ----------
+    bbox : list[float]
+        bounding box coordinates within a list.
+    geot : object
+        Geotransform object.
 
     Returns
-    ----------------
-    [row1, row2, col1, col2] : list
-        list of offsets (integers)
+    -------
+    list[float]
+        List of offsets (floats) as [row1, row2, col1, col2].
+
+    Notes
+    -----
+    The original implementation of this function was written by Konrad Hafen and can be found at:
+    https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
 
     """
 
@@ -261,17 +259,20 @@ def geotFromOffsets(row_offset, col_offset, geot):
     """
 
     This function calculates a new geotransform from offsets.
-    The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
 
     Parameters
-    ----------------
+    ----------
     row_offset : int
     col_offset : int
-    geot : variable
+    geot : object
 
     Returns
-    ----------------
+    -------
     new_geot : float
+
+    Notes
+    -----
+    The original implementation of this function was written by Konrad Hafen and can be found at: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
 
     """
 
@@ -305,7 +306,7 @@ def setFeatureStats(fid, min, max, mean, median, sd, sum, count, report_band):
     report_band : int
 
     Returns
-    ---------
+    -------
 
     featstats : dict
     """
@@ -339,30 +340,31 @@ def zonal_statistics(
     raster_path: str,
     shapefile_path: str,
     report_band: int,
-    log : logging.Logger,
-    config_dict : dict
+    log : logging.Logger
 ):
     """
     This function calculates zonal statistics on a raster.
-    The contents of which were written by Konrad Hafen, \n taken from: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
-    Matt Payne has amended aspects of the function to accommodate library updates from GDAL, OGR and numpy.ma.MaskedArray() on 30/03/2023.
-
-    Note, the raster at raster_path needs to be an even shape, e.g. 10980, 10980, not 10979, 10979.
 
     Parameters
-    ---------------
+    ----------
     raster_path : str
         the path to the raster to obtain the values from.
     shapefile_path : str
-        the path to the shapefile which we will use as the "zones"
+        the path to the shapefile which we will use as the "zones".
     band : int
         the band to run zonal statistics on.
-    config_dict : dict
-        a config_dict containing `conda_directory` and `conda_env_name`
 
     Returns
-    ----------------
-    zstats_df
+    -------
+    zstats_df : pd.DataFrame()
+
+    Notes
+    -----
+    The raster at raster_path needs to be an even shape, e.g. 10980, 10980, not 10979, 10979.
+
+    The original implementation of this function was written by Konrad Hafen and can be found at: https://opensourceoptions.com/blog/zonal-statistics-algorithm-with-python-in-4-steps/
+
+    Matt Payne amended aspects of the function to accommodate library updates from GDAL, OGR and numpy.ma.MaskedArray() on 30/03/2023.
 
     """
 
@@ -371,14 +373,10 @@ def zonal_statistics(
     import pandas as pd
     import os
     import csv
-    from pathlib import Path
     from tempfile import TemporaryDirectory
 
     # enable gdal to raise exceptions
     gdal.UseExceptions()
-
-    # switch GDAL installation to geopandas'
-    # gdal_switch(installation="geopandas", config_dict=config_dict)
 
     with TemporaryDirectory(dir=os.path.expanduser('~')) as td:
         mem_driver = ogr.GetDriverByName("Memory")
@@ -519,9 +517,6 @@ def zonal_statistics(
             writer.writeheader()
             writer.writerows(zstats)
 
-    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
-
     return zstats_df
 
 
@@ -539,7 +534,6 @@ def merge_and_calculate_spatial(
     epsg: int,
     level_1_boundaries_path: str,
     tileid: str,
-    config_dict: dict,
     delete_intermediates: bool=True,
 ):
     """
@@ -587,16 +581,13 @@ def merge_and_calculate_spatial(
 
     tileid : str
         tileid to work with
-        
-    config_dict : dict
-        a config_dict containing `conda_directory` and `conda_env_name`
 
     delete_intermediates : bool
         a boolean indicating whether to delete or keep intermediate files. Defaults to True.
 
     Returns
-    ----------------
-    output_vector_files : list of str
+    -------
+    output_vector_files : list[str]
         list of output vector files created
 
     """

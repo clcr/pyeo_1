@@ -1,3 +1,6 @@
-.. title:: pyeo_1.classification
+Classification
+==============
+
+.. title:: Classification
 .. automodule:: pyeo_1.classification
    :members:

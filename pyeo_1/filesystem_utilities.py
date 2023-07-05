@@ -1,6 +1,6 @@
 """
 pyeo_1.filesystem_utilities
-=========================
+===========================
 Contains functions for sorting, creating and comparing images as part of the filesystem. Includes any function
 that works on a generic pyeo_1 timestamp and sentinel 2 functions.
 
@@ -14,7 +14,7 @@ Key functions
 :py:func:`sort_by_timestamp` Sorts a set of files by timestamp
 
 Function reference
--------------
+------------------
 """
 
 import configparser
@@ -27,10 +27,10 @@ import os
 import sys
 import re
 import shutil
+import zipfile
 
 import numpy as np
 import pandas as pd
-import pyeo_1.windows_compatability
 from pyeo_1.exceptions import CreateNewStacksException
 
 # Set up logging on import
@@ -1270,44 +1270,56 @@ def get_mask_path(image_path):
     return mask_path
 
 
-def serial_date_to_string(srl_no: int):
+def serial_date_to_string(srl_no: int) -> str:
     """
-    Converts a serial date (days since X), to a date as a string.
-    Author: AER
-    Taken from: https://stackoverflow.com/a/39988256/6809533
+    Converts a serial date (days since X) to a date as a string.
 
-    ------------
     Parameters
-    srl_no (int)
-        serial number representing days since X
+    ----------
+    srl_no : int
+        Serial number representing days since X.
 
-    -----------
     Returns
+    -------
+    str
+        Date in the format "YYYY-MM-DD".
 
-    Date object
+    Notes
+    -----
+    This function assumes the base date as January 1, 2000.
+
+    References
+    ----------
+    - Original implementation by AER:
+      https://stackoverflow.com/a/39988256/6809533
     """
 
     import datetime
 
-    new_date = datetime.datetime(2000, 1, 1, 0, 0) + datetime.timedelta(
-        srl_no
-    )  # could require srl_no - 1, if day 1 is 2000-01-01
+    new_date = datetime.datetime(2000, 1, 1, 0, 0) + datetime.timedelta(srl_no)
     return new_date.strftime("%Y-%m-%d")
 
 
-def zip_contents(directory: str, notstartswith=None):
+
+def zip_contents(directory: str, notstartswith=None) -> None:
     """
-    This function zips the contents of the directory passed
+    Zip the contents of the specified directory.
 
-    ---------
     Parameters
-
-    Directory (str)
+    ----------
+    directory : str
         Path to the directory whose contents to zip.
+    notstartswith : list or None, optional
+        List of prefixes to exclude from zipping. Default is None.
 
-    --------
     Returns
+    -------
     None
+
+    Notes
+    -----
+    - This function skips files that have the ".zip" extension.
+    - If `notstartswith` is provided, files starting with any of the specified prefixes are skipped.
 
     """
     paths = [f for f in os.listdir(directory) if not f.endswith(".zip")]
@@ -1339,15 +1351,30 @@ def zip_contents(directory: str, notstartswith=None):
     return
 
 
-def unzip_contents(zippath: str, ifstartswith=None, ending=None):
+def unzip_contents(zippath: str, ifstartswith=None, ending=None) -> None:
     """
-    This function unzips the zipped path provided
+    Unzip the contents of the specified zipped folder.
 
-    ---------
     Parameters
-    Zippath (str)
-        Path to the zipped folder, to unzip.
+    ----------
+    zippath : str
+        Path to the zipped folder to unzip.
+    ifstartswith : str or None, optional
+        Prefix to check before extracting. Default is None.
+    ending : str or None, optional
+        Suffix to add to the extracted folder name. Default is None.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - This function assumes the zip file extension to be ".zip".
+    - If `ifstartswith` is provided, extraction occurs only if the folder name starts with the specified prefix.
+    - If `ending` is provided, it is added to the extracted folder name.
     """
+    
     dirpath = zippath[:-4]  # cut away the  .zip ending
     if ifstartswith is not None and ending is not None:
         if dirpath.startswith(ifstartswith):
