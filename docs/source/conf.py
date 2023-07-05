@@ -22,13 +22,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(__file__, '..','..','..')))
 # -- Project information -----------------------------------------------------
 
 project = 'pyeo_1'
-copyright = '2018, John Roberts'
-author = 'John Roberts'
+copyright = '2023, Ivan Reading, Matthew Payne, John Roberts, Heiko Balzter'
+author = 'Ivan Reading, Matthew Payne, John Roberts, Heiko Balzter'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '0.9'
 
 
 # -- General configuration ---------------------------------------------------
@@ -67,7 +67,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -107,7 +107,7 @@ html_static_path = ['static']
 # html_sidebars = {}
 
 # The logo
-html_logo = r"../../pyeo_1/assets/pyeo_1logo_small.png"
+html_logo = r"../../pyeo_1/assets/pyeologo.png"
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
