@@ -1,3 +1,3 @@
-.. title:: pyeo_1.validation
+.. title:: Validation
 .. automodule:: pyeo_1.validation
    :members:

@@ -1,3 +1,3 @@
-.. title:: pyeo_1.raster_manipulation
+.. title:: Raster Manipulation
 .. automodule:: pyeo_1.raster_manipulation
    :members:

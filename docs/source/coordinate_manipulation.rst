@@ -1,3 +1,3 @@
-.. title:: pyeo_1.coordinate_manipulation
+.. title:: Coordinate Manipulation
 .. automodule:: pyeo_1.coordinate_manipulation
    :members:
