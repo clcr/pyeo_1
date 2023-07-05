@@ -609,13 +609,9 @@ def merge_and_calculate_spatial(
     from pathlib import Path
     from pyeo_1.filesystem_utilities import serial_date_to_string
 
-    # switch GDAL installation to geopandas'
-    # gdal_switch(installation="geopandas", config_dict=config_dict)
-
     binary_dec = gpd.read_file(path_to_vectorised_binary_filtered)
 
     # convert first date of change detection in days, to change date
-    # columns_to_apply = ["rb7_min", "rb7_max", "rb7_mean", "rb7_median"]
     columns_to_apply = ["rb4_min", "rb4_max", "rb4_mean", "rb4_median"]
 
     for column in columns_to_apply:
@@ -687,7 +683,7 @@ def merge_and_calculate_spatial(
         log.info(f"Shapefile written as ESRI Shapefile, to:  {shp_fname}")
         output_vector_files.append(shp_fname)
         
-    if write_kmlfile:
+    if write_kml:
         fiona.supported_drivers['KML'] = 'rw'
         merged.to_file(kml_fname, driver='KML')
         log.info(f"Vector file written as kml file, to:  {kml_fname}")
@@ -717,8 +713,5 @@ def merge_and_calculate_spatial(
                 os.remove(file)
         except:
             log.info("Could not delete intermediate files")
-
-    # "reset" gdal and proj installation back to default (which is GDAL's GDAL and PROJ_LIB installation)
-    # gdal_switch(installation="gdal_api", config_dict=config_dict)
     
     return(list(output_vector_files))
