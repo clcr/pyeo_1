@@ -7,17 +7,17 @@ pyeo_1
 
    classification
    coordinate_manipulation
+   filesystem_utilities
    queries_and_downloads
    raster_manipulation
-   filesystem_utilities
    validation
+   vectorisation
    scripts
 
 Introduction
 ############
 
-Python For Earth Observation is a collection of functions for downloading, manipulating, combining and classifying
-geospatial raster and vector data.
+Python For Earth Observation is a collection of functions for downloading, manipulating, combining and classifying geospatial raster and vector data.
 
 
 Installation
@@ -29,8 +29,8 @@ With Git and Miniconda or Anaconda installed, :code:`cd` to an install location 
 
    git clone https://github.com/clcr/pyeo_1.git
    cd pyeo_1
-   conda env create --file environment.yml --name pyeo_1_env
-   conda activate pyeo_1_env
+   conda env create --file environment.yml --name pyeo_env
+   conda activate pyeo_env
    python -m pip install . -vv
 
 In a Python prompt, try  :code:`import pyeo_1` - you should see no errors.
