@@ -3607,6 +3607,7 @@ def stack_old_and_new_images(
 def apply_sen2cor(
     image_path,
     sen2cor_path,
+    gipp_path,
     delete_unprocessed_image=False,
     log=logging.getLogger(__name__),
 ):
@@ -3619,6 +3620,8 @@ def apply_sen2cor(
         Path to the L1C Sentinel 2 .SAFE file directory
     sen2cor_path : str
         Path to the l2a_process script (Linux) or l2a_process.exe (Windows)
+    gipp_path : str
+        Path to the L2A_GIPP.xml configuration file
     delete_unprocessed_image : bool, optional
         If True, delete the unprocessed image after processing is done. Defaults to False.
 
@@ -3646,25 +3649,15 @@ def apply_sen2cor(
 
     # I.R. 20220509
     log.info("Calling sen2cor:")
-    log.info(sen2cor_path + " " + image_path + " --output_dir " + out_path)
+    # to point sen2cor to a user-defined GIPP file location use:
+    #    L2A_Process --GIP_L2A $HOME/sen2cor/2.10/cfg/L2A_GIPP.xml
+    log.info(sen2cor_path + " --GIP_L2A " + gipp_path + " " + image_path + " --output_dir " + out_path)
     sen2cor_proc = subprocess.Popen(
-        [sen2cor_path, image_path, "--output_dir", out_path],
+        [sen2cor_path, "--GIP_L2A", gipp_path, image_path, "--output_dir", out_path],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,
     )
-
-    # log.info("#I.R. 20220509 Removed explicit setting of --output_dir: calling sen2cor:")
-    # log.info(sen2cor_path + " " + image_path)
-    # sen2cor_proc = subprocess.Popen([sen2cor_path, image_path],
-    # stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    # universal_newlines=True)
-
-    # log.info(sen2cor_path + " " + image_path + " --output_dir " + os.path.dirname(image_path) + " --GIP_L2A " + gipp_path)
-    # sen2cor_proc = subprocess.Popen([sen2cor_path, image_path, '--output_dir', os.path.dirname(image_path),
-    #                                 '--GIP_L2A', gipp_path],
-    #                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    #                                universal_newlines=True)
 
     while True:
         nextline = sen2cor_proc.stdout.readline()
@@ -3765,6 +3758,7 @@ def atmospheric_correction(
     in_directory,
     out_directory,
     sen2cor_path,
+    gipp_path,
     delete_unprocessed_image=False,
     log=logging.getLogger(__name__),
 ):
@@ -3779,6 +3773,8 @@ def atmospheric_correction(
         Path to the directory that will containg the new L2A images
     sen2cor_path : str
         Path to the l2a_process script (Linux) or l2a_process.exe (Windows)
+    gipp_path : str
+        Path to the L2A_GIPP.xml configuration file
     delete_unprocessed_image : bool, optional
         If True, delete the unprocessed image after processing is done. Defaults to False.
     log : optional
@@ -3815,6 +3811,7 @@ def atmospheric_correction(
                 l2_path = apply_sen2cor(
                     image_path,
                     sen2cor_path,
+                    gipp_path,
                     delete_unprocessed_image=delete_unprocessed_image,
                     log=log,
                 )

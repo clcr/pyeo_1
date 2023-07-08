@@ -224,7 +224,7 @@ def clean_zero_nodata_vectorised_band(
     return filename
 
 
-def boundingBoxToOffsets(bbox: list, geot: object) -> list[float]:
+def boundingBoxToOffsets(bbox: list, geot: object) -> 'list[float]':
     """
 
     This function calculates offsets from the provided bounding box and geotransform.
