@@ -3708,6 +3708,10 @@ def build_sen2cor_output_path(image_path, timestamp, version):
     else:
         out_path = image_path.replace("MSIL1C", "MSIL2A")
     
+    # TODO: Build a better solution around a temporary directory.
+    #       Make output file in temp dir, move it to the right dir.
+    #       Then delete the temp dir.
+
     # I.R. Modification to use home directory to store temporary sen2cor output 
     # - required to avoid errors due to path length exceeding maximum allowed under Windows
     # - note sen2cor fails if given a relative path
