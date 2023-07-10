@@ -527,7 +527,7 @@ def merge_and_calculate_spatial(
     path_to_vectorised_binary_filtered: str,
     write_csv: bool,
     write_shapefile: bool,
-    write_kml: bool,
+    write_kmlfile: bool,
     write_pkl: bool,
     change_report_path: str,
     log: logging.Logger,
